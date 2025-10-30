@@ -6,14 +6,14 @@ import 'package:stuntinq_apps/bottomnavigation/imunisasi.dart';
 import 'package:stuntinq_apps/bottomnavigation/peta.dart';
 import 'package:stuntinq_apps/bottomnavigation/profile.dart';
 
-class Tugasbottomnavigator extends StatefulWidget {
-  const Tugasbottomnavigator({super.key});
+class BottomNavigatorApp extends StatefulWidget {
+  const BottomNavigatorApp({super.key});
 
   @override
-  State<Tugasbottomnavigator> createState() => _tugasBottomNavigatorState();
+  State<BottomNavigatorApp> createState() => _BottomNavigatorAppState();
 }
 
-class _tugasBottomNavigatorState extends State<Tugasbottomnavigator> {
+class _BottomNavigatorAppState extends State<BottomNavigatorApp> {
   bool clickEye = true;
   bool obscurepass = true;
   int _selectedIndex = 0;
