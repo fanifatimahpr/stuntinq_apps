@@ -18,6 +18,7 @@ class DBHelper {
     );
   }
 
+  //(Sign Up)
   static Future<void> registerUser(UserModel user) async {
     final dbs = await db();
     //Insert adalah fungsi untuk menambahkan data (CREATE)
@@ -29,6 +30,7 @@ class DBHelper {
     print(user.toMap());
   }
 
+  //Read User (Sign In)
   static Future<UserModel?> loginUser({
     required String email,
     required String password,
@@ -46,17 +48,17 @@ class DBHelper {
     return null;
   }
 
-  //Create User
-  static Future<void> createUser(UserModel user) async {
-    final dbs = await db();
-    //Insert adalah fungsi untuk menambahkan data (CREATE)
-    await dbs.insert(
-      tableUser,
-      user.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-    print(user.toMap());
-  }
+  // //Create User
+  // static Future<void> createUser(UserModel user) async {
+  //   final dbs = await db();
+  //   //Insert adalah fungsi untuk menambahkan data (CREATE)
+  //   await dbs.insert(
+  //     tableUser,
+  //     user.toMap(),
+  //     conflictAlgorithm: ConflictAlgorithm.replace,
+  //   );
+  //   print(user.toMap());
+  // }
 
   //GET USER
   static Future<List<UserModel>> getAllUser() async {
@@ -66,7 +68,20 @@ class DBHelper {
     return results.map((e) => UserModel.fromMap(e)).toList();
   }
 
-  //Get Only Login User???
+  //Get UserID (for Only Login User)
+  static Future<UserModel?> getUserById(int id) async {
+    final dbs = await db();
+    final List<Map<String, dynamic>> results = await dbs.query(
+      tableUser,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (results.isNotEmpty) {
+      return UserModel.fromMap(results.first);
+    }
+    return null;
+  }
 
   //UPDATE USER
   static Future<void> updateUser(UserModel user) async {

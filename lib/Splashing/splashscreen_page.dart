@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:stuntinq_apps/Database/dbhelper_user.dart';
+import 'package:stuntinq_apps/Model/user_model.dart';
 import 'package:stuntinq_apps/Splashing/signin_page.dart';
 import 'package:stuntinq_apps/bottomnavigation/bottomnavigation.dart';
 import 'package:stuntinq_apps/preference_handler.dart';
@@ -19,22 +22,32 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   isLoginFunction() async {
-    Future.delayed(const Duration(seconds: 3)).then((value) async {
-      var isLogin = await PreferenceHandler.getLogin();
-      print(isLogin);
-      if (isLogin != null && isLogin == true) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => BottomNavigationApp()),
-          (route) => false,
-        );
-      } else {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => SigninPage()),
-          (route) => false,
-        );
+    await Future.delayed(const Duration(seconds: 3)).then((value) async {
+      bool? isLogin = await PreferenceHandler.getLogin();
+      int? userId = await PreferenceHandler.getUserId(); //get user ID (login)
+
+      // var isLogin = await PreferenceHandler.getLogin();
+      // UserModel? user =
+      // await PreferenceHandler.getUserId(); //get user ID (login)
+
+      if (isLogin == true && userId != null) {
+        UserModel? user = await DBHelper.getUserById(userId);
+        if (user != null) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BottomNavigationApp(currentUser: user),
+            ),
+            (route) => false,
+          );
+          return;
+        }
       }
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => SigninPage()),
+        (route) => false,
+      );
     });
   }
 

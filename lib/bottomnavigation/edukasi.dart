@@ -13,17 +13,17 @@ class _EdukasiPageState extends State<EdukasiPage> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(18.0),
+          padding: const EdgeInsets.all(22.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               //Header
               _buildHeader(),
-              SizedBox(height: 15),
+              height(15),
 
               //Progress Edukasi
               _buildProgressEducation(),
-              SizedBox(height: 15),
+              height(15),
 
               //List Modul Edukasi
 
@@ -62,7 +62,7 @@ Widget _buildHeader() {
         ),
         child: Icon(Icons.menu_book, color: Color(0xFF2F6B6A), size: 24),
       ),
-      const SizedBox(width: 12),
+      width(12),
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -134,7 +134,7 @@ Widget _buildProgressEducation() {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 12),
+            height(12),
             // Row(
             //   children: [
             //     Expanded(
@@ -219,3 +219,7 @@ Widget _buildFAQ() {
     ),
   );
 }
+
+//Sized Box
+SizedBox height(double h) => SizedBox(height: h);
+SizedBox width(double w) => SizedBox(width: w);

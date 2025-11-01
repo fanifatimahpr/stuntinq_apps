@@ -152,10 +152,14 @@ class _SigninPageState extends State<SigninPage> {
                     if (data != null) {
                       //Berhasil Sign in
                       PreferenceHandler.saveLogin(true);
+                      PreferenceHandler.saveUserId(
+                        data.id!,
+                      ); //Menyimpan user ID yang login
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => BottomNavigationApp(),
+                          builder: (_) =>
+                              BottomNavigationApp(currentUser: data),
                         ),
                       );
                       //Gagal Sign in
@@ -289,19 +293,10 @@ class _SigninPageState extends State<SigninPage> {
       width: double.infinity,
       height: 56,
       decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(26),
         gradient: const LinearGradient(
           colors: [Color(0xff2f6b6a), Color(0xff40E0D0)],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
         ),
-        borderRadius: BorderRadius.circular(26),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
-          ),
-        ],
       ),
       child: ElevatedButton(
         onPressed: onPressed,

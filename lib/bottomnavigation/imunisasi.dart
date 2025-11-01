@@ -92,16 +92,16 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(18.0),
+          padding: const EdgeInsets.all(22.0),
           child: Column(
             children: [
               //Header Jadwal Imunisasi
               _buildHeader(),
-              SizedBox(height: 15),
+              height(15),
 
               //Imunisasi Berikutnya
               _buildNextImunisasi(),
-              SizedBox(height: 15),
+              height(15),
 
               //Daftar Jadwal Imunisasi
               Column(
@@ -113,11 +113,11 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 12),
+              height(15),
 
               //List Jenis Imunisasi
               _buildListImunisasi(),
-              SizedBox(height: 15),
+              height(15),
 
               //Info Notifikasi Penting
               _buildImportantNotification(),
@@ -154,7 +154,7 @@ Widget _buildHeader() {
         ),
         child: Icon(Icons.calendar_month, color: Color(0xFF2F6B6A), size: 24),
       ),
-      const SizedBox(width: 12),
+      width(12),
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -270,7 +270,7 @@ Widget _buildListImunisasi() {
           padding: const EdgeInsets.only(top: 2),
           // child: _getStatusIcon(immunization.status),
         ),
-        const SizedBox(width: 12),
+        height(12),
 
         // Content
         Expanded(
@@ -310,7 +310,7 @@ Widget _buildListImunisasi() {
                   // _getStatusBadge(immunization.status),
                 ],
               ),
-              const SizedBox(height: 8),
+              height(8),
 
               // Date
               Text(
@@ -347,8 +347,10 @@ Widget _buildImportantNotification() {
       ],
     ),
     child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(Icons.warning),
@@ -375,3 +377,7 @@ Widget _buildImportantNotification() {
     ),
   );
 }
+
+//Sized Box
+SizedBox height(double h) => SizedBox(height: h);
+SizedBox width(double w) => SizedBox(width: w);
