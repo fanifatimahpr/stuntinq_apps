@@ -26,28 +26,29 @@ class _SplashPageState extends State<SplashPage> {
       bool? isLogin = await PreferenceHandler.getLogin();
       int? userId = await PreferenceHandler.getUserId(); //get user ID (login)
 
-      // var isLogin = await PreferenceHandler.getLogin();
-      // UserModel? user =
-      // await PreferenceHandler.getUserId(); //get user ID (login)
+      //Jika sudah ada user id langsung ke bottom navigation
+      //  if (userId != null) {
+      //   UserModel? user = await DBHelper.getUserById(userId);
 
-      if (isLogin == true && userId != null) {
-        UserModel? user = await DBHelper.getUserById(userId);
-        if (user != null) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BottomNavigationApp(currentUser: user),
-            ),
-            (route) => false,
-          );
-          return;
-        }
+      //   if (user != null) {
+      //     Navigator.pushAndRemoveUntil(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => BottomNavigationApp(currentUser: user),
+      //       ),
+      //       (route) => false,
+      //     );
+      //     return;
+      //
+
+      //Jika sudah ada user id namun harus ke sign in lagi
+      if (userId != null) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => SigninPage()),
+          (route) => false,
+        );
       }
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => SigninPage()),
-        (route) => false,
-      );
     });
   }
 

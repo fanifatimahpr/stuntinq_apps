@@ -149,8 +149,8 @@ class _SigninPageState extends State<SigninPage> {
                       password: _passwordController.text,
                     );
 
+                    //Jika Berhasil Sign in
                     if (data != null) {
-                      //Berhasil Sign in
                       PreferenceHandler.saveLogin(true);
                       PreferenceHandler.saveUserId(
                         data.id!,
@@ -162,16 +162,19 @@ class _SigninPageState extends State<SigninPage> {
                               BottomNavigationApp(currentUser: data),
                         ),
                       );
-                      //Gagal Sign in
+                      //Jika Gagal Sign in
                     } else {
                       Fluttertoast.showToast(msg: "Email or password invalid");
                     }
-                    //Pengisian Form Kurang
+                    //Jika Pengisian Data Form Kurang
                   } else {
                     showDialog(
                       context: context,
                       builder: (context) {
                         return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                           title: const Text("Validation Error"),
                           content: const Text("Please fill all fields"),
                           actions: [

@@ -27,7 +27,7 @@ class _BottomNavigatorAppState extends State<BottomNavigationApp> {
     ImunisasiPage(),
     EdukasiPage(),
     PetaPage(),
-    // ProfilePage(user: currentUser), // Mengirim user login
+    ProfilePage(user: currentUser), // Mengirim user login
   ];
 
   void _onItemTapped(int Index) {

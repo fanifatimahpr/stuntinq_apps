@@ -12,25 +12,39 @@ class _EdukasiPageState extends State<EdukasiPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(22.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //Header
-              _buildHeader(),
-              height(15),
+        child: Stack(children: [_buildBackground(), _buildLayer()]),
+      ),
+    );
+  }
 
-              //Progress Edukasi
-              _buildProgressEducation(),
-              height(15),
+  Widget _buildBackground() {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: const Color(0xffD4F2F1),
+    );
+  }
 
-              //List Modul Edukasi
+  Widget _buildLayer() {
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(22.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //Header
+            _buildHeader(),
+            height(20),
 
-              //Frequently Ask Questions
-              _buildFAQ(),
-            ],
-          ),
+            //Progress Edukasi
+            _buildProgressEducation(),
+            height(15),
+
+            //List Modul Edukasi
+
+            //Frequently Ask Questions
+            _buildFAQ(),
+          ],
         ),
       ),
     );
@@ -102,27 +116,13 @@ Widget _buildProgressEducation() {
       boxShadow: [
         BoxShadow(
           color: Color(0xFF2F6B6A).withOpacity(0.3),
-          blurRadius: 12,
-          offset: Offset(0, 4),
+          blurRadius: 8,
+          offset: Offset(0, 2),
         ),
       ],
     ),
     child: Stack(
       children: [
-        // Decorative circle
-        // Positioned(
-        //   top: -30,
-        //   right: -30,
-        //   child: Container(
-        //     width: 96,
-        //     height: 96,
-        //     decoration: BoxDecoration(
-        //       color: Colors.white.withOpacity(0.1),
-        //       shape: BoxShape.circle,
-        //     ),
-        //   ),
-        // ),
-        // Content
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
