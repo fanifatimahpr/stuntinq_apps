@@ -1,13 +1,12 @@
-// Model Class
-class Immunization {
+class Imunisasi {
   final int id;
   final String name;
   final int ageMonth;
   final String date;
-  final ImmunizationStatus status;
+  final ImunisasiStatus status;
   bool reminder;
 
-  Immunization({
+  Imunisasi({
     required this.id,
     required this.name,
     required this.ageMonth,
@@ -18,8 +17,4 @@ class Immunization {
 }
 
 // Enum
-enum ImmunizationStatus {
-  completed,
-  upcoming,
-  overdue,
-}
+enum ImunisasiStatus { completed, upcoming, overdue }

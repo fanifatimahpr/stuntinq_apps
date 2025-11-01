@@ -1,12 +1,11 @@
-// Model Classes
-class Module {
+class Education {
   final int id;
   final String title;
   final String duration;
   final bool completed;
-  final ModuleType type;
+  final EducationType type;
 
-  Module({
+  Education({
     required this.id,
     required this.title,
     required this.duration,
@@ -15,18 +14,13 @@ class Module {
   });
 }
 
+//Class Question
 class FAQ {
   final String question;
   final String answer;
 
-  FAQ({
-    required this.question,
-    required this.answer,
-  });
+  FAQ({required this.question, required this.answer});
 }
 
 // Enum
-enum ModuleType {
-  video,
-  article,
-}
+enum EducationType { video, article }
