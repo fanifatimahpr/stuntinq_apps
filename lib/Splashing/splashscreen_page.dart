@@ -4,7 +4,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:stuntinq_apps/Database/dbhelper_user.dart';
 import 'package:stuntinq_apps/Model/user_model.dart';
 import 'package:stuntinq_apps/Splashing/signin_page.dart';
-import 'package:stuntinq_apps/bottomnavigation/bottomnavigation.dart';
 import 'package:stuntinq_apps/preference_handler.dart';
 
 class SplashPage extends StatefulWidget {
@@ -27,7 +26,7 @@ class _SplashPageState extends State<SplashPage> {
       int? userId = await PreferenceHandler.getUserId(); //get user ID (login)
 
       //Jika sudah ada user id langsung ke bottom navigation
-      //  if (userId != null) {
+      //  if (isLogin == true && userId != null) {
       //   UserModel? user = await DBHelper.getUserById(userId);
 
       //   if (user != null) {
@@ -42,11 +41,11 @@ class _SplashPageState extends State<SplashPage> {
       //
 
       //Jika sudah ada user id namun harus ke sign in lagi
-      if (isLogin = true && userId != null) {
-        Navigator.pushAndRemoveUntil(
+      if (isLogin == true && userId != null) {
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => SigninPage()),
-          (route) => false,
+          // (route) => false,
         );
       }
     });

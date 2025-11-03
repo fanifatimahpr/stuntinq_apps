@@ -12,17 +12,24 @@ class _DataPageState extends State<DataPage>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _nameController = TextEditingController(text: 'Aira Azzahra');
+  final TextEditingController _nameController = TextEditingController(
+    text: 'Aira Azzahra',
+  );
   final TextEditingController _ageController = TextEditingController(text: '6');
-  final TextEditingController _weightController = TextEditingController(text: '8.3');
-  final TextEditingController _heightController = TextEditingController(text: '67');
-  final TextEditingController _headCircumferenceController = TextEditingController(text: '43.5');
-  
+  final TextEditingController _weightController = TextEditingController(
+    text: '8.3',
+  );
+  final TextEditingController _heightController = TextEditingController(
+    text: '67',
+  );
+  final TextEditingController _headCircumferenceController =
+      TextEditingController(text: '43.5');
+
   String _selectedGender = 'female';
   bool _showSuccess = false;
   late AnimationController _successAnimationController;
-  
- @override
+
+  @override
   void initState() {
     super.initState();
     _successAnimationController = AnimationController(
@@ -31,7 +38,7 @@ class _DataPageState extends State<DataPage>
     );
   }
 
- @override
+  @override
   void dispose() {
     _nameController.dispose();
     _ageController.dispose();
@@ -42,14 +49,14 @@ class _DataPageState extends State<DataPage>
     // super.dispose();
   }
 
-void _handleSubmit() {
+  void _handleSubmit() {
     if (_formKey.currentState!.validate()) {
       HapticFeedback.mediumImpact();
       setState(() {
         _showSuccess = true;
       });
       _successAnimationController.forward();
-      
+
       // Hide success message after 3 seconds
       Future.delayed(const Duration(seconds: 3), () {
         if (mounted) {
@@ -79,15 +86,15 @@ void _handleSubmit() {
     );
   }
 
-   Widget _buildBackground() {
+  Widget _buildBackground() {
     return Container(
       width: double.infinity,
       height: double.infinity,
       color: const Color(0xffD4F2F1),
     );
-
   }
-  Widget _buildLayer() {    
+
+  Widget _buildLayer() {
     return SafeArea(
       // child: Container(
       //             decoration: const BoxDecoration(
@@ -115,24 +122,23 @@ void _handleSubmit() {
             height(16),
 
             //Form Input Data Anak
-             _buildInputForm(),
-              height(16),
-             
+            _buildInputForm(),
+            height(16),
+
             //Save Button
             _buildSaveButton(),
-             height(26),
+            height(26),
 
             //Tips
-            _buildTips()
-
-            ]
-            )
-            )
-            );
-        
+            _buildTips(),
+          ],
+        ),
+      ),
+    );
   }
- Widget _buildHeader (){
-return Row(
+
+  Widget _buildHeader() {
+    return Row(
       children: [
         Container(
           padding: const EdgeInsets.all(12),
@@ -145,7 +151,7 @@ return Row(
                 Color(0xFF2F6B6A).withOpacity(0.3),
               ],
             ),
-            borderRadius: BorderRadius.circular(22),
+            borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -180,17 +186,15 @@ return Row(
         ),
       ],
     );
- } 
-Widget _buildProfilAnak (){
-  return Container(
+  }
+
+  Widget _buildProfilAnak() {
+    return Container(
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF2F6B6A),
-            Color(0xFF40E0D0),
-          ],
+          colors: [Color(0xFF2F6B6A), Color(0xFF40E0D0)],
         ),
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
@@ -203,8 +207,8 @@ Widget _buildProfilAnak (){
       ),
       child: Stack(
         children: [
-Padding(
-  padding: const EdgeInsets.all(24),
+          Padding(
+            padding: const EdgeInsets.all(24),
             child: Column(
               children: [
                 Row(
@@ -251,10 +255,7 @@ Padding(
                                 colors: [Color(0xFFFBBF24), Color(0xFFF59E0B)],
                               ),
                               shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 2,
-                              ),
+                              border: Border.all(color: Colors.white, width: 2),
                             ),
                             child: const Icon(
                               Icons.star,
@@ -266,16 +267,16 @@ Padding(
                       ],
                     ),
                     width(16),
-                    
+
                     // Nama & Info
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            _nameController.text.isEmpty 
-                              ? 'Nama Anak' 
-                              : _nameController.text,
+                            _nameController.text.isEmpty
+                                ? 'Nama Anak'
+                                : _nameController.text,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -309,21 +310,18 @@ Padding(
                     ),
                   ],
                 ),
-                
+
                 // Divider
                 height(16),
                 Divider(color: Colors.white.withOpacity(0.2)),
                 height(16),
-                
+
                 // Status
                 Row(
                   children: [
                     const Text(
                       'Status: ',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 13,
-                      ),
+                      style: TextStyle(color: Colors.white70, fontSize: 13),
                     ),
                     Text(
                       _getGrowthStatus(),
@@ -333,7 +331,7 @@ Padding(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    width(4) ,        
+                    width(4),
                   ],
                 ),
               ],
@@ -342,7 +340,7 @@ Padding(
         ],
       ),
     );
-}
+  }
 
   Widget _buildStatChip(IconData icon, String text) {
     return Container(
@@ -368,16 +366,18 @@ Padding(
       ),
     );
   }
- String _getInitials(String name) {
+
+  String _getInitials(String name) {
     if (name.isEmpty) return 'NA';
-    
+
     List<String> parts = name.trim().split(' ');
     if (parts.length >= 2) {
       return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
     }
     return name.substring(0, name.length >= 2 ? 2 : 1).toUpperCase();
   }
-  Widget _buildInputForm (){     
+
+  Widget _buildInputForm() {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -412,8 +412,9 @@ Padding(
                 }
                 return null;
               },
-            ),height(16),
-            
+            ),
+            height(16),
+
             // Age & Gender Row
             Row(
               children: [
@@ -433,20 +434,20 @@ Padding(
                   ),
                 ),
                 width(12),
-                Expanded(
-                  child: _buildGenderSelector(),
-                ),
+                Expanded(child: _buildGenderSelector()),
               ],
             ),
             height(16),
-            
+
             // Weight Input
             _buildInputField(
               controller: _weightController,
               label: 'Berat Badan (kg)',
               icon: Icons.monitor_weight_outlined,
               hint: '0.0',
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Berat badan tidak boleh kosong';
@@ -455,14 +456,16 @@ Padding(
               },
             ),
             height(16),
-            
+
             // Height Input
             _buildInputField(
               controller: _heightController,
               label: 'Tinggi Badan (cm)',
               icon: Icons.straighten,
               hint: '0.0',
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Tinggi badan tidak boleh kosong';
@@ -470,15 +473,17 @@ Padding(
                 return null;
               },
             ),
-           height(16),
-            
+            height(16),
+
             // Head Circumference Input
             _buildInputField(
               controller: _headCircumferenceController,
               label: 'Lingkar Kepala (cm)',
               icon: Icons.child_care_outlined,
               hint: '0.0',
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Lingkar kepala tidak boleh kosong';
@@ -491,6 +496,7 @@ Padding(
       ),
     );
   }
+
   Widget _buildInputField({
     required TextEditingController controller,
     required String label,
@@ -504,11 +510,7 @@ Padding(
       children: [
         Row(
           children: [
-            Icon(
-              icon,
-              size: 18,
-              color: Color(0xFF40E0D0),
-            ),
+            Icon(icon, size: 18, color: Color(0xFF40E0D0)),
             width(8),
             Text(
               label,
@@ -520,21 +522,15 @@ Padding(
             ),
           ],
         ),
-       height(8),
+        height(8),
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
           validator: validator,
-          style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-          ),
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(
-              color: Colors.grey[400],
-              fontSize: 15,
-            ),
+            hintStyle: TextStyle(color: Colors.grey[400], fontSize: 15),
             filled: true,
             fillColor: Colors.white,
             contentPadding: const EdgeInsets.symmetric(
@@ -557,39 +553,30 @@ Padding(
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(22),
-              borderSide: const BorderSide(
-                color: Color(0xFF2F6B6A),
-                width: 2,
-              ),
+              borderSide: const BorderSide(color: Color(0xFF2F6B6A), width: 2),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(22),
-              borderSide: const BorderSide(
-                color: Colors.red,
-                width: 1.5,
-              ),
+              borderSide: const BorderSide(color: Colors.red, width: 1.5),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(22),
-              borderSide: const BorderSide(
-                color: Colors.red,
-                width: 2,
-              ),
+              borderSide: const BorderSide(color: Colors.red, width: 2),
             ),
           ),
         ),
       ],
     );
   }
+
   Widget _buildGenderSelector() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [Row(
-        children: [
-          Icon(Icons.male,
-          size: 22,
-          color: Color(0xFF40E0D0),),
-          Text(
+      children: [
+        Row(
+          children: [
+            Icon(Icons.male, size: 22, color: Color(0xFF40E0D0)),
+            Text(
               'Jenis Kelamin',
               style: TextStyle(
                 color: Color(0xFF2F6B6A),
@@ -597,8 +584,8 @@ Padding(
                 fontWeight: FontWeight.w600,
               ),
             ),
-        ],
-      ),
+          ],
+        ),
         height(8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 13),
@@ -624,14 +611,8 @@ Padding(
                 color: Colors.black87,
               ),
               items: const [
-                DropdownMenuItem(
-                  value: 'male',
-                  child: Text('👦 Laki-laki'),
-                ),
-                DropdownMenuItem(
-                  value: 'female',
-                  child: Text('👧 Perempuan'),
-                ),
+                DropdownMenuItem(value: 'male', child: Text('👦 Laki-laki')),
+                DropdownMenuItem(value: 'female', child: Text('👧 Perempuan')),
               ],
               onChanged: (value) {
                 if (value != null) {
@@ -646,7 +627,8 @@ Padding(
       ],
     );
   }
- Widget _buildSaveButton() {
+
+  Widget _buildSaveButton() {
     return Container(
       width: double.infinity,
       height: 56,
@@ -670,7 +652,7 @@ Padding(
           borderRadius: BorderRadius.circular(26),
           child: const Center(
             child: Text(
-          'Simpan Data',
+              'Simpan Data',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
@@ -682,7 +664,6 @@ Padding(
       ),
     );
   }
-
 
   Widget _buildTips() {
     return Container(
@@ -711,14 +692,11 @@ Padding(
                   color: Color.fromARGB(255, 219, 163, 89).withOpacity(0.3),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.lightbulb_outline,
-                  size: 20,
-                  color: Color(0xFF92400E),
-                ),
+                child: Text('💡', style: TextStyle(fontSize: 16)),
               ),
               width(12),
               const Text(
-                'Tips!',
+                'Tips',
                 style: TextStyle(
                   color: Color(0xFF92400E),
                   fontSize: 15,
@@ -766,9 +744,8 @@ Padding(
       ],
     );
   }
+}
 
-  }
-  
 //Sized Box
 SizedBox height(double h) => SizedBox(height: h);
 SizedBox width(double w) => SizedBox(width: w);

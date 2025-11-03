@@ -8,8 +8,7 @@ class EdukasiPage extends StatefulWidget {
   State<EdukasiPage> createState() => _EdukasiPageState();
 }
 
-class _EdukasiPageState extends State<EdukasiPage> { 
-
+class _EdukasiPageState extends State<EdukasiPage> {
   List<FAQ> faqs = [
     FAQ(
       question: 'Apa perbedaan stunting dan gizi buruk?',
@@ -33,9 +32,8 @@ class _EdukasiPageState extends State<EdukasiPage> {
     ),
   ];
 
-  // int get completedEducation=> modul.where((m) => m.completed).length;
+  // int get completedEducation => modul.where((m) => m.completed).length;
   // double get progress => (completedEducation / modul.length);
-
 
   @override
   Widget build(BuildContext context) {
@@ -70,10 +68,12 @@ class _EdukasiPageState extends State<EdukasiPage> {
             height(15),
 
             //List Modul Edukasi
-            ...modul.map((modul) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12.0),
-                    child: _buildListModul(modul),
-                  )),
+            ...modul.map(
+              (modul) => Padding(
+                padding: const EdgeInsets.only(bottom: 12.0),
+                child: _buildListModul(modul),
+              ),
+            ),
 
             // _buildListModul(modul),
             height(20),
@@ -86,129 +86,129 @@ class _EdukasiPageState extends State<EdukasiPage> {
     );
   }
 
-
-Widget _buildHeader() {
-  return Row(
-    children: [
-      Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF40E0D0).withOpacity(0.3),
-              Color(0xFF2F6B6A).withOpacity(0.3),
+  Widget _buildHeader() {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF40E0D0).withOpacity(0.3),
+                Color(0xFF2F6B6A).withOpacity(0.3),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 8,
+                offset: Offset(0, 2),
+              ),
             ],
           ),
-          borderRadius: BorderRadius.circular(22),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: Offset(0, 2),
-            ),
-          ],
+          child: Icon(Icons.menu_book, color: Color(0xFF2F6B6A), size: 24),
         ),
-        child: Icon(Icons.menu_book, color: Color(0xFF2F6B6A), size: 24),
-      ),
-      width(12),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Modul Edukasi',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF2F6B6A),
-            ),
-          ),
-          Text(
-            'Pelajari tentang stunting',
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey[600],
-            ),
-          ),
-        ],
-      ),
-    ],
-  );
-}
-
-Widget _buildProgressEducation() {
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Color(0xFF2F6B6A), Color(0xFF359a99), Color(0xFF40E0D0)],
-      ),
-      borderRadius: BorderRadius.circular(22),
-      boxShadow: [
-        BoxShadow(
-          color: Color(0xFF2F6B6A).withOpacity(0.3),
-          blurRadius: 8,
-          offset: Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Stack(
-      children: [
+        width(12),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Progres Pembelajaran',
+              'Modul Edukasi',
               style: TextStyle(
-                fontSize: 13,
-                color: Colors.white.withOpacity(0.9),
-                fontWeight: FontWeight.w500,
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF2F6B6A),
               ),
             ),
-            height(12),
-            // Row(
-            //   children: [
-            //     Expanded(
-            //       child: ClipRRect(
-            //         borderRadius: BorderRadius.circular(10),
-            //         child: LinearProgressIndicator(
-            //           // value: progress,
-            //           backgroundColor: Colors.white.withOpacity(0.3),
-            //           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            //           minHeight: 8,
-            //         ),
-            //       ),
-            //     ),
-            //     const SizedBox(width: 12),
-            //     Text('',
-            //       // '$completedModules/${modules.length}',
-            //       style: TextStyle(
-            //         fontSize: 13,
-            //         color: Colors.white,
-            //         fontWeight: FontWeight.w600,
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            const SizedBox(height: 8),
             Text(
-              'Terus belajar untuk lindungi anak dari stunting!',
+              'Pelajari tentang stunting',
               style: TextStyle(
-                fontSize: 12,
-                color: Colors.white.withOpacity(0.95),
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey[600],
               ),
             ),
           ],
         ),
       ],
-    ),
-  );
-}
+    );
+  }
+
+  Widget _buildProgressEducation() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF2F6B6A), Color(0xFF359a99), Color(0xFF40E0D0)],
+        ),
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0xFF2F6B6A).withOpacity(0.3),
+            blurRadius: 8,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Progres Pembelajaran',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.white.withOpacity(0.9),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              height(12),
+              // Row(
+              //   children: [
+              //     Expanded(
+              //       child: ClipRRect(
+              //         borderRadius: BorderRadius.circular(10),
+              //         child: LinearProgressIndicator(
+              //           // value: progress,
+              //           backgroundColor: Colors.white.withOpacity(0.3),
+              //           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              //           minHeight: 8,
+              //         ),
+              //       ),
+              //     ),
+              //     const SizedBox(width: 12),
+              //     Text(
+              //       '',
+              //       // '$completedEducation/${modul.length}',
+              //       style: TextStyle(
+              //         fontSize: 13,
+              //         color: Colors.white,
+              //         fontWeight: FontWeight.w600,
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              const SizedBox(height: 8),
+              Text(
+                'Terus belajar untuk lindungi anak dari stunting!',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.white.withOpacity(0.95),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildListModul(Education modul) {
     return InkWell(
@@ -216,14 +216,14 @@ Widget _buildProgressEducation() {
         print('Tapped on module: ${modul.title}');
       },
       //Jika mau ontap ke next page
-//       onTap: () {
-//   Navigator.push(
-//     context,
-//     MaterialPageRoute(
-//       builder: (context) => ModulDetailPage(modul: modul),
-//     ),
-//   );
-// },
+      //       onTap: () {
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => ModulDetailPage(modul: modul),
+      //     ),
+      //   );
+      // },
       borderRadius: BorderRadius.circular(22),
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -254,16 +254,13 @@ Widget _buildProgressEducation() {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: modul.type == EducationType.video
-                      ? [
-                          Color(0xFFFEE2E2),
-                          Color(0xFFFCE7F3),
-                        ]
+                      ? [Color(0xFFFEE2E2), Color(0xFFFCE7F3)]
                       : [
                           Color(0xFF40E0D0).withOpacity(0.2),
                           Color(0xFF2F6B6A).withOpacity(0.2),
                         ],
                 ),
-                borderRadius: BorderRadius.circular(22),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 modul.type == EducationType.video
@@ -324,7 +321,9 @@ Widget _buildProgressEducation() {
                     const SizedBox(height: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Color(0xFFDCFCE7),
                         borderRadius: BorderRadius.circular(22),
@@ -347,34 +346,39 @@ Widget _buildProgressEducation() {
       ),
     );
   }
-  
 
-Widget _buildFAQ() {
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.white.withOpacity(0.8),
-      borderRadius: BorderRadius.circular(22),
-      border: Border.all(color: Color(0xFF40E0D0).withOpacity(0.2), width: 1),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.05),
-          blurRadius: 12,
-          offset: Offset(0, 4),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'FAQ - Pertanyaan Umum',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF2F6B6A),
+  Widget _buildFAQ() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.8),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: Color(0xFF40E0D0).withOpacity(0.2), width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 12,
+            offset: Offset(0, 4),
           ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text('❓', style: TextStyle(fontSize: 16)),
+              width(10),
+              Text(
+                'FAQ - Pertanyaan Umum',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF2F6B6A),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 12),
           ...faqs.asMap().entries.map((entry) {
@@ -386,22 +390,15 @@ Widget _buildFAQ() {
                 _buildFAQItem(faq),
               ],
             );
-          }
-          )
-          .toList(
-        ),
-      ],
-    ),
-  );
-}
-
-  Widget _buildFAQItem(FAQ faq) {
-    return FAQExpansionTile(
-      question: faq.question,
-      answer: faq.answer,
+          }).toList(),
+        ],
+      ),
     );
   }
 
+  Widget _buildFAQItem(FAQ faq) {
+    return FAQExpansionTile(question: faq.question, answer: faq.answer);
+  }
 }
 
 // Class baru untuk FAQ
@@ -426,17 +423,10 @@ class _FAQExpansionTileState extends State<FAQExpansionTile> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.grey[200]!,
-            width: 1,
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: Colors.grey[200]!, width: 1)),
       ),
       child: Theme(
-        data: Theme.of(context).copyWith(
-          dividerColor: Colors.transparent,
-        ),
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           tilePadding: EdgeInsets.zero,
           title: Text(
@@ -475,9 +465,6 @@ class _FAQExpansionTileState extends State<FAQExpansionTile> {
   }
 }
 
-
-
 //Sized Box
 SizedBox height(double h) => SizedBox(height: h);
 SizedBox width(double w) => SizedBox(width: w);
-  
