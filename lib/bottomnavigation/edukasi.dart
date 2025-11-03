@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stuntinq_apps/Model/edukasi_model.dart';
 
 class EdukasiPage extends StatefulWidget {
   const EdukasiPage({super.key});
@@ -8,6 +9,29 @@ class EdukasiPage extends StatefulWidget {
 }
 
 class _EdukasiPageState extends State<EdukasiPage> {
+  List<FAQ> faqs = [
+    FAQ(
+      question: 'Apa perbedaan stunting dan gizi buruk?',
+      answer:
+          'Stunting adalah kondisi gagal tumbuh pada anak karena kekurangan gizi kronis, yang ditandai dengan tinggi badan di bawah standar. Gizi buruk lebih umum dan dapat mempengaruhi berat badan dan kondisi kesehatan secara keseluruhan.',
+    ),
+    FAQ(
+      question: 'Kapan periode kritis pencegahan stunting?',
+      answer:
+          'Periode kritis adalah 1000 hari pertama kehidupan, mulai dari masa kehamilan hingga anak berusia 2 tahun. Nutrisi yang baik pada periode ini sangat penting untuk mencegah stunting.',
+    ),
+    FAQ(
+      question: 'Apa saja tanda-tanda anak stunting?',
+      answer:
+          'Tanda utama adalah tinggi badan lebih pendek dari standar usianya. Tanda lain: pertumbuhan lambat, wajah tampak lebih muda, perkembangan kognitif terlambat, dan sistem imun lemah.',
+    ),
+    FAQ(
+      question: 'Bagaimana cara mencegah stunting?',
+      answer:
+          'Cara mencegah: nutrisi seimbang saat hamil, ASI eksklusif 6 bulan, MPASI bergizi, imunisasi lengkap, sanitasi baik, dan pemantauan pertumbuhan rutin di posyandu.',
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -173,7 +197,13 @@ Widget _buildProgressEducation() {
     ),
   );
 }
+// Widget _buildListModul (){
+//   return Column(
+//     children: [
 
+//     ],
+//   )
+// }
 Widget _buildFAQ() {
   return Container(
     width: double.infinity,

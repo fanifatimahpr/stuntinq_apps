@@ -15,72 +15,72 @@
 // }
 
 // class _ImmunizationReminderPageState extends State<ImmunizationReminderPage> {
-  // List<Immunization> immunizations = [
-  //   Immunization(
-  //     id: 1,
-  //     name: 'Hepatitis B',
-  //     ageMonth: 0,
-  //     date: '15 Jan 2025',
-  //     status: ImmunizationStatus.completed,
-  //     reminder: false,
-  //   ),
-  //   Immunization(
-  //     id: 2,
-  //     name: 'BCG',
-  //     ageMonth: 1,
-  //     date: '15 Feb 2025',
-  //     status: ImmunizationStatus.completed,
-  //     reminder: false,
-  //   ),
-  //   Immunization(
-  //     id: 3,
-  //     name: 'DPT-HB-Hib 1',
-  //     ageMonth: 2,
-  //     date: '15 Mar 2025',
-  //     status: ImmunizationStatus.upcoming,
-  //     reminder: true,
-  //   ),
-  //   Immunization(
-  //     id: 4,
-  //     name: 'Polio 1',
-  //     ageMonth: 2,
-  //     date: '15 Mar 2025',
-  //     status: ImmunizationStatus.upcoming,
-  //     reminder: true,
-  //   ),
-  //   Immunization(
-  //     id: 5,
-  //     name: 'DPT-HB-Hib 2',
-  //     ageMonth: 3,
-  //     date: '15 Apr 2025',
-  //     status: ImmunizationStatus.upcoming,
-  //     reminder: false,
-  //   ),
-  //   Immunization(
-  //     id: 6,
-  //     name: 'Polio 2',
-  //     ageMonth: 3,
-  //     date: '15 Apr 2025',
-  //     status: ImmunizationStatus.upcoming,
-  //     reminder: false,
-  //   ),
-  //   Immunization(
-  //     id: 7,
-  //     name: 'DPT-HB-Hib 3',
-  //     ageMonth: 4,
-  //     date: '15 Mei 2025',
-  //     status: ImmunizationStatus.upcoming,
-  //     reminder: false,
-  //   ),
-  //   Immunization(
-  //     id: 8,
-  //     name: 'Polio 3',
-  //     ageMonth: 4,
-  //     date: '15 Mei 2025',
-  //     status: ImmunizationStatus.upcoming,
-  //     reminder: false,
-  //   ),
-  // ];
+//   List<Immunization> immunizations = [
+//     Immunization(
+//       id: 1,
+//       name: 'Hepatitis B',
+//       ageMonth: 0,
+//       date: '15 Jan 2025',
+//       status: ImmunizationStatus.completed,
+//       reminder: false,
+//     ),
+//     Immunization(
+//       id: 2,
+//       name: 'BCG',
+//       ageMonth: 1,
+//       date: '15 Feb 2025',
+//       status: ImmunizationStatus.completed,
+//       reminder: false,
+//     ),
+//     Immunization(
+//       id: 3,
+//       name: 'DPT-HB-Hib 1',
+//       ageMonth: 2,
+//       date: '15 Mar 2025',
+//       status: ImmunizationStatus.upcoming,
+//       reminder: true,
+//     ),
+//     Immunization(
+//       id: 4,
+//       name: 'Polio 1',
+//       ageMonth: 2,
+//       date: '15 Mar 2025',
+//       status: ImmunizationStatus.upcoming,
+//       reminder: true,
+//     ),
+//     Immunization(
+//       id: 5,
+//       name: 'DPT-HB-Hib 2',
+//       ageMonth: 3,
+//       date: '15 Apr 2025',
+//       status: ImmunizationStatus.upcoming,
+//       reminder: false,
+//     ),
+//     Immunization(
+//       id: 6,
+//       name: 'Polio 2',
+//       ageMonth: 3,
+//       date: '15 Apr 2025',
+//       status: ImmunizationStatus.upcoming,
+//       reminder: false,
+//     ),
+//     Immunization(
+//       id: 7,
+//       name: 'DPT-HB-Hib 3',
+//       ageMonth: 4,
+//       date: '15 Mei 2025',
+//       status: ImmunizationStatus.upcoming,
+//       reminder: false,
+//     ),
+//     Immunization(
+//       id: 8,
+//       name: 'Polio 3',
+//       ageMonth: 4,
+//       date: '15 Mei 2025',
+//       status: ImmunizationStatus.upcoming,
+//       reminder: false,
+//     ),
+//   ];
 
 //   void toggleReminder(int id) {
 //     setState(() {
@@ -113,15 +113,15 @@
 //               const SizedBox(height: 20),
 
 //               // List Title
-              // Text(
-              //   'Daftar Jadwal Imunisasi',
-              //   style: TextStyle(
-              //     fontSize: 14,
-              //     fontWeight: FontWeight.w600,
-              //     color: Color(0xFF2F6B6A),
-              //   ),
-              // ),
-              // const SizedBox(height: 12),
+//               Text(
+//                 'Daftar Jadwal Imunisasi',
+//                 style: TextStyle(
+//                   fontSize: 14,
+//                   fontWeight: FontWeight.w600,
+//                   color: Color(0xFF2F6B6A),
+//                 ),
+//               ),
+//               const SizedBox(height: 12),
 
 //               // Immunization List
 //               ...immunizations.map((immunization) => Padding(
@@ -140,221 +140,221 @@
 //     );
 //   }
 
-  // Widget _buildHeader() {
-  //   return Row(
-  //     children: [
-  //       Container(
-  //         padding: const EdgeInsets.all(12),
-  //         decoration: BoxDecoration(
-  //           gradient: LinearGradient(
-  //             begin: Alignment.topLeft,
-  //             end: Alignment.bottomRight,
-  //             colors: [
-  //               Color(0xFF40E0D0).withOpacity(0.3),
-  //               Color(0xFF2F6B6A).withOpacity(0.3),
-  //             ],
-  //           ),
-  //           borderRadius: BorderRadius.circular(16),
-  //           boxShadow: [
-  //             BoxShadow(
-  //               color: Colors.black.withOpacity(0.1),
-  //               blurRadius: 8,
-  //               offset: Offset(0, 2),
-  //             ),
-  //           ],
-  //         ),
-  //         child: Icon(
-  //           Icons.calendar_month,
-  //           color: Color(0xFF2F6B6A),
-  //           size: 24,
-  //         ),
-  //       ),
-  //       const SizedBox(width: 12),
-  //       Column(
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           Text(
-  //             'Jadwal Imunisasi',
-  //             style: TextStyle(
-  //               fontSize: 18,
-  //               fontWeight: FontWeight.w700,
-  //               color: Color(0xFF2F6B6A),
-  //             ),
-  //           ),
-  //           Text(
-  //             '$upcomingCount jadwal akan datang',
-  //             style: TextStyle(
-  //               fontSize: 13,
-  //               color: Colors.grey[600],
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ],
-  //   );
-  // }
+//   Widget _buildHeader() {
+//     return Row(
+//       children: [
+//         Container(
+//           padding: const EdgeInsets.all(12),
+//           decoration: BoxDecoration(
+//             gradient: LinearGradient(
+//               begin: Alignment.topLeft,
+//               end: Alignment.bottomRight,
+//               colors: [
+//                 Color(0xFF40E0D0).withOpacity(0.3),
+//                 Color(0xFF2F6B6A).withOpacity(0.3),
+//               ],
+//             ),
+//             borderRadius: BorderRadius.circular(16),
+//             boxShadow: [
+//               BoxShadow(
+//                 color: Colors.black.withOpacity(0.1),
+//                 blurRadius: 8,
+//                 offset: Offset(0, 2),
+//               ),
+//             ],
+//           ),
+//           child: Icon(
+//             Icons.calendar_month,
+//             color: Color(0xFF2F6B6A),
+//             size: 24,
+//           ),
+//         ),
+//         const SizedBox(width: 12),
+//         Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Text(
+//               'Jadwal Imunisasi',
+//               style: TextStyle(
+//                 fontSize: 18,
+//                 fontWeight: FontWeight.w700,
+//                 color: Color(0xFF2F6B6A),
+//               ),
+//             ),
+//             Text(
+//               '$upcomingCount jadwal akan datang',
+//               style: TextStyle(
+//                 fontSize: 13,
+//                 color: Colors.grey[600],
+//               ),
+//             ),
+//           ],
+//         ),
+//       ],
+//     );
+//   }
 
 //   Widget _buildNextImmunizationCard() {
-    // return Container(
-    //   width: double.infinity,
-    //   padding: const EdgeInsets.all(20),
-    //   decoration: BoxDecoration(
-    //     gradient: LinearGradient(
-    //       begin: Alignment.topLeft,
-    //       end: Alignment.bottomRight,
-    //       colors: [
-    //         Color(0xFF2F6B6A),
-    //         Color(0xFF359a99),
-    //         Color(0xFF40E0D0),
-    //       ],
-    //     ),
-    //     borderRadius: BorderRadius.circular(16),
-    //     boxShadow: [
-    //       BoxShadow(
-    //         color: Color(0xFF2F6B6A).withOpacity(0.3),
-    //         blurRadius: 12,
-    //         offset: Offset(0, 4),
-    //       ),
-    //     ],
-    //   ),
-    //   child: Stack(
-    //     children: [
-    //       // Decorative circle
-    //       Positioned(
-    //         top: -30,
-    //         right: -30,
-    //         child: Container(
-    //           width: 96,
-    //           height: 96,
-    //           decoration: BoxDecoration(
-    //             color: Colors.white.withOpacity(0.1),
-    //             shape: BoxShape.circle,
-    //           ),
-    //         ),
-    //       ),
-  //         // Content
-  //         Row(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             Icon(
-  //               Icons.notifications_active,
-  //               color: Colors.white,
-  //               size: 24,
-  //             ),
-  //             const SizedBox(width: 12),
-  //             Expanded(
-  //               child: Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 children: [
-  //                   Text(
-  //                     'Imunisasi Berikutnya',
-  //                     style: TextStyle(
-  //                       fontSize: 13,
-  //                       color: Colors.white.withOpacity(0.9),
-  //                       fontWeight: FontWeight.w500,
-  //                     ),
-  //                   ),
-  //                   const SizedBox(height: 4),
-  //                   Text(
-  //                     'DPT-HB-Hib 1 & Polio 1',
-  //                     style: TextStyle(
-  //                       fontSize: 18,
-  //                       color: Colors.white,
-  //                       fontWeight: FontWeight.w700,
-  //                     ),
-  //                   ),
-  //                   const SizedBox(height: 4),
-  //                   Text(
-  //                     '15 Maret 2025 • 2 hari lagi',
-  //                     style: TextStyle(
-  //                       fontSize: 13,
-  //                       color: Colors.white.withOpacity(0.95),
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+//     return Container(
+//       width: double.infinity,
+//       padding: const EdgeInsets.all(20),
+//       decoration: BoxDecoration(
+//         gradient: LinearGradient(
+//           begin: Alignment.topLeft,
+//           end: Alignment.bottomRight,
+//           colors: [
+//             Color(0xFF2F6B6A),
+//             Color(0xFF359a99),
+//             Color(0xFF40E0D0),
+//           ],
+//         ),
+//         borderRadius: BorderRadius.circular(16),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Color(0xFF2F6B6A).withOpacity(0.3),
+//             blurRadius: 12,
+//             offset: Offset(0, 4),
+//           ),
+//         ],
+//       ),
+//       child: Stack(
+//         children: [
+//           // Decorative circle
+//           Positioned(
+//             top: -30,
+//             right: -30,
+//             child: Container(
+//               width: 96,
+//               height: 96,
+//               decoration: BoxDecoration(
+//                 color: Colors.white.withOpacity(0.1),
+//                 shape: BoxShape.circle,
+//               ),
+//             ),
+//           ),
+//           // Content
+//           Row(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Icon(
+//                 Icons.notifications_active,
+//                 color: Colors.white,
+//                 size: 24,
+//               ),
+//               const SizedBox(width: 12),
+//               Expanded(
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Text(
+//                       'Imunisasi Berikutnya',
+//                       style: TextStyle(
+//                         fontSize: 13,
+//                         color: Colors.white.withOpacity(0.9),
+//                         fontWeight: FontWeight.w500,
+//                       ),
+//                     ),
+//                     const SizedBox(height: 4),
+//                     Text(
+//                       'DPT-HB-Hib 1 & Polio 1',
+//                       style: TextStyle(
+//                         fontSize: 18,
+//                         color: Colors.white,
+//                         fontWeight: FontWeight.w700,
+//                       ),
+//                     ),
+//                     const SizedBox(height: 4),
+//                     Text(
+//                       '15 Maret 2025 • 2 hari lagi',
+//                       style: TextStyle(
+//                         fontSize: 13,
+//                         color: Colors.white.withOpacity(0.95),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
 
-  // Widget _buildImmunizationCard(Immunization immunization) {
-  //   return Container(
-  //     padding: const EdgeInsets.all(16),
-  //     decoration: BoxDecoration(
-  //       color: Colors.white.withOpacity(0.8),
-  //       borderRadius: BorderRadius.circular(12),
-  //       border: Border.all(
-  //         color: Color(0xFF40E0D0).withOpacity(0.2),
-  //         width: 1,
-  //       ),
-  //       boxShadow: [
-  //         BoxShadow(
-  //           color: Colors.black.withOpacity(0.05),
-  //           blurRadius: 8,
-  //           offset: Offset(0, 2),
-  //         ),
-  //       ],
-  //     ),
-  //     child: Row(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         // Status Icon
-  //         Padding(
-  //           padding: const EdgeInsets.only(top: 2),
-  //           child: _getStatusIcon(immunization.status),
-  //         ),
-  //         const SizedBox(width: 12),
+//   Widget _buildImmunizationCard(Immunization immunization) {
+//     return Container(
+//       padding: const EdgeInsets.all(16),
+//       decoration: BoxDecoration(
+//         color: Colors.white.withOpacity(0.8),
+//         borderRadius: BorderRadius.circular(12),
+//         border: Border.all(
+//           color: Color(0xFF40E0D0).withOpacity(0.2),
+//           width: 1,
+//         ),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.black.withOpacity(0.05),
+//             blurRadius: 8,
+//             offset: Offset(0, 2),
+//           ),
+//         ],
+//       ),
+//       child: Row(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           // Status Icon
+//           Padding(
+//             padding: const EdgeInsets.only(top: 2),
+//             child: _getStatusIcon(immunization.status),
+//           ),
+//           const SizedBox(width: 12),
 
-          // // Content
-          // Expanded(
-          //   child: Column(
-          //     crossAxisAlignment: CrossAxisAlignment.start,
-          //     children: [
-          //       // Title and Badge
-          //       Row(
-          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           Expanded(
-          //             child: Column(
-          //               crossAxisAlignment: CrossAxisAlignment.start,
-          //               children: [
-          //                 Text(
-          //                   immunization.name,
-          //                   style: TextStyle(
-          //                     fontSize: 15,
-          //                     fontWeight: FontWeight.w600,
-          //                     color: Color(0xFF2F6B6A),
-          //                   ),
-          //                 ),
-          //                 const SizedBox(height: 2),
-          //                 Text(
-          //                   'Usia ${immunization.ageMonth} bulan',
-          //                   style: TextStyle(
-          //                     fontSize: 12,
-          //                     color: Colors.grey[600],
-          //                   ),
-          //                 ),
-          //               ],
-          //             ),
-          //           ),
-          //           _getStatusBadge(immunization.status),
-          //         ],
-          //       ),
-          //       const SizedBox(height: 8),
+//           // Content
+//           Expanded(
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 // Title and Badge
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Expanded(
+//                       child: Column(
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: [
+//                           Text(
+//                             immunization.name,
+//                             style: TextStyle(
+//                               fontSize: 15,
+//                               fontWeight: FontWeight.w600,
+//                               color: Color(0xFF2F6B6A),
+//                             ),
+//                           ),
+//                           const SizedBox(height: 2),
+//                           Text(
+//                             'Usia ${immunization.ageMonth} bulan',
+//                             style: TextStyle(
+//                               fontSize: 12,
+//                               color: Colors.grey[600],
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                     ),
+//                     _getStatusBadge(immunization.status),
+//                   ],
+//                 ),
+//                 const SizedBox(height: 8),
 
-          //       // Date
-          //       Text(
-          //         immunization.date,
-          //         style: TextStyle(
-          //           fontSize: 14,
-          //           color: Colors.grey[700],
-          //         ),
-          //       ),
+//                 // Date
+//                 Text(
+//                   immunization.date,
+//                   style: TextStyle(
+//                     fontSize: 14,
+//                     color: Colors.grey[700],
+//                   ),
+//                 ),
 
 //                 // Reminder Toggle (only for non-completed)
 //                 if (immunization.status != ImmunizationStatus.completed) ...[
@@ -379,66 +379,66 @@
 //                         ),
 //                       ),
 //                     ],
-  //                 ),
-  //               ],
-  //             ],
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+//                   ),
+//                 ],
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
 
-  // Widget _buildImportantNoticeCard() {
-  //   return Container(
-  //     width: double.infinity,
-  //     padding: const EdgeInsets.all(16),
-  //     decoration: BoxDecoration(
-  //       gradient: LinearGradient(
-  //         begin: Alignment.topLeft,
-  //         end: Alignment.bottomRight,
-  //         colors: [
-  //           Color(0xFFFFF9F0),
-  //           Color(0xFFFFEDD5),
-  //         ],
-  //       ),
-  //       borderRadius: BorderRadius.circular(12),
-  //       border: Border.all(
-  //         color: Color(0xFFFFD88D).withOpacity(0.5),
-  //         width: 1,
-  //       ),
-  //       boxShadow: [
-  //         BoxShadow(
-  //           color: Colors.black.withOpacity(0.05),
-  //           blurRadius: 8,
-  //           offset: Offset(0, 2),
-  //         ),
-  //       ],
-  //     ),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Text(
-  //           '⚠️ Penting!',
-  //           style: TextStyle(
-  //             fontSize: 14,
-  //             fontWeight: FontWeight.w700,
-  //             color: Color(0xFF78350F),
-  //           ),
-  //         ),
-  //         const SizedBox(height: 8),
-  //         Text(
-  //           'Imunisasi lengkap sangat penting untuk mencegah stunting dan penyakit berbahaya. Jangan lewatkan jadwal yang sudah ditentukan.',
-  //           style: TextStyle(
-  //             fontSize: 12,
-  //             color: Color(0xFF92400E),
-  //             height: 1.5,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+//   Widget _buildImportantNoticeCard() {
+//     return Container(
+//       width: double.infinity,
+//       padding: const EdgeInsets.all(16),
+//       decoration: BoxDecoration(
+//         gradient: LinearGradient(
+//           begin: Alignment.topLeft,
+//           end: Alignment.bottomRight,
+//           colors: [
+//             Color(0xFFFFF9F0),
+//             Color(0xFFFFEDD5),
+//           ],
+//         ),
+//         borderRadius: BorderRadius.circular(12),
+//         border: Border.all(
+//           color: Color(0xFFFFD88D).withOpacity(0.5),
+//           width: 1,
+//         ),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.black.withOpacity(0.05),
+//             blurRadius: 8,
+//             offset: Offset(0, 2),
+//           ),
+//         ],
+//       ),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Text(
+//             '⚠️ Penting!',
+//             style: TextStyle(
+//               fontSize: 14,
+//               fontWeight: FontWeight.w700,
+//               color: Color(0xFF78350F),
+//             ),
+//           ),
+//           const SizedBox(height: 8),
+//           Text(
+//             'Imunisasi lengkap sangat penting untuk mencegah stunting dan penyakit berbahaya. Jangan lewatkan jadwal yang sudah ditentukan.',
+//             style: TextStyle(
+//               fontSize: 12,
+//               color: Color(0xFF92400E),
+//               height: 1.5,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
 
 //   Widget _getStatusIcon(ImmunizationStatus status) {
 //     switch (status) {
@@ -568,15 +568,15 @@
 
 // class _MainAppState extends State<MainApp> {
 //   int _currentIndex = 0;
-  
-//   final List<Widget> _pages = [
-//     AnthropometricInputPage(), // Page 0
-//     ImmunizationReminderPage(), // Page 1 - Halaman Imunisasi
-//     GrowthChartPage(),          // Page 2
-//     EducationModulePage(),      // Page 3
-//     HealthFacilitiesMapPage(),  // Page 4
-//     ProfilePage(),              // Page 5
-//   ];
+
+//   // final List<Widget> _pages = [
+//   //   AnthropometricInputPage(), // Page 0
+//   //   ImmunizationReminderPage(), // Page 1 - Halaman Imunisasi
+//   //   GrowthChartPage(),          // Page 2
+//   //   EducationModulePage(),      // Page 3
+//   //   HealthFacilitiesMapPage(),  // Page 4
+//   //   ProfilePage(),              // Page 5
+//   // ];
 
 //   @override
 //   Widget build(BuildContext context) {

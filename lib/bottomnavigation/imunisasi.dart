@@ -3,90 +3,127 @@ import 'package:flutter/material.dart';
 import 'package:stuntinq_apps/Model/imunisasi_model.dart';
 
 class ImunisasiPage extends StatefulWidget {
-  const ImunisasiPage({super.key});
+  const ImunisasiPage({Key? key}) : super(key: key);
 
   @override
   State<ImunisasiPage> createState() => _ImunisasiPageState();
 }
 
+String _monthName(int m) {
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "Mei",
+    "Jun",
+    "Jul",
+    "Agu",
+    "Sep",
+    "Okt",
+    "Nov",
+    "Des",
+  ];
+  return months[m - 1];
+}
+
 class _ImunisasiPageState extends State<ImunisasiPage> {
-  // List<ImunisasiPage> ImunisasiPages = [
-  //   Imunisasi(
-  //     id: 1,
-  //     name: 'Hepatitis B',
-  //     ageMonth: 0,
-  //     date: '15 Jan 2025',
-  //     status: ImunisasiPageStatus.completed,
-  //     reminder: false,
-  //   ),
-  //   Imunisasi(
-  //     id: 2,
-  //     name: 'BCG',
-  //     ageMonth: 1,
-  //     date: '15 Feb 2025',
-  //     status: ImunisasiPageStatus.completed,
-  //     reminder: false,
-  //   ),
-  //   Imunisasi(
-  //     id: 3,
-  //     name: 'DPT-HB-Hib 1',
-  //     ageMonth: 2,
-  //     date: '15 Mar 2025',
-  //     status: ImunisasiPageStatus.upcoming,
-  //     reminder: true,
-  //   ),
-  //   Imunisasi(
-  //     id: 4,
-  //     name: 'Polio 1',
-  //     ageMonth: 2,
-  //     date: '15 Mar 2025',
-  //     status: ImunisasiPageStatus.upcoming,
-  //     reminder: true,
-  //   ),
-  //   Imunisasi(
-  //     id: 5,
-  //     name: 'DPT-HB-Hib 2',
-  //     ageMonth: 3,
-  //     date: '15 Apr 2025',
-  //     status: ImunisasiPageStatus.upcoming,
-  //     reminder: false,
-  //   ),
-  //   Imunisasi(
-  //     id: 6,
-  //     name: 'Polio 2',
-  //     ageMonth: 3,
-  //     date: '15 Apr 2025',
-  //     status: ImunisasiPageStatus.upcoming,
-  //     reminder: false,
-  //   ),
-  //   Imunisasi(
-  //     id: 7,
-  //     name: 'DPT-HB-Hib 3',
-  //     ageMonth: 4,
-  //     date: '15 Mei 2025',
-  //     status: ImunisasiPageStatus.upcoming,
-  //     reminder: false,
-  //   ),
-  //   Imunisasi(
-  //     id: 8,
-  //     name: 'Polio 3',
-  //     ageMonth: 4,
-  //     date: '15 Mei 2025',
-  //     status: ImmunizationStatus.upcoming,
-  //     reminder: false,
-  //   ),
-  // ];
-  // void toggleReminder(int id) {
-  //   setState(() {
-  //     final index = Imunisasi.indexWhere((imm) => imm.id == id);
-  //     if (index != -1) {
-  //       Imunisasi[index].reminder = !Imunisasi[index].reminder;
-  //     }
-  //   });
-  // }
+  List<Imunisasi> ImunisasiList = [
+    Imunisasi(
+      id: 1,
+      name: 'Hepatitis B',
+      ageMonth: 0,
+      date: DateTime(2025, 9, 15),
+      reminder: false,
+    ),
+    Imunisasi(
+      id: 2,
+      name: 'BCG',
+      ageMonth: 1,
+      date: DateTime(2025, 10, 15),
+      reminder: false,
+    ),
+    Imunisasi(
+      id: 3,
+      name: 'DPT-HB-Hib 1',
+      ageMonth: 2,
+      date: DateTime(2025, 11, 15),
+      reminder: true,
+    ),
+    Imunisasi(
+      id: 4,
+      name: 'Polio 1',
+      ageMonth: 2,
+      date: DateTime(2025, 11, 15),
+      reminder: true,
+    ),
+    Imunisasi(
+      id: 5,
+      name: 'DPT-HB-Hib 2',
+      ageMonth: 3,
+      date: DateTime(2025, 12, 15),
+      reminder: false,
+    ),
+    Imunisasi(
+      id: 6,
+      name: 'Polio 2',
+      ageMonth: 3,
+      date: DateTime(2025, 12, 15),
+      reminder: false,
+    ),
+    Imunisasi(
+      id: 7,
+      name: 'DPT-HB-Hib 3',
+      ageMonth: 4,
+      date: DateTime(2026, 1, 15),
+      reminder: false,
+    ),
+    Imunisasi(
+      id: 8,
+      name: 'Polio 3',
+      ageMonth: 4,
+      date: DateTime(2026, 1, 15),
+      reminder: false,
+    ),
+  ];
 
   // int get upcomingCount =>
   //     Imunisasi.where((i) => i.status == ImunisasiStatus.upcoming).length;
+  late List<Imunisasi> imunisasi;
+
+  @override
+  void initState() {
+    super.initState();
+    imunisasi = ImunisasiList;
+    imunisasi.sort((a, b) => a.date.compareTo(b.date));
+  }
+
+  // Imunisasi? get nextImunisasi {
+  //   final now = DateTime.now();
+  //   return imunisasi.firstWhere(
+  //     (i) => i.date.isAfter(now),
+  //     orElse: () => imunisasi.last,
+  //   );
+  // }
+
+  Imunisasi? get nextImunisasi {
+    final now = DateTime.now();
+    try {
+      return imunisasi.firstWhere(
+        (i) => i.date.isAfter(DateTime(now.year, now.month, now.day)),
+      );
+    } catch (e) {
+      // jika semua lewat, kembalikan null atau yang terakhir
+      return null;
+    }
+  }
+
+  // void toggleReminder(int id) {
+  //   setState(() {
+  //     final idx = imunisasi.indexWhere((i) => i.id == id);
+  //     if (idx != -1) imunisasi[idx].reminder = !imunisasi[idx].reminder;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -134,279 +171,393 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ),
     );
   }
-}
 
-Widget _buildHeader() {
-  return Row(
-    children: [
-      Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF40E0D0).withOpacity(0.3),
-              Color(0xFF2F6B6A).withOpacity(0.3),
+  Widget _buildHeader() {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF40E0D0).withOpacity(0.3),
+                Color(0xFF2F6B6A).withOpacity(0.3),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 8,
+                offset: Offset(0, 2),
+              ),
             ],
           ),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: Offset(0, 2),
+          child: Icon(Icons.calendar_month, color: Color(0xFF2F6B6A), size: 24),
+        ),
+        width(12),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Jadwal Imunisasi',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF2F6B6A),
+              ),
+            ),
+            Text(
+              'Perhatikan jadwal imunisasi anak',
+              // '$upcomingCount jadwal akan datang',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey[600],
+              ),
             ),
           ],
         ),
-        child: Icon(Icons.calendar_month, color: Color(0xFF2F6B6A), size: 24),
-      ),
-      width(12),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Jadwal Imunisasi',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF2F6B6A),
-            ),
-          ),
-          Text(
-            '(Atur Jadwal Upcoming)',
-            // '$upcomingCount jadwal akan datang',
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey[600],
-            ),
+      ],
+    );
+  }
+
+  Widget _buildNextImunisasi() {
+    final next = nextImunisasi;
+    if (next == null) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Color(0xFFBCEDE6),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text('Tidak ada jadwal imunisasi mendatang'),
+      );
+    }
+
+    final daysLeft = next.date.difference(DateTime.now()).inDays;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF2F6B6A), Color(0xFF359a99), Color(0xFF40E0D0)],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0xFF2F6B6A).withOpacity(0.3),
+            blurRadius: 8,
+            offset: Offset(0, 2),
           ),
         ],
       ),
-    ],
-  );
-}
-
-Widget _buildNextImunisasi() {
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Color(0xFF2F6B6A), Color(0xFF359a99), Color(0xFF40E0D0)],
-      ),
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Color(0xFF2F6B6A).withOpacity(0.3),
-          blurRadius: 8,
-          offset: Offset(0, 2),
-        ),
-      ],
-    ),
-    // Content
-    child: Stack(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(Icons.notifications_active, color: Colors.white, size: 20),
-            width(12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Imunisasi Berikutnya',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.white.withOpacity(0.9),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  height(15),
-                  Text(
-                    '(Atur Nama Jenis Imunisasi)',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  height(5),
-                  Text(
-                    '(Atur Tanggal) • 2 hari lagi',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.white.withOpacity(0.95),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _buildSectionTitle(String title) {
-  return Align(
-    alignment: Alignment.centerLeft,
-    child: Text(
-      title,
-      style: const TextStyle(
-        color: Color(0xFF2F6B6A),
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
-      ),
-    ),
-  );
-}
-
-Widget _buildListImunisasi() {
-  return Container(
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      color: Colors.white.withOpacity(1.0),
-      borderRadius: BorderRadius.circular(14),
-      border: Border.all(color: Color(0xFF40E0D0).withOpacity(0.2), width: 1),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.05),
-          blurRadius: 8,
-          offset: Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Status Icon
-        Padding(
-          padding: const EdgeInsets.only(top: 2),
-          // child: _getStatusIcon(immunization.status),
-        ),
-        height(12),
-
-        // Content
-        Expanded(
-          child: Column(
+      // Content
+      child: Stack(
+        children: [
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Title and Badge
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '(Atur Nama Jenis Imunisasi)',
-                          // imunisasi.name,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF2F6B6A),
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          '(Atur Usia (xxx) Bulan)',
-                          // 'Usia ${immunization.ageMonth} bulan',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
+              Icon(Icons.notifications_active, color: Colors.white, size: 20),
+              width(12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Imunisasi Berikutnya',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white.withOpacity(0.9),
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  // _getStatusBadge(immunization.status),
-                ],
-              ),
-              height(8),
-
-              // Date
-              Text(
-                '(Atur Tanggal Imunisasi)',
-                // imunisasi.date,
-                style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                    height(15),
+                    Text(
+                      next.name,
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.white.withOpacity(0.9),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "${next.date.day} ${_monthName(next.date.month)} ${next.date.year} • $daysLeft hari lagi",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    // Text(
+                    //   '(Atur Nama Jenis Imunisasi)',
+                    //   style: TextStyle(
+                    //     fontSize: 16,
+                    //     color: Colors.white,
+                    //     fontWeight: FontWeight.w700,
+                    //   ),
+                    // ),
+                    // height(5),
+                    // Text(
+                    //   '(Atur Tanggal) • 2 hari lagi',
+                    //   style: TextStyle(
+                    //     fontSize: 13,
+                    //     color: Colors.white.withOpacity(0.95),
+                    //   ),
+                    // ),
+                  ],
+                ),
               ),
             ],
           ),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _buildImportantNotification() {
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Color(0xFFFFF9F0), Color(0xFFFFEDD5)],
+        ],
       ),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Color(0xFFFFD88D).withOpacity(0.5), width: 1),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.05),
-          blurRadius: 8,
-          offset: Offset(0, 2),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        title,
+        style: const TextStyle(
+          color: Color(0xFF2F6B6A),
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
         ),
-      ],
-    ),
-    child: Stack(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(
-              Icons.warning_outlined,
-              size: (20),
-              color: CupertinoColors.destructiveRed,
-            ),
-            width(12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Informasi Penting!',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF78350F),
-                    ),
-                  ),
-                  height(10),
-                  Text(
-                    'Imunisasi lengkap sangat penting untuk mencegah stunting dan penyakit berbahaya. Jangan lewatkan imunisasi sesuai jadwal yang telah ditentukan.',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF92400E),
-                      height: 1.5,
-                    ),
-                  ),
-                ],
+      ),
+    );
+  }
+
+  Widget _buildListImunisasi() {
+    return Column(
+      children: imunisasi.map((item) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.8),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: const Color(0xFF40E0D0).withOpacity(0.2),
+                width: 1.5,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 15,
+                  offset: const Offset(0, 5),
+                ),
+              ],
             ),
-          ],
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              children: [
+                _getStatusIcon(item.status),
+                width(12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.name,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF2F6B6A),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Usia ${item.ageMonth} bulan',
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "${item.date.day} ${_monthName(item.date.month)} ${item.date.year}",
+                        style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            item.status == ImunisasiStatus.upcoming
+                                ? 'Akan Datang'
+                                : item.status == ImunisasiStatus.completed
+                                ? 'Selesai'
+                                : 'Terlambat',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          // Transform.scale(
+                          //   scale: 0.85,
+                          //   child: Switch(
+                          //     value: item.reminder,
+                          //     // onChanged: () {},
+                          //     onChanged: (_) => toggleReminder(item.id),
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _getStatusIcon(ImunisasiStatus status) {
+    switch (status) {
+      case ImunisasiStatus.completed:
+        return Icon(Icons.check_circle, color: Colors.green[600], size: 20);
+      case ImunisasiStatus.upcoming:
+        return Icon(Icons.schedule, color: Colors.blue[600], size: 20);
+      case ImunisasiStatus.overdue:
+      default:
+        return Icon(Icons.error, color: Colors.red[600], size: 20);
+    }
+  }
+  // Widget _buildListImunisasi() {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       color: Colors.white.withOpacity(1.0),
+  //       borderRadius: BorderRadius.circular(14),
+  //       border: Border.all(color: Color(0xFF40E0D0).withOpacity(0.2), width: 1),
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: Colors.black.withOpacity(0.05),
+  //           blurRadius: 8,
+  //           offset: Offset(0, 2),
+  //         ),
+  //       ],
+  //     ),
+  //     child: Row(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         // Status Icon
+  //         Padding(
+  //           padding: const EdgeInsets.only(top: 2),
+  //           // child: _getStatusIcon(immunization.status),
+  //         ),
+  //         height(12),
+  //         Expanded(
+  //           child: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               Row(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Expanded(
+  //                     child: Column(
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         Text(
+  //                           Imunisasi.name,
+  //                           // imunisasi.name,
+  //                           style: TextStyle(
+  //                             fontSize: 14,
+  //                             fontWeight: FontWeight.bold,
+  //                             color: Color(0xFF2F6B6A),
+  //                           ),
+  //                         ),
+  //                         const SizedBox(height: 2),
+  //                         Text(
+  //                           '(Atur Usia (xxx) Bulan)',
+  //                           // 'Usia ${immunization.ageMonth} bulan',
+  //                           style: TextStyle(
+  //                             fontSize: 12,
+  //                             color: Colors.grey[600],
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                   // _getStatusBadge(immunization.status),
+  //                 ],
+  //               ),
+  //               height(8),
+  //               // Date
+  //               Text(
+  //                 "${Imunisasi.date.day} ${_monthName(Imunisasi.date.month)} ${Imunisasi.date.year}",
+  //                 // imunisasi.date,
+  //                 style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  Widget _buildImportantNotification() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFFFF9F0), Color(0xFFFFEDD5)],
         ),
-      ],
-    ),
-  );
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Color(0xFFFFD88D).withOpacity(0.5), width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                Icons.warning_outlined,
+                size: (20),
+                color: CupertinoColors.destructiveRed,
+              ),
+              width(12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Informasi Penting!',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF78350F),
+                      ),
+                    ),
+                    height(10),
+                    Text(
+                      'Imunisasi lengkap sangat penting untuk mencegah stunting dan penyakit berbahaya. Jangan lewatkan imunisasi sesuai jadwal yang telah ditentukan.',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF92400E),
+                        height: 1.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 //Sized Box
