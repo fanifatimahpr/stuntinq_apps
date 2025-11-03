@@ -13,6 +13,43 @@ class Education {
     required this.type,
   });
 }
+List<Education> modul = [
+    Education(
+      id: 1,
+      title: 'Apa Itu Stunting?',
+      duration: '5 menit',
+      completed: true,
+      type: EducationType.video,
+    ),
+    Education(
+      id: 2,
+      title: 'Penyebab Stunting',
+      duration: '7 menit',
+      completed: true,
+      type: EducationType.article,
+    ),
+    Education(
+      id: 3,
+      title: 'Nutrisi untuk Mencegah Stunting',
+      duration: '10 menit',
+      completed: false,
+      type: EducationType.video,
+    ),
+    Education(
+      id: 4,
+      title: '1000 Hari Pertama Kehidupan',
+      duration: '8 menit',
+      completed: false,
+      type: EducationType.article,
+    ),
+    Education(
+      id: 5,
+      title: 'Resep MPASI Bergizi',
+      duration: '12 menit',
+      completed: false,
+      type: EducationType.video,
+    ),
+  ];
 
 //Class Question
 class FAQ {

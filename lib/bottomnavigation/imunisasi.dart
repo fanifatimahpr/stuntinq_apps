@@ -158,7 +158,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
 
             //Daftar Jadwal Imunisasi
             _buildSectionTitle("Daftar Jadwal Imunisasi"),
-            height(5),
+            
 
             //List Jenis Imunisasi
             _buildListImunisasi(),
@@ -186,7 +186,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
                 Color(0xFF2F6B6A).withOpacity(0.3),
               ],
             ),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(22),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -232,7 +232,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Color(0xFFBCEDE6),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(22),
         ),
         child: Text('Tidak ada jadwal imunisasi mendatang'),
       );
@@ -246,9 +246,10 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF2F6B6A), Color(0xFF359a99), Color(0xFF40E0D0)],
+          colors: [Color(0xFF2F6B6A),
+            Color(0xFF40E0D0),],
         ),
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
             color: Color(0xFF2F6B6A).withOpacity(0.3),
@@ -261,7 +262,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.notifications_active, color: Colors.white, size: 20),
+          Icon(Icons.notifications_active_outlined, color: Colors.white, size: 24),
           width(12),
           Expanded(
             child: Column(
@@ -270,47 +271,51 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
                 Text(
                   'Imunisasi Berikutnya',
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 16,
                     color: Colors.white.withOpacity(0.9),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 height(15),
             //Jenis Imunisasi
-                Container(
-                   width: double.infinity,
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [ Color(0xFF359a99), Color(0xFF40E0D0)],
-              ),
-              borderRadius: BorderRadius.circular(16),
+              Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Color(0xffD4F2F1).withOpacity(0.5),
+              // gradient: LinearGradient(
+              // begin: Alignment.topLeft,
+              // end: Alignment.bottomRight,
+              // colors: [ Color(0xFFD4F2F1), Color(0xFF40E0D0)],
+              // ),
+              borderRadius: BorderRadius.circular(22),
               boxShadow: [
       BoxShadow(
         color: Color(0xFF2F6B6A).withOpacity(0.3),
         blurRadius: 8,
-        offset: Offset(0, 2),
+        offset: Offset(0, 8),
          ),
               ],
             ),
-                      child: Column(
+                      child: Column(          
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          
                           Text(
                             next.name,
                             style: TextStyle(
                               fontSize: 17,
-                              color: Colors.white.withOpacity(0.9),
+                              color: Color(0xFF2F6B6A),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         
                       Text(
                         "${next.date.day} ${_monthName(next.date.month)} ${next.date.year} • $daysLeft hari lagi",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: const Color.fromARGB(255, 243, 243, 243)),
                       ),
-                  
+                        
               ]
                 ),
                 )
@@ -360,7 +365,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.8),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(22),
               border: Border.all(
                 color: const Color(0xFF40E0D0).withOpacity(0.2),
                 width: 1.5,
@@ -529,7 +534,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
             Color(0xFFFFF9F0).withOpacity(0.6),
           ],
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(22),
         border: Border.all(
           color: Color.fromARGB(255, 219, 163, 89).withOpacity(0.3),
           width: 1.5,
@@ -544,7 +549,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 219, 163, 89).withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(Icons.warning_amber_outlined,
                   size: 20,
