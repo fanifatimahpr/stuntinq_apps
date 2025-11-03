@@ -200,7 +200,6 @@ Widget _buildProgressEducation() {
 // Widget _buildListModul (){
 //   return Column(
 //     children: [
-
 //     ],
 //   )
 // }

@@ -248,7 +248,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
           end: Alignment.bottomRight,
           colors: [Color(0xFF2F6B6A), Color(0xFF359a99), Color(0xFF40E0D0)],
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
             color: Color(0xFF2F6B6A).withOpacity(0.3),
@@ -258,58 +258,80 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
         ],
       ),
       // Content
-      child: Stack(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(Icons.notifications_active, color: Colors.white, size: 20),
-              width(12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Imunisasi Berikutnya',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.white.withOpacity(0.9),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    height(15),
-                    Text(
-                      next.name,
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.white.withOpacity(0.9),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      "${next.date.day} ${_monthName(next.date.month)} ${next.date.year} • $daysLeft hari lagi",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    // Text(
-                    //   '(Atur Nama Jenis Imunisasi)',
-                    //   style: TextStyle(
-                    //     fontSize: 16,
-                    //     color: Colors.white,
-                    //     fontWeight: FontWeight.w700,
-                    //   ),
-                    // ),
-                    // height(5),
-                    // Text(
-                    //   '(Atur Tanggal) • 2 hari lagi',
-                    //   style: TextStyle(
-                    //     fontSize: 13,
-                    //     color: Colors.white.withOpacity(0.95),
-                    //   ),
-                    // ),
-                  ],
+          Icon(Icons.notifications_active, color: Colors.white, size: 20),
+          width(12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Imunisasi Berikutnya',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white.withOpacity(0.9),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
+                height(15),
+            //Jenis Imunisasi
+                Container(
+                   width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [ Color(0xFF359a99), Color(0xFF40E0D0)],
               ),
-            ],
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+      BoxShadow(
+        color: Color(0xFF2F6B6A).withOpacity(0.3),
+        blurRadius: 8,
+        offset: Offset(0, 2),
+         ),
+              ],
+            ),
+                      child: Column(
+                        children: [
+                          Text(
+                            next.name,
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.white.withOpacity(0.9),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        
+                      Text(
+                        "${next.date.day} ${_monthName(next.date.month)} ${next.date.year} • $daysLeft hari lagi",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                  
+              ]
+                ),
+                )
+                // Text(
+                //   '(Atur Nama Jenis Imunisasi)',
+                //   style: TextStyle(
+                //     fontSize: 16,
+                //     color: Colors.white,
+                //     fontWeight: FontWeight.w700,
+                //   ),
+                // ),
+                // height(5),
+                // Text(
+                //   '(Atur Tanggal) • 2 hari lagi',
+                //   style: TextStyle(
+                //     fontSize: 13,
+                //     color: Colors.white.withOpacity(0.95),
+                //   ),
+                // ),
+              ],
+            ),
           ),
         ],
       ),
@@ -498,62 +520,56 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
   // }
 
   Widget _buildImportantNotification() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
+     return Container(
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFFFFF9F0), Color(0xFFFFEDD5)],
+          colors: [
+            Color(0xFFFFEDD5).withOpacity(0.6),
+            Color(0xFFFFF9F0).withOpacity(0.6),
+          ],
         ),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Color(0xFFFFD88D).withOpacity(0.5), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: Offset(0, 2),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Color.fromARGB(255, 219, 163, 89).withOpacity(0.3),
+          width: 1.5,
+        ),
       ),
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
-                Icons.warning_outlined,
-                size: (20),
-                color: CupertinoColors.destructiveRed,
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 219, 163, 89).withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(Icons.warning_amber_outlined,
+                  size: 20,
+                  color: Color(0xFF92400E),
+                ),
               ),
               width(12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Informasi Penting!',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF78350F),
-                      ),
-                    ),
-                    height(10),
-                    Text(
-                      'Imunisasi lengkap sangat penting untuk mencegah stunting dan penyakit berbahaya. Jangan lewatkan imunisasi sesuai jadwal yang telah ditentukan.',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF92400E),
-                        height: 1.5,
-                      ),
-                    ),
-                  ],
+              const Text(
+                'Informasi Penting!',
+                style: TextStyle(
+                  color: Color(0xFF92400E),
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
+          height(12),
+          Text('Imunisasi lengkap sangat penting untuk mencegah stunting dan penyakit berbahaya. Jangan lewatkan imunisasi sesuai jadwal yang telah ditentukan.',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
+                        color: Color(0xFF92400E),
+                        height: 1.5,)
+          )
         ],
       ),
     );

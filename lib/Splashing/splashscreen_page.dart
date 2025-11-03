@@ -42,7 +42,7 @@ class _SplashPageState extends State<SplashPage> {
       //
 
       //Jika sudah ada user id namun harus ke sign in lagi
-      if (userId != null) {
+      if (isLogin = true && userId != null) {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => SigninPage()),

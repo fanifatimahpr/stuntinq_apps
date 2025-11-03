@@ -31,10 +31,19 @@ class _ProfilePageState extends State<ProfilePage> {
       height: double.infinity,
       color: const Color(0xffD4F2F1),
     );
+
   }
 
-  Widget _buildLayer() {
+  Widget _buildLayer() {    
     return SafeArea(
+    //   child: Container(
+    //               decoration: const BoxDecoration(
+    //                 color: Color(0xFFF8FAFB),
+    //                 borderRadius: BorderRadius.only(
+    //                   topLeft: Radius.circular(30),
+    //                   topRight: Radius.circular(30),
+    //                 ),
+    //               ),
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(22),
         child: Column(
@@ -78,7 +87,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       ),
-    );
+      );
   }
 
   Widget _buildHeader() {
@@ -223,11 +232,18 @@ class _ProfilePageState extends State<ProfilePage> {
       height: 56,
       width: double.infinity,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26),
-        gradient: const LinearGradient(
-          colors: [Color(0xff2f6b6a), Color(0xff40E0D0)],
-        ),
-      ),
+          gradient: const LinearGradient(
+          colors: [Color(0xff2f6b6a), Color(0xff40E0D0)
+          ],),
+           borderRadius: BorderRadius.circular(26),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF2F6B6A).withOpacity(0.4),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+          ),
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(

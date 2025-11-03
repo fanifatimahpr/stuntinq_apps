@@ -222,11 +222,18 @@ class _SignupPageState extends State<SignupPage> {
       height: 56,
       width: double.infinity,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26),
-        gradient: const LinearGradient(
-          colors: [Color(0xff2f6b6a), Color(0xff40E0D0)],
-        ),
-      ),
+          gradient: const LinearGradient(
+          colors: [Color(0xff2f6b6a), Color(0xff40E0D0)
+          ],),
+           borderRadius: BorderRadius.circular(26),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF2F6B6A).withOpacity(0.4),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+          ),
       child: ElevatedButton(
         onPressed: () {
           if (_formKey.currentState!.validate()) {

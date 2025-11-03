@@ -75,7 +75,7 @@ class _BottomNavigatorAppState extends State<BottomNavigationApp> {
           ),
           BottomNavigationBarItem(icon: Icon(Icons.school), label: "Edukasi"),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: "Peta"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profil"),
         ],
       ),
     );
