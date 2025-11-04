@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:stuntinq_apps/Model/edukasi_model.dart';
 
 class DataPage extends StatefulWidget {
   const DataPage({Key? key}) : super(key: key);
@@ -10,20 +11,36 @@ class DataPage extends StatefulWidget {
 
 class _DataPageState extends State<DataPage>
     with SingleTickerProviderStateMixin {
-  final _formKey = GlobalKey<FormState>();
+      List<NutritionSource> _nutritionSources = [
+    NutritionSource(
+      id: '1',
+      name: 'Nasi Putih',
+      portion: '1 mangkok',
+      dateAdded: DateTime.now().subtract(const Duration(days: 1)),
+    ),
+    NutritionSource(
+      id: '2',
+      name: 'Telur Rebus',
+      portion: '1 butir',
+      dateAdded: DateTime.now(),
+    ),
+  ];
 
-  final TextEditingController _nameController = TextEditingController(
-    text: 'Aira Azzahra',
-  );
-  final TextEditingController _ageController = TextEditingController(text: '6');
-  final TextEditingController _weightController = TextEditingController(
-    text: '8.3',
-  );
-  final TextEditingController _heightController = TextEditingController(
-    text: '67',
-  );
-  final TextEditingController _headCircumferenceController =
-      TextEditingController(text: '43.5');
+  List<HealthComplaint> _healthComplaints = [
+    HealthComplaint(
+      id: '1',
+      complaint: 'Nafsu makan berkurang',
+      severity: 'Ringan',
+      dateAdded: DateTime.now().subtract(const Duration(days: 2)),
+    ),
+  ];
+
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController(  );
+  final TextEditingController _heightController = TextEditingController(  );
+  final TextEditingController _headCircumferenceController = TextEditingController();
 
   String _selectedGender = 'female';
   bool _showSuccess = false;
@@ -57,25 +74,58 @@ class _DataPageState extends State<DataPage>
       });
       _successAnimationController.forward();
 
-      // Hide success message after 3 seconds
-      Future.delayed(const Duration(seconds: 3), () {
-        if (mounted) {
-          setState(() {
-            _showSuccess = false;
-          });
-          _successAnimationController.reverse();
-        }
-      });
+      // // Hide success message after 3 seconds
+      // Future.delayed(const Duration(seconds: 3), () {
+      //   if (mounted) {
+      //     setState(() {
+      //       _showSuccess = false;
+      //     });
+      //     _successAnimationController.reverse();
+      //   }
+      // });
 
-      // TODO: Save data to backend/database
-      print('Data saved: ${_nameController.text}');
+      // print('Data saved: ${_nameController.text}');
     }
   }
+  double _calculateIMT() {
+    if (_weightController.text.isEmpty || _heightController.text.isEmpty) {
+      return 0;
+    }
 
-  String _getGrowthStatus() {
-    // TODO: Implement actual growth status calculation based on WHO standards
-    return 'Pertumbuhan Normal';
+    double weight = double.tryParse(_weightController.text) ?? 0;
+    double heightCm = double.tryParse(_heightController.text) ?? 0;
+    if (weight == 0 || heightCm == 0) return 0;
+
+    double heightMeter = heightCm / 100;
+    return weight / (heightMeter * heightMeter);
   }
+
+  String _getStatus() {
+    double imt = _calculateIMT();
+    if (imt == 0) return 'Data belum lengkap';
+    if (imt < 18.5) return 'Berat Badan Kurang (Underweight)';
+    if (imt >= 18.5 && imt <= 22.9) return 'Berat Badan Normal (Ideal)';
+    if (imt >= 23 && imt <= 24.9) return 'Kelebihan Berat Badan (Overweight)';
+    if (imt >= 25 && imt <=29.9) return 'Obesitas Tingkat I (Risk of Obesity)';
+    if (imt >= 30) return 'Obesitas Tingkat II';
+    return 'Normal';
+  }
+   String _getGrowthStatus() {
+    double imt = _calculateIMT();
+    if (imt == 0) return 'Data belum lengkap';
+    if (imt < 18.5) return 'Berat badan anak di bawah normal. '
+          'Konsultasikan dengan tenaga kesehatan dan pastikan asupan gizi cukup.';
+    if (imt >= 18.5 && imt <= 22.9) return 'Pertumbuhan anak Anda sesuai dengan standar WHO. '
+          'Lanjutkan pola asuh dan nutrisi yang baik.';
+    if (imt >= 23 && imt <= 24.9) return 'Berat badan anak sedikit melebihi standar. '
+          'Perhatikan pola makan, kurangi makanan tinggi gula dan lemak, serta dorong aktivitas fisik rutin.';
+    if (imt >= 25 && imt <=29.9) return 'Berat badan anak jauh di atas standar WHO. '
+          'Segera konsultasikan dengan dokter anak untuk penanganan lebih lanjut dan evaluasi pola hidup sehat.';
+    if (imt >= 30) return 'Berat badan anak jauh di atas standar WHO. '
+          'Segera konsultasikan dengan dokter anak untuk penanganan lebih lanjut dan evaluasi pola hidup sehat.';
+    return 'Normal';
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -114,15 +164,23 @@ class _DataPageState extends State<DataPage>
             height(20),
 
             //Profil Anak
-            _buildProfilAnak(),
+            _buildChildProfile(),
             height(16),
 
             //IMT
-            // _buildFormIMT(),
+            _buildIMTResult(),
             height(16),
 
             //Form Input Data Anak
             _buildInputForm(),
+            height(16),
+            
+            //Form Sumber Nutrisi
+            _buildNutritionSection(),
+            height(16),
+
+            //Form Complaint
+            // _buildComplaintSection(),
             height(16),
 
             //Save Button
@@ -188,7 +246,7 @@ class _DataPageState extends State<DataPage>
     );
   }
 
-  Widget _buildProfilAnak() {
+  Widget _buildChildProfile() {
     return Container(
       decoration: BoxDecoration(
         gradient: const LinearGradient(
@@ -314,21 +372,26 @@ class _DataPageState extends State<DataPage>
                 // Divider
                 height(16),
                 Divider(color: Colors.white.withOpacity(0.2)),
-                height(16),
+                
 
                 // Status
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     const Text(
                       'Status: ',
-                      style: TextStyle(color: Colors.white70, fontSize: 13),
+                      style: TextStyle(                    
+                      color: Colors.white, 
+                      fontSize: 13, fontWeight: FontWeight.bold),
                     ),
+                    height(4),
                     Text(
                       _getGrowthStatus(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 13,
-                        fontWeight: FontWeight.w600,
+                        height: 1.2,
                       ),
                     ),
                     width(4),
@@ -342,6 +405,63 @@ class _DataPageState extends State<DataPage>
     );
   }
 
+ Widget _buildIMTResult() {
+   double imt = _calculateIMT();
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFFFFEDD5).withOpacity(0.6),
+            Color(0xFFFFF9F0).withOpacity(0.6),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(
+          color: Color.fromARGB(255, 219, 163, 89).withOpacity(0.3),
+          width: 1.5,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              // Container(
+              //   padding: const EdgeInsets.all(8),
+              //   decoration: BoxDecoration(
+              //     color: Color.fromARGB(255, 219, 163, 89).withOpacity(0.3),
+              //     borderRadius: BorderRadius.circular(12),
+              //   ),
+              //   child: 
+                Text('📈', style: TextStyle(fontSize: 18)),
+              // ),
+              width(12),
+              const Text(
+                'Indeks Massa Tubuh (IMT)',
+                style: TextStyle(
+                  color: Color(0xFF92400E),
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+         height(12),
+          Text(
+            imt == 0
+                ? 'Masukkan berat dan tinggi badan untuk menghitung IMT dan mengetahui status IMT anak Anda.'
+                : 'Hasil IMT: ${imt.toStringAsFixed(2)} (${_getStatus()})',
+            style: TextStyle(
+              color: Color(0xFF92400E),
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   Widget _buildStatChip(IconData icon, String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -627,7 +747,186 @@ class _DataPageState extends State<DataPage>
       ],
     );
   }
+  Widget _buildNutritionSection() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.8),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: const Color(0xFF40E0D0).withOpacity(0.2),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF40E0D0).withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.restaurant_menu,
+                      size: 20,
+                      color: Color(0xFF2F6B6A),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text(
+                    'Sumber Gizi Anak',
+                    style: TextStyle(
+                      color: Color(0xFF2F6B6A),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              IconButton(
+                onPressed: _showAddNutritionDialog,
+                // onPressed: (){},
+                icon: const Icon(Icons.add_circle),
+                color: const Color(0xFF40E0D0),
+                iconSize: 28,
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          
+          // if (_nutritionSources.isEmpty)
+          //   Container(
+          //     padding: const EdgeInsets.all(24),
+          //     child: Center(
+          //       child: Column(
+          //         children: [
+          //           Icon(
+          //             Icons.restaurant,
+          //             size: 48,
+          //             color: Colors.grey[400],
+          //           ),
+          //           const SizedBox(height: 12),
+          //           Text(
+          //             'Belum ada sumber gizi tercatat',
+          //             style: TextStyle(
+          //               color: Colors.grey[600],
+          //               fontSize: 14,
+          //             ),
+          //           ),
+          //           const SizedBox(height: 8),
+          //           Text(
+          //             'Tap ikon + untuk menambah',
+          //             style: TextStyle(
+          //               color: Colors.grey[500],
+          //               fontSize: 12,
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   )
+          // else
+          //   ListView.separated(
+          //     shrinkWrap: true,
+          //     physics: const NeverScrollableScrollPhysics(),
+          //     itemCount: _nutritionSources.length,
+          //     separatorBuilder: (context, index) => const SizedBox(height: 8),
+          //     itemBuilder: (context, index) {
+          //       final nutrition = _nutritionSources[index];
+          //       return _buildNutritionItem(nutrition);
+          //     },
+          //   ),
+        ],
+      ),
+    );
+  }
 
+  Widget _buildNutritionItem(NutritionSource nutrition) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF40E0D0).withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: const Color(0xFF40E0D0).withOpacity(0.2),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF40E0D0).withOpacity(0.2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Icon(
+              Icons.dining,
+              size: 20,
+              color: Color(0xFF2F6B6A),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  nutrition.name,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF2F6B6A),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Text(
+                      nutrition.portion,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '',
+                      // '• ${_formatDate(nutrition.dateAdded)}',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.grey[500],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            // onPressed: (){},
+            onPressed: () => _deleteNutrition(nutrition.id),
+            icon: const Icon(Icons.delete_outline),
+            color: Colors.red,
+            iconSize: 20,
+          ),
+        ],
+      ),
+    );
+  }
   Widget _buildSaveButton() {
     return Container(
       width: double.infinity,
@@ -742,6 +1041,193 @@ class _DataPageState extends State<DataPage>
           ),
         ),
       ],
+    );
+  }
+void _showAddNutritionDialog() {
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController portionController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF40E0D0).withOpacity(0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(
+                Icons.restaurant_menu,
+                color: Color(0xFF2F6B6A),
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Text(
+              'Tambah Sumber Gizi',
+              style: TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: InputDecoration(
+                labelText: 'Nama Makanan',
+                hintText: 'Contoh: Nasi Putih',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: Color(0xFF2F6B6A),
+                    width: 2,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: portionController,
+              decoration: InputDecoration(
+                labelText: 'Porsi',
+                hintText: 'Contoh: 1 mangkok',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: Color(0xFF2F6B6A),
+                    width: 2,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Batal',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (nameController.text.isNotEmpty && 
+                  portionController.text.isNotEmpty) {
+                _addNutrition(
+                  nameController.text,
+                  portionController.text,
+                );
+                Navigator.pop(context);
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF2F6B6A),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text('Tambah'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  //CRUD Nutrisi
+  void _addNutrition(String name, String portion) {
+    setState(() {
+      _nutritionSources.add(
+        NutritionSource(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          name: name,
+          portion: portion,
+          dateAdded: DateTime.now(),
+        ),
+      );
+    });
+    
+    HapticFeedback.mediumImpact();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.white),
+            const SizedBox(width: 12),
+            Text('$name berhasil ditambahkan'),
+          ],
+        ),
+        backgroundColor: const Color(0xFF2F6B6A),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: const EdgeInsets.all(16),
+      ),
+    );
+  }
+
+  void _deleteNutrition(String id) {
+    final nutrition = _nutritionSources.firstWhere((n) => n.id == id);
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: const Text('Hapus Sumber Gizi?'),
+        content: Text('Apakah Anda yakin ingin menghapus "${nutrition.name}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _nutritionSources.removeWhere((n) => n.id == id);
+              });
+              Navigator.pop(context);
+              
+              HapticFeedback.mediumImpact();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    children: [
+                      const Icon(Icons.delete, color: Colors.white),
+                      const SizedBox(width: 12),
+                      Text('${nutrition.name} dihapus'),
+                    ],
+                  ),
+                  backgroundColor: Colors.red,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  margin: const EdgeInsets.all(16),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text('Hapus'),
+          ),
+        ],
+      ),
     );
   }
 }

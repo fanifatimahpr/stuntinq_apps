@@ -35,6 +35,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ageMonth: 0,
       date: DateTime(2025, 9, 15),
       reminder: false,
+      completed: false
     ),
     Imunisasi(
       id: 2,
@@ -42,6 +43,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ageMonth: 1,
       date: DateTime(2025, 10, 15),
       reminder: false,
+      completed: false
     ),
     Imunisasi(
       id: 3,
@@ -49,6 +51,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ageMonth: 2,
       date: DateTime(2025, 11, 15),
       reminder: true,
+      completed: false
     ),
     Imunisasi(
       id: 4,
@@ -56,6 +59,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ageMonth: 2,
       date: DateTime(2025, 11, 15),
       reminder: true,
+      completed: false
     ),
     Imunisasi(
       id: 5,
@@ -63,6 +67,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ageMonth: 3,
       date: DateTime(2025, 12, 15),
       reminder: false,
+      completed: false
     ),
     Imunisasi(
       id: 6,
@@ -70,6 +75,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ageMonth: 3,
       date: DateTime(2025, 12, 15),
       reminder: false,
+      completed: false
     ),
     Imunisasi(
       id: 7,
@@ -77,6 +83,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ageMonth: 4,
       date: DateTime(2026, 1, 15),
       reminder: false,
+      completed: false
     ),
     Imunisasi(
       id: 8,
@@ -84,12 +91,15 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ageMonth: 4,
       date: DateTime(2026, 1, 15),
       reminder: false,
+      completed: false
     ),
+    
   ];
 
   // int get upcomingCount =>
   //     Imunisasi.where((i) => i.status == ImunisasiStatus.upcoming).length;
   late List<Imunisasi> imunisasi;
+  
 
   @override
   void initState() {
@@ -225,6 +235,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
 
   Widget _buildNextImunisasi() {
     final next = nextImunisasi;
+    final completedList = imunisasi.where((i) => i.completed).toList();
     if (next == null) {
       return Container(
         width: double.infinity,
@@ -240,19 +251,22 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
     final daysLeft = next.date.difference(DateTime.now()).inDays;
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF2F6B6A), Color(0xFF40E0D0)],
+          colors: [Color(0xFF2F6B6A), Color(0xFF359a99), Color(0xFF40E0D0)],
         ),
         borderRadius: BorderRadius.circular(22),
+        border: Border.all(
+          color: const Color(0xFF40E0D0).withOpacity(0.3),
+          width: 1.5,),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF2F6B6A).withOpacity(0.3),
-            blurRadius: 8,
-            offset: Offset(0, 2),
+            color: Color(0xFF2F6B6A).withOpacity(0.15),
+            blurRadius: 15,
+            offset: Offset(0, 5),
           ),
         ],
       ),
@@ -262,7 +276,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
         children: [
           Icon(
             Icons.notifications_active_outlined,
-            color: Colors.white,
+            color: Colors.white.withOpacity(0.8),
             size: 24,
           ),
           width(12),
@@ -273,70 +287,72 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
                 Text(
                   'Imunisasi Berikutnya',
                   style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white.withOpacity(0.9),
-                    fontWeight: FontWeight.w500,
+                    fontSize: 15,
+                    color: Colors.white.withOpacity(0.8),
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                height(15),
+                Divider(color: Colors.white.withOpacity(0.4)),
+                height(4),
+                
                 //Jenis Imunisasi
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Color(0xffD4F2F1).withOpacity(0.5),
-                    // gradient: LinearGradient(
-                    // begin: Alignment.topLeft,
-                    // end: Alignment.bottomRight,
-                    // colors: [ Color(0xFFD4F2F1), Color(0xFF40E0D0)],
-                    // ),
-                    borderRadius: BorderRadius.circular(22),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xFF2F6B6A).withOpacity(0.3),
-                        blurRadius: 8,
-                        offset: Offset(0, 8),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      next.name,
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white.withOpacity(0.8),
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        next.name,
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Color(0xFF2F6B6A),
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    // height(5),
+                    
+                
+                    Text(
+                      "${next.date.day} ${_monthName(next.date.month)} ${next.date.year} • $daysLeft hari lagi",
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.white.withOpacity(0.8),
+                        fontWeight: FontWeight.w500
                       ),
-
-                      Text(
-                        "${next.date.day} ${_monthName(next.date.month)} ${next.date.year} • $daysLeft hari lagi",
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 243, 243, 243),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                    height(6),
+                    if (completedList.isNotEmpty) ...[
+      // Text(
+      //   "✅ Sudah dilakukan:",
+      //   style: TextStyle(
+      //     color: Colors.white.withOpacity(0.9),
+      //     fontSize: 13,
+      //     fontWeight: FontWeight.w600,
+      //   ),
+      // ),
+      height(10),
+      for (var done in completedList)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "- ${done.name}",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+              ),
+            ),
+            // width(30),
+            
+            Text('Selesai', 
+            style: TextStyle(
+                color: Colors.white,              
+                fontSize: 12,)),
+          ],
+        ),
+                  ],
+                  ]
                 ),
-                // Text(
-                //   '(Atur Nama Jenis Imunisasi)',
-                //   style: TextStyle(
-                //     fontSize: 16,
-                //     color: Colors.white,
-                //     fontWeight: FontWeight.w700,
-                //   ),
-                // ),
-                // height(5),
-                // Text(
-                //   '(Atur Tanggal) • 2 hari lagi',
-                //   style: TextStyle(
-                //     fontSize: 13,
-                //     color: Colors.white.withOpacity(0.95),
-                //   ),
-                // ),
+                
               ],
             ),
           ),
@@ -407,20 +423,32 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
                         "${item.date.day} ${_monthName(item.date.month)} ${item.date.year}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                       ),
+                      
+                      //Menambahkan fitur checklist
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            item.status == ImunisasiStatus.upcoming
-                                ? 'Akan Datang'
-                                : item.status == ImunisasiStatus.completed
-                                ? 'Selesai'
-                                : 'Terlambat',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
+                            Text(
+                              item.status == ImunisasiStatus.upcoming
+                                  ? 'Akan Datang'
+                                  : item.status == ImunisasiStatus.completed
+                                      ? 'Selesai'
+                                      : 'Terlambat',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
+                          Checkbox(
+                            value: item.completed,
+                            activeColor: Color(0xFF2F6B6A),
+                            onChanged: (value) {
+                              setState(() {
+                                item.completed = value ?? false;
+                              });
+                            },
                           ),
+                          
                           // Transform.scale(
                           //   scale: 0.85,
                           //   child: Switch(
@@ -430,12 +458,13 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
                           //   ),
                           // ),
                         ],
-                      ),
+                      ),                      
                     ],
                   ),
                 ),
               ],
             ),
+            
           ),
         );
       }).toList(),

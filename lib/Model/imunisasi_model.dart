@@ -5,6 +5,9 @@ class Imunisasi {
   final DateTime date;
   // final ImunisasiStatus status;
   bool reminder;
+  bool completed;
+  // final completedList = Imunisasi.where((i) => i.completed).toList();
+
 
   Imunisasi({
     required this.id,
@@ -13,6 +16,7 @@ class Imunisasi {
     required this.date,
     // required this.status,
     required this.reminder,
+    required this.completed
   });
 
   ImunisasiStatus get status {
