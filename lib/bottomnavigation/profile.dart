@@ -140,7 +140,6 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
     );
   }
-
   Widget _buildSectionTitle(String title) {
     return Align(
       alignment: Alignment.centerLeft,
@@ -154,7 +153,6 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-
   Widget _buildInfoUserAccount() {
     return Column(
       children: [
@@ -184,7 +182,6 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
     );
   }
-
   Widget _buildEditBottom() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -203,7 +200,6 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
     );
   }
-
   Widget _buildSettingsAccount() {
     return Column(
       children: [
@@ -223,7 +219,6 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
     );
   }
-
   Widget _buildLogOutButton({
     required String text,
     required VoidCallback onPressed,
@@ -264,7 +259,6 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-
   Widget _buildAppVersion() {
     return Center(
       child: Column(
@@ -295,7 +289,6 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-
   Widget _buildInfoItem({
     required IconData icon,
     required String title,
@@ -386,24 +379,87 @@ class _ProfilePageState extends State<ProfilePage> {
     final res = await showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text("Edit Data"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 12,
-            children: [
-              buildTextField(
-                hintText: "Nama Lengkap",
-                controller: editFullnameC,
+        return 
+        AlertDialog(
+          shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF40E0D0).withOpacity(0.2),
+                borderRadius: BorderRadius.circular(8),
               ),
-              buildTextField(hintText: "Email", controller: editEmailC),
-              buildTextField(
-                hintText: "Nomor Telepon",
-                controller: editPhonenumberC,
+              child: const Icon(
+                Icons.edit,
+                color: Color(0xFF2F6B6A),
               ),
-            ],
-          ),
-          actions: [
+            ),
+            width(12),
+            const Text(
+              'Edit Profil',
+              style: TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
+         content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: editFullnameC,
+              decoration: InputDecoration(
+                labelText: 'Nama Lengkap',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: Color(0xFF2F6B6A),
+                    width: 2,
+                  ),
+                ),
+              ),
+            ),
+            height(16),
+            TextField(              
+              controller: editEmailC,
+              decoration: InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: Color(0xFF2F6B6A),
+                    width: 2,
+                  ),
+                ),
+              ),
+            ),
+            height(16),
+            TextField(              
+              controller: editPhonenumberC,
+              decoration: InputDecoration(
+                labelText: 'Nomor Telepon',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: Color(0xFF2F6B6A),
+                    width: 2,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+            actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context, false);
@@ -415,11 +471,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 Navigator.pop(context, true);
               },
               child: Text("Save"),
-            ),
-          ],
-        );
-      },
-    );
+        ),
+            ]
+          );
+      }
+            );
+          
+      
 
     if (res == true) {
       final updated = UserModel(
@@ -438,7 +496,21 @@ class _ProfilePageState extends State<ProfilePage> {
         widget.user.email = updated.email;
         widget.user.phonenumber = updated.phonenumber;
       });
-      Fluttertoast.showToast(msg: "Data has been updated");
+       ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.white),
+            const SizedBox(width: 12),
+            Text('Data Berhasil Diedit'),
+          ],
+        ),
+        backgroundColor: const Color(0xFF2F6B6A),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: const EdgeInsets.all(16),
+      ),
+    );
     }
   }
 }

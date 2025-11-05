@@ -63,12 +63,10 @@ class _PetaPageState extends State<PetaPage> {
 
   List<PetaModel> get _filteredFacilities {
     List<PetaModel> filtered = _allFacilities;
-
     // Filter by type
     if (_selectedFilter != 'Semua') {
       filtered = filtered.where((f) => f.type == _selectedFilter).toList();
     }
-
     // Filter by search query
     if (_searchController.text.isNotEmpty) {
       filtered = filtered
@@ -92,6 +90,46 @@ class _PetaPageState extends State<PetaPage> {
     _searchController.dispose();
     super.dispose();
   }
+
+  //Snackbar Memanggil No.Telp
+  void _callFacility(PetaModel facility) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.phone, color: Colors.white, size: 20),
+            width(12),
+            Expanded(child: Text('Memanggil ${facility.phone}')),
+          ],
+        ),
+        backgroundColor: const Color(0xFF2F6B6A),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: const EdgeInsets.all(16),
+      ),
+    );
+  }
+  // //Snackbar Memanggil Arah Location
+  // void _callDirection(PetaModel direction) {
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     SnackBar(
+  //       content: Row(
+  //         children: [
+  //           const Icon(Icons.navigation, color: Colors.white, size: 20),
+  //           const SizedBox(width: 12),
+  //           Expanded(child: 
+  //           // Text('Memanggil ${facility.phone}'
+  //           Text('Masih Gatau Arah'
+  //         )),
+  //         ],
+  //       ),
+  //       backgroundColor: const Color(0xFF2F6B6A),
+  //       behavior: SnackBarBehavior.floating,
+  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  //       margin: const EdgeInsets.all(16),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +231,6 @@ class _PetaPageState extends State<PetaPage> {
       ],
     );
   }
-
   Widget _buildSearchBar() {
     return Container(
       decoration: BoxDecoration(
@@ -240,7 +277,6 @@ class _PetaPageState extends State<PetaPage> {
       ),
     );
   }
-
   Widget _buildMapLocation() {
     return Container(
       height: 200,
@@ -337,7 +373,6 @@ class _PetaPageState extends State<PetaPage> {
       ),
     );
   }
-
   Widget _buildFilterFaskes() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -350,36 +385,35 @@ class _PetaPageState extends State<PetaPage> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        GestureDetector(
-          onTap: () {},
-          // onTap: (_showFilterDialog),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: const Color(0xFF40E0D0).withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(Icons.filter_list, size: 16, color: Color(0xFF2F6B6A)),
-                SizedBox(width: 6),
-                Text(
-                  'Filter',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFF2F6B6A),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        // GestureDetector(
+        //   onTap: () {},
+        //   // onTap: (_showFilterDialog),
+        //   child: Container(
+        //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        //     decoration: BoxDecoration(
+        //       color: const Color(0xFF40E0D0).withOpacity(0.1),
+        //       borderRadius: BorderRadius.circular(8),
+        //     ),
+        //     child: Row(
+        //       mainAxisSize: MainAxisSize.min,
+        //       children: const [
+        //         Icon(Icons.filter_list, size: 16, color: Color(0xFF2F6B6A)),
+        //         SizedBox(width: 6),
+        //         Text(
+        //           'Filter',
+        //           style: TextStyle(
+        //             fontSize: 12,
+        //             color: Color(0xFF2F6B6A),
+        //             fontWeight: FontWeight.w600,
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
-
   Widget _buildListFaskes() {
     if (_filteredFacilities.isEmpty) {
       return Container(
@@ -396,7 +430,6 @@ class _PetaPageState extends State<PetaPage> {
         ),
       );
     }
-
     return Column(
       children: _filteredFacilities.map((facility) {
         return Padding(
@@ -406,7 +439,6 @@ class _PetaPageState extends State<PetaPage> {
       }).toList(),
     );
   }
-
   Widget _buildInfoFaskes(PetaModel facility) {
     return Container(
       decoration: BoxDecoration(
@@ -573,7 +605,18 @@ class _PetaPageState extends State<PetaPage> {
                       child: _buildActionButton(
                         icon: Icons.navigation,
                         label: 'Arah',
-                        onTap: () {},
+                        //SnackBar sementara
+                        onTap: () { 
+                          ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Masih Gatau Arah🙂'),
+        backgroundColor: const Color(0xFF2F6B6A),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: const EdgeInsets.all(16),
+      ),
+    );}
+      
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -599,7 +642,8 @@ class _PetaPageState extends State<PetaPage> {
     required String label,
     required VoidCallback onTap,
   }) {
-    return Container(
+    return
+    Container(
       height: 40,
       decoration: BoxDecoration(
         border: Border.all(color: const Color(0xFF2F6B6A), width: 1.5),
@@ -608,10 +652,7 @@ class _PetaPageState extends State<PetaPage> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {
-            HapticFeedback.lightImpact();
-            onTap();
-          },
+          onTap: onTap,
           borderRadius: BorderRadius.circular(10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -688,23 +729,6 @@ class _PetaPageState extends State<PetaPage> {
     );
   }
 
-  void _callFacility(PetaModel facility) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.phone, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
-            Expanded(child: Text('Memanggil ${facility.phone}')),
-          ],
-        ),
-        backgroundColor: const Color(0xFF2F6B6A),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
-      ),
-    );
-  }
 }
 
 //Sized Box

@@ -424,7 +424,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
                         style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                       ),
                       
-                      //Menambahkan fitur checklist
+              
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -439,6 +439,8 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
+                            
+                          //Menambahkan fitur checklist
                           Checkbox(
                             value: item.completed,
                             activeColor: Color(0xFF2F6B6A),

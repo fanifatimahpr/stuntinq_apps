@@ -61,33 +61,3 @@ class FAQ {
 
 // Enum
 enum EducationType { video, article }
-
-//Model Class untuk sumber nutrisi
-class NutritionSource {
-  final String id;
-  final String name;
-  final String portion;
-  final DateTime dateAdded;
-
-  NutritionSource({
-    required this.id,
-    required this.name,
-    required this.portion,
-    required this.dateAdded,
-  });
-}
-
-/// Model Class untuk Keluhan
-class HealthComplaint {
-  final String id;
-  final String complaint;
-  final String severity; // Ringan, Sedang, Berat
-  final DateTime dateAdded;
-
-  HealthComplaint({
-    required this.id,
-    required this.complaint,
-    required this.severity,
-    required this.dateAdded,
-  });
-}

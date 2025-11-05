@@ -1,26 +1,30 @@
 import 'package:stuntinq_apps/Model/edukasi_model.dart';
 
-List<NutritionSource> _nutritionSources = [
-    NutritionSource(
-      id: '1',
-      name: 'Nasi Putih',
-      portion: '1 mangkok',
-      dateAdded: DateTime.now().subtract(const Duration(days: 1)),
-    ),
-    NutritionSource(
-      id: '2',
-      name: 'Telur Rebus',
-      portion: '1 butir',
-      dateAdded: DateTime.now(),
-    ),
-  ];
+// Class Model untuk Sumber Nutrisi
+class NutritionSource {
+  final String id;
+  final String name;
+  final String portion;
+  final DateTime dateAdded;
 
-  List<HealthComplaint> _healthComplaints = [
-    HealthComplaint(
-      id: '1',
-      complaint: 'Nafsu makan berkurang',
-      severity: 'Ringan',
-      dateAdded: DateTime.now().subtract(const Duration(days: 2)),
-    ),
-  ];
-  
+  NutritionSource({
+    required this.id,
+    required this.name,
+    required this.portion,
+    required this.dateAdded,
+  });
+}
+
+// // Class Model untuk Keluhan
+// class HealthComplaint {
+//   final String id;
+//   final String complaint;
+//   final String severity; // Ringan, Sedang, Berat
+//   final DateTime dateAdded;
+
+//   HealthComplaint({
+//     required this.id,
+//     required this.complaint,
+//     required this.severity,
+//     required this.dateAdded,
+//   });

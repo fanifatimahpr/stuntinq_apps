@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:stuntinq_apps/Model/data_model.dart';
 import 'package:stuntinq_apps/Model/edukasi_model.dart';
 
 class DataPage extends StatefulWidget {
@@ -23,15 +24,6 @@ class _DataPageState extends State<DataPage>
       name: 'Telur Rebus',
       portion: '1 butir',
       dateAdded: DateTime.now(),
-    ),
-  ];
-
-  List<HealthComplaint> _healthComplaints = [
-    HealthComplaint(
-      id: '1',
-      complaint: 'Nafsu makan berkurang',
-      severity: 'Ringan',
-      dateAdded: DateTime.now().subtract(const Duration(days: 2)),
     ),
   ];
 
@@ -63,17 +55,14 @@ class _DataPageState extends State<DataPage>
     _heightController.dispose();
     _headCircumferenceController.dispose();
     _successAnimationController.dispose();
-    // super.dispose();
+    super.dispose();
   }
-
   void _handleSubmit() {
     if (_formKey.currentState!.validate()) {
-      HapticFeedback.mediumImpact();
       setState(() {
         _showSuccess = true;
       });
       _successAnimationController.forward();
-
       // // Hide success message after 3 seconds
       // Future.delayed(const Duration(seconds: 3), () {
       //   if (mounted) {
@@ -87,6 +76,188 @@ class _DataPageState extends State<DataPage>
       // print('Data saved: ${_nameController.text}');
     }
   }
+  //Show Dialog Add Nutrition
+  void _showAddNutritionDialog() {
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController portionController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF40E0D0).withOpacity(0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(
+                Icons.restaurant_menu,
+                color: Color(0xFF2F6B6A),
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Text(
+              'Tambah Sumber Gizi',
+              style: TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: InputDecoration(
+                labelText: 'Nama Makanan',
+                hintText: 'Contoh: Nasi Putih',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: Color(0xFF2F6B6A),
+                    width: 2,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: portionController,
+              decoration: InputDecoration(
+                labelText: 'Porsi',
+                hintText: 'Contoh: 1 mangkok',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: Color(0xFF2F6B6A),
+                    width: 2,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Batal',
+              style: TextStyle(color: Color.fromARGB(255, 82, 82, 82)),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (nameController.text.isNotEmpty && 
+                  portionController.text.isNotEmpty) {
+                _addNutrition(
+                  nameController.text,
+                  portionController.text,
+                );
+                Navigator.pop(context);
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF2F6B6A),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text('Tambah',
+            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
+          ),
+        ],
+      ),
+    );
+  }
+  //Create Nutrition
+  void _addNutrition(String name, String portion) {
+    setState(() {
+      _nutritionSources.add(
+        NutritionSource(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          name: name,
+          portion: portion,
+          dateAdded: DateTime.now(),
+        ),
+      );
+    });
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.white),
+            const SizedBox(width: 12),
+            Text('$name berhasil ditambahkan'),
+          ],
+        ),
+        backgroundColor: const Color(0xFF2F6B6A),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: const EdgeInsets.all(16),
+      ),
+    );
+  }
+  //Delete Nutrition
+  void _deleteNutrition(String id) {final nutrition = _nutritionSources.firstWhere((n) => n.id == id);
+  showDialog(      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: const Text('Hapus Sumber Gizi?'),
+        content: Text('Apakah Anda yakin ingin menghapus "${nutrition.name}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _nutritionSources.removeWhere((n) => n.id == id);
+              });
+              Navigator.pop(context);
+              
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    children: [
+                      const Icon(Icons.delete, color: Colors.white),
+                      const SizedBox(width: 12),
+                      Text('${nutrition.name} dihapus'),
+                    ],
+                  ),
+                  backgroundColor: const Color(0xFF2F6B6A),
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  margin: const EdgeInsets.all(16),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF2F6B6A),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text('Hapus',style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
+          ),
+        ],
+      ),
+    );
+  }
   double _calculateIMT() {
     if (_weightController.text.isEmpty || _heightController.text.isEmpty) {
       return 0;
@@ -99,7 +270,6 @@ class _DataPageState extends State<DataPage>
     double heightMeter = heightCm / 100;
     return weight / (heightMeter * heightMeter);
   }
-
   String _getStatus() {
     double imt = _calculateIMT();
     if (imt == 0) return 'Data belum lengkap';
@@ -110,7 +280,7 @@ class _DataPageState extends State<DataPage>
     if (imt >= 30) return 'Obesitas Tingkat II';
     return 'Normal';
   }
-   String _getGrowthStatus() {
+  String _getGrowthStatus() {
     double imt = _calculateIMT();
     if (imt == 0) return 'Data belum lengkap';
     if (imt < 18.5) return 'Berat badan anak di bawah normal. '
@@ -125,7 +295,29 @@ class _DataPageState extends State<DataPage>
           'Segera konsultasikan dengan dokter anak untuk penanganan lebih lanjut dan evaluasi pola hidup sehat.';
     return 'Normal';
   }
+  String _getInitials(String name) {
+    if (name.isEmpty) return 'NA';
 
+    List<String> parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
+    }
+    return name.substring(0, name.length >= 2 ? 2 : 1).toUpperCase();
+  }
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+    
+    if (difference.inDays == 0) {
+      return 'Hari ini';
+    } else if (difference.inDays == 1) {
+      return 'Kemarin';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays} hari lalu';
+    } else {
+      return '${date.day}/${date.month}/${date.year}';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +327,6 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
-
   Widget _buildBackground() {
     return Container(
       width: double.infinity,
@@ -146,14 +337,6 @@ class _DataPageState extends State<DataPage>
 
   Widget _buildLayer() {
     return SafeArea(
-      // child: Container(
-      //             decoration: const BoxDecoration(
-      //               color: Color(0xFFF8FAFB),
-      //               borderRadius: BorderRadius.only(
-      //                 topLeft: Radius.circular(30),
-      //                 topRight: Radius.circular(30),
-      //               ),
-      //             ),
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(22),
         child: Column(
@@ -170,22 +353,22 @@ class _DataPageState extends State<DataPage>
             //IMT
             _buildIMTResult(),
             height(16),
-
-            //Form Input Data Anak
-            _buildInputForm(),
-            height(16),
             
-            //Form Sumber Nutrisi
-            _buildNutritionSection(),
-            height(16),
-
-            //Form Complaint
-            // _buildComplaintSection(),
+            //Form Input Data Anak
+            _buildSectionTitle('Input Data Antropometri Anak'),
+            height(8),
+            _buildInputForm(),
             height(16),
 
             //Save Button
             _buildSaveButton(),
-            height(26),
+            height(40),
+            
+            //Form Sumber Nutrisi
+             _buildSectionTitle('Input Sumber Gizi Harian Anak'),
+            height(8),
+            _buildNutritionSection(),
+            height(16),
 
             //Tips
             _buildTips(),
@@ -245,7 +428,6 @@ class _DataPageState extends State<DataPage>
       ],
     );
   }
-
   Widget _buildChildProfile() {
     return Container(
       decoration: BoxDecoration(
@@ -404,8 +586,7 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
-
- Widget _buildIMTResult() {
+  Widget _buildIMTResult() {
    double imt = _calculateIMT();
     return Container(
       padding: const EdgeInsets.all(18),
@@ -486,17 +667,19 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
-
-  String _getInitials(String name) {
-    if (name.isEmpty) return 'NA';
-
-    List<String> parts = name.trim().split(' ');
-    if (parts.length >= 2) {
-      return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
-    }
-    return name.substring(0, name.length >= 2 ? 2 : 1).toUpperCase();
+  Widget _buildSectionTitle(String title) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        title,
+        style: const TextStyle(
+          color: Color(0xFF2F6B6A),
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
   }
-
   Widget _buildInputForm() {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -616,7 +799,6 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
-
   Widget _buildInputField({
     required TextEditingController controller,
     required String label,
@@ -688,7 +870,6 @@ class _DataPageState extends State<DataPage>
       ],
     );
   }
-
   Widget _buildGenderSelector() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -747,6 +928,42 @@ class _DataPageState extends State<DataPage>
       ],
     );
   }
+  Widget _buildSaveButton() {
+    return Container(
+      width: double.infinity,
+      height: 56,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF2F6B6A), Color(0xFF40E0D0)],
+        ),
+        borderRadius: BorderRadius.circular(26),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF2F6B6A).withOpacity(0.4),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: _handleSubmit,
+          borderRadius: BorderRadius.circular(26),
+          child: const Center(
+            child: Text(
+              'Simpan Data',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
   Widget _buildNutritionSection() {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -785,7 +1002,7 @@ class _DataPageState extends State<DataPage>
                       color: Color(0xFF2F6B6A),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  width(12),
                   const Text(
                     'Sumber Gizi Anak',
                     style: TextStyle(
@@ -800,60 +1017,59 @@ class _DataPageState extends State<DataPage>
                 onPressed: _showAddNutritionDialog,
                 // onPressed: (){},
                 icon: const Icon(Icons.add_circle),
-                color: const Color(0xFF40E0D0),
+                color: Color(0xFF2F6B6A),
                 iconSize: 28,
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          height(16),
           
-          // if (_nutritionSources.isEmpty)
-          //   Container(
-          //     padding: const EdgeInsets.all(24),
-          //     child: Center(
-          //       child: Column(
-          //         children: [
-          //           Icon(
-          //             Icons.restaurant,
-          //             size: 48,
-          //             color: Colors.grey[400],
-          //           ),
-          //           const SizedBox(height: 12),
-          //           Text(
-          //             'Belum ada sumber gizi tercatat',
-          //             style: TextStyle(
-          //               color: Colors.grey[600],
-          //               fontSize: 14,
-          //             ),
-          //           ),
-          //           const SizedBox(height: 8),
-          //           Text(
-          //             'Tap ikon + untuk menambah',
-          //             style: TextStyle(
-          //               color: Colors.grey[500],
-          //               fontSize: 12,
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   )
-          // else
-          //   ListView.separated(
-          //     shrinkWrap: true,
-          //     physics: const NeverScrollableScrollPhysics(),
-          //     itemCount: _nutritionSources.length,
-          //     separatorBuilder: (context, index) => const SizedBox(height: 8),
-          //     itemBuilder: (context, index) {
-          //       final nutrition = _nutritionSources[index];
-          //       return _buildNutritionItem(nutrition);
-          //     },
-          //   ),
+          if (_nutritionSources.isEmpty)
+            Container(
+              padding: const EdgeInsets.all(24),
+              child: Center(
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.restaurant,
+                      size: 48,
+                      color: Colors.grey[400],
+                    ),
+                    height(12),
+                    Text(
+                      'Belum ada sumber gizi tercatat',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 14,
+                      ),
+                    ),
+                    height(8),
+                    Text(
+                      'Tap ikon + untuk menambah',
+                      style: TextStyle(
+                        color: Colors.grey[500],
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          else
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _nutritionSources.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 8),
+              itemBuilder: (context, index) {
+                final nutrition = _nutritionSources[index];
+                return _buildNutritionItem(nutrition);
+              },
+            ),
         ],
       ),
     );
   }
-
   Widget _buildNutritionItem(NutritionSource nutrition) {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -879,7 +1095,7 @@ class _DataPageState extends State<DataPage>
               color: Color(0xFF2F6B6A),
             ),
           ),
-          const SizedBox(width: 12),
+          width(12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -904,8 +1120,8 @@ class _DataPageState extends State<DataPage>
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      '',
-                      // '• ${_formatDate(nutrition.dateAdded)}',
+                      // '',
+                      '• ${_formatDate(nutrition.dateAdded)}',
                       style: TextStyle(
                         fontSize: 11,
                         color: Colors.grey[500],
@@ -927,43 +1143,6 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
-  Widget _buildSaveButton() {
-    return Container(
-      width: double.infinity,
-      height: 56,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF2F6B6A), Color(0xFF40E0D0)],
-        ),
-        borderRadius: BorderRadius.circular(26),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF2F6B6A).withOpacity(0.4),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: _handleSubmit,
-          borderRadius: BorderRadius.circular(26),
-          child: const Center(
-            child: Text(
-              'Simpan Data',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildTips() {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -1014,7 +1193,6 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
-
   Widget _buildTipItem(String text) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1043,193 +1221,7 @@ class _DataPageState extends State<DataPage>
       ],
     );
   }
-void _showAddNutritionDialog() {
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController portionController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color(0xFF40E0D0).withOpacity(0.2),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(
-                Icons.restaurant_menu,
-                color: Color(0xFF2F6B6A),
-              ),
-            ),
-            const SizedBox(width: 12),
-            const Text(
-              'Tambah Sumber Gizi',
-              style: TextStyle(fontSize: 18),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(
-                labelText: 'Nama Makanan',
-                hintText: 'Contoh: Nasi Putih',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(
-                    color: Color(0xFF2F6B6A),
-                    width: 2,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: portionController,
-              decoration: InputDecoration(
-                labelText: 'Porsi',
-                hintText: 'Contoh: 1 mangkok',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(
-                    color: Color(0xFF2F6B6A),
-                    width: 2,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Batal',
-              style: TextStyle(color: Colors.grey),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (nameController.text.isNotEmpty && 
-                  portionController.text.isNotEmpty) {
-                _addNutrition(
-                  nameController.text,
-                  portionController.text,
-                );
-                Navigator.pop(context);
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF2F6B6A),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: const Text('Tambah'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  //CRUD Nutrisi
-  void _addNutrition(String name, String portion) {
-    setState(() {
-      _nutritionSources.add(
-        NutritionSource(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          name: name,
-          portion: portion,
-          dateAdded: DateTime.now(),
-        ),
-      );
-    });
-    
-    HapticFeedback.mediumImpact();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle, color: Colors.white),
-            const SizedBox(width: 12),
-            Text('$name berhasil ditambahkan'),
-          ],
-        ),
-        backgroundColor: const Color(0xFF2F6B6A),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
-      ),
-    );
-  }
-
-  void _deleteNutrition(String id) {
-    final nutrition = _nutritionSources.firstWhere((n) => n.id == id);
-    
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        title: const Text('Hapus Sumber Gizi?'),
-        content: Text('Apakah Anda yakin ingin menghapus "${nutrition.name}"?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Batal'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _nutritionSources.removeWhere((n) => n.id == id);
-              });
-              Navigator.pop(context);
-              
-              HapticFeedback.mediumImpact();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Row(
-                    children: [
-                      const Icon(Icons.delete, color: Colors.white),
-                      const SizedBox(width: 12),
-                      Text('${nutrition.name} dihapus'),
-                    ],
-                  ),
-                  backgroundColor: Colors.red,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  margin: const EdgeInsets.all(16),
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: const Text('Hapus'),
-          ),
-        ],
-      ),
-    );
-  }
+  
 }
 
 //Sized Box
