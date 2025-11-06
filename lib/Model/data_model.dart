@@ -33,16 +33,24 @@ class NutritionSource {
   }
 }
 
-// // Class Model untuk Keluhan
-// class HealthComplaint {
-//   final String id;
-//   final String complaint;
-//   final String severity; // Ringan, Sedang, Berat
-//   final DateTime dateAdded;
+// Class Model untuk Anak
+class ChildData {
+  String id;
+  String name;
+  int age;
+  double weight;
+  double height;
+  double headCircumference;
+  String gender;
 
-//   HealthComplaint({
-//     required this.id,
-//     required this.complaint,
-//     required this.severity,
-//     required this.dateAdded,
-//   });
+  ChildData({
+    required this.id,
+    required this.name,
+    required this.age,
+    required this.weight,
+    required this.height,
+    required this.headCircumference,
+    required this.gender,
+  });
+}
+

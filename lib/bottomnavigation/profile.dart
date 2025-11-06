@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stuntinq_apps/Database/dbhelper_user.dart';
 import 'package:stuntinq_apps/Model/user_model.dart';
-import 'package:stuntinq_apps/Splashing/signin_page.dart';
-import 'package:stuntinq_apps/Splashing/splashscreen_page.dart';
+import 'package:stuntinq_apps/Slashingg/splashscreen_page.dart';
 
 class ProfilePage extends StatefulWidget {
   final UserModel user;
@@ -395,6 +394,7 @@ class _ProfilePageState extends State<ProfilePage> {
         phonenumber: phoneC.text,
       );
 
+      //Edit User
       await DBHelper.updateUser(updated);
 
       setState(() {
@@ -434,7 +434,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-// reusable helper
 Widget _buildInfoItem({
   required IconData icon,
   required String title,

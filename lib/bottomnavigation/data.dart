@@ -320,7 +320,6 @@ class _DataPageState extends State<DataPage>
         );
       });
 
-      HapticFeedback.mediumImpact();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(
@@ -466,6 +465,7 @@ class _DataPageState extends State<DataPage>
       return '${date.day}/${date.month}/${date.year}';
     }
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -516,6 +516,13 @@ class _DataPageState extends State<DataPage>
             //Form Sumber Nutrisi
             _buildSectionTitle('Input Sumber Gizi Harian Anak'),
             height(8),
+            
+// NutritionCRUDWidget(
+//   nutritionSources: _nutritionSources,
+//   onAdd: _addNutrition,
+//   onEdit: _editNutrition,
+//   onDelete: _deleteNutrition,
+// ),
             _buildNutritionSection(),
             height(16),
 

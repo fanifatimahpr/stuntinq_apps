@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stuntinq_apps/Database/dbhelper_user.dart';
 import 'package:stuntinq_apps/Model/user_model.dart';
-import 'package:stuntinq_apps/Splashing/signin_page.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -186,7 +185,7 @@ class _SignupPageState extends State<SignupPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const SigninPage()),
+                    MaterialPageRoute(builder: (_) => const SignupPage()),
                   );
                 },
               ),
