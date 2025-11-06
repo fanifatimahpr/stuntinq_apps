@@ -19,7 +19,7 @@ class NutritionSource {
       'id': id,
       'name': name,
       'portion': portion,
-      'dateAdded': dateAdded.toIso8601String(),
+      'dateAdded': dateAdded.toIso8601String(), // ubah ke String saat disimpan
     };
   }
 
@@ -28,10 +28,11 @@ class NutritionSource {
       id: map['id'],
       name: map['name'],
       portion: map['portion'],
-      dateAdded: DateTime.parse(map['dateAdded']),
+      dateAdded: DateTime.parse(map['dateAdded']), // ubah ke DateTime saat dibaca
     );
   }
 }
+
 
 // Class Model untuk Anak
 class ChildData {
