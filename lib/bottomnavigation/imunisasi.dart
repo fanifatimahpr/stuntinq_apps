@@ -35,7 +35,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ageMonth: 0,
       date: DateTime(2025, 9, 15),
       reminder: false,
-      completed: false
+      completed: false,
     ),
     Imunisasi(
       id: 2,
@@ -43,7 +43,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ageMonth: 1,
       date: DateTime(2025, 10, 15),
       reminder: false,
-      completed: false
+      completed: false,
     ),
     Imunisasi(
       id: 3,
@@ -51,7 +51,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ageMonth: 2,
       date: DateTime(2025, 11, 15),
       reminder: true,
-      completed: false
+      completed: false,
     ),
     Imunisasi(
       id: 4,
@@ -59,7 +59,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ageMonth: 2,
       date: DateTime(2025, 11, 15),
       reminder: true,
-      completed: false
+      completed: false,
     ),
     Imunisasi(
       id: 5,
@@ -67,7 +67,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ageMonth: 3,
       date: DateTime(2025, 12, 15),
       reminder: false,
-      completed: false
+      completed: false,
     ),
     Imunisasi(
       id: 6,
@@ -75,7 +75,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ageMonth: 3,
       date: DateTime(2025, 12, 15),
       reminder: false,
-      completed: false
+      completed: false,
     ),
     Imunisasi(
       id: 7,
@@ -83,7 +83,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ageMonth: 4,
       date: DateTime(2026, 1, 15),
       reminder: false,
-      completed: false
+      completed: false,
     ),
     Imunisasi(
       id: 8,
@@ -91,15 +91,13 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ageMonth: 4,
       date: DateTime(2026, 1, 15),
       reminder: false,
-      completed: false
+      completed: false,
     ),
-    
   ];
 
   // int get upcomingCount =>
   //     Imunisasi.where((i) => i.status == ImunisasiStatus.upcoming).length;
   late List<Imunisasi> imunisasi;
-  
 
   @override
   void initState() {
@@ -261,7 +259,8 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
           color: const Color(0xFF40E0D0).withOpacity(0.3),
-          width: 1.5,),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
             color: Color(0xFF2F6B6A).withOpacity(0.15),
@@ -274,11 +273,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.notifications_active_outlined,
-            color: Colors.white.withOpacity(0.8),
-            size: 24,
-          ),
+          Text('🔔', style: TextStyle(fontSize: 20)),
           width(12),
           Expanded(
             child: Column(
@@ -294,7 +289,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
                 ),
                 Divider(color: Colors.white.withOpacity(0.4)),
                 height(4),
-                
+
                 //Jenis Imunisasi
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -308,51 +303,52 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+
                     // height(5),
-                    
-                
                     Text(
                       "${next.date.day} ${_monthName(next.date.month)} ${next.date.year} • $daysLeft hari lagi",
                       style: TextStyle(
                         fontSize: 13,
                         color: Colors.white.withOpacity(0.8),
-                        fontWeight: FontWeight.w500
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     height(6),
                     if (completedList.isNotEmpty) ...[
-      // Text(
-      //   "✅ Sudah dilakukan:",
-      //   style: TextStyle(
-      //     color: Colors.white.withOpacity(0.9),
-      //     fontSize: 13,
-      //     fontWeight: FontWeight.w600,
-      //   ),
-      // ),
-      height(10),
-      for (var done in completedList)
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "- ${done.name}",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-              ),
-            ),
-            // width(30),
-            
-            Text('Selesai', 
-            style: TextStyle(
-                color: Colors.white,              
-                fontSize: 12,)),
-          ],
-        ),
+                      // Text(
+                      //   "✅ Sudah dilakukan:",
+                      //   style: TextStyle(
+                      //     color: Colors.white.withOpacity(0.9),
+                      //     fontSize: 13,
+                      //     fontWeight: FontWeight.w600,
+                      //   ),
+                      // ),
+                      height(10),
+                      for (var done in completedList)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "- ${done.name}",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+
+                            // width(30),
+                            Text(
+                              'Selesai',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
                   ],
-                  ]
                 ),
-                
               ],
             ),
           ),
@@ -423,23 +419,22 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
                         "${item.date.day} ${_monthName(item.date.month)} ${item.date.year}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                       ),
-                      
-              
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                            Text(
-                              item.status == ImunisasiStatus.upcoming
-                                  ? 'Akan Datang'
-                                  : item.status == ImunisasiStatus.completed
-                                      ? 'Selesai'
-                                      : 'Terlambat',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          Text(
+                            item.status == ImunisasiStatus.upcoming
+                                ? 'Akan Datang'
+                                : item.status == ImunisasiStatus.completed
+                                ? 'Selesai'
+                                : 'Terlambat',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
                             ),
-                            
+                          ),
+
                           //Menambahkan fitur checklist
                           Checkbox(
                             value: item.completed,
@@ -450,7 +445,7 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
                               });
                             },
                           ),
-                          
+
                           // Transform.scale(
                           //   scale: 0.85,
                           //   child: Switch(
@@ -460,13 +455,12 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
                           //   ),
                           // ),
                         ],
-                      ),                      
+                      ),
                     ],
                   ),
                 ),
               ],
             ),
-            
           ),
         );
       }).toList(),

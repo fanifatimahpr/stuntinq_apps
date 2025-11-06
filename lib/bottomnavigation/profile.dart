@@ -4,11 +4,9 @@ import 'package:stuntinq_apps/Database/dbhelper_user.dart';
 import 'package:stuntinq_apps/Model/user_model.dart';
 import 'package:stuntinq_apps/Splashing/signin_page.dart';
 import 'package:stuntinq_apps/Splashing/splashscreen_page.dart';
-import 'package:stuntinq_apps/test_listuser_editdelete.dart';
 
 class ProfilePage extends StatefulWidget {
   final UserModel user;
-
   ProfilePage({Key? key, required this.user}) : super(key: key);
 
   @override
@@ -31,63 +29,57 @@ class _ProfilePageState extends State<ProfilePage> {
       height: double.infinity,
       color: const Color(0xffD4F2F1),
     );
-
   }
 
-  Widget _buildLayer() {    
-    return SafeArea(
-    //   child: Container(
-    //               decoration: const BoxDecoration(
-    //                 color: Color(0xFFF8FAFB),
-    //                 borderRadius: BorderRadius.only(
-    //                   topLeft: Radius.circular(30),
-    //                   topRight: Radius.circular(30),
-    //                 ),
-    //               ),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(22),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //Header
-            _buildHeader(),
-            height(20),
+  Widget _buildLayer() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(22),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          //Header
+          _buildHeader(),
+          height(20),
 
-            //Informasi Akun (login)
-            _buildSectionTitle("Informasi Akun"),
-            height(8),
-            _buildInfoUserAccount(),
+          //List Info Akun
+          _buildSectionTitle("Informasi Akun"),
+          height(8),
+          _buildInfoUserAccount(),
 
-            //Edit Data
-            _buildEditBottom(),
-            height(15),
+          //Edit TextButton
+          _buildEditBottom(),
+          height(15),
 
-            //Pengaturan
-            _buildSectionTitle("Pengaturan Akun"),
-            height(8),
-            _buildSettingsAccount(),
-            height(40),
+          //Pengaturan
+          _buildSectionTitle("Pengaturan Akun"),
+          height(8),
+          _buildSettingsAccount(),
+          height(40),
 
-            //Log Out Button
-            _buildLogOutButton(
-              text: "Log Out",
-              onPressed: () async {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => SplashPage()),
-                  (route) => false,
-                );
-              },
-            ),
-            height(40),
+          //Log Out
+          _buildLogOutButton(
+            text: "Log Out",
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => SplashPage()),
+                (route) => false,
+              );
+            },
+          ),
 
-            //App Version
-            _buildAppVersion(),
-            height(50),
-          ],
-        ),
+          height(15),
+
+          //Delete Acc
+          _buildDeleteAccountButton(),
+          height(40),
+
+          //App Version
+          _buildAppVersion(),
+          height(50),
+        ],
       ),
-      );
+    );
   }
 
   Widget _buildHeader() {
@@ -140,19 +132,18 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
     );
   }
+
   Widget _buildSectionTitle(String title) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Text(
-        title,
-        style: const TextStyle(
-          color: Color(0xFF2F6B6A),
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
-        ),
+    return Text(
+      title,
+      style: const TextStyle(
+        color: Color(0xFF2F6B6A),
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
       ),
     );
   }
+
   Widget _buildInfoUserAccount() {
     return Column(
       children: [
@@ -160,7 +151,6 @@ class _ProfilePageState extends State<ProfilePage> {
           icon: Icons.person_outline,
           title: 'Nama Lengkap',
           subtitle: widget.user.fullname ?? '-',
-          // subtitle: _userData['name'] ?? '',
           onTap: () {},
         ),
         height(12),
@@ -168,7 +158,6 @@ class _ProfilePageState extends State<ProfilePage> {
           icon: Icons.email_outlined,
           title: 'Email',
           subtitle: widget.user.email ?? '-',
-          // subtitle: _userData['email'] ?? '',
           onTap: () {},
         ),
         height(12),
@@ -176,12 +165,12 @@ class _ProfilePageState extends State<ProfilePage> {
           icon: Icons.phone_outlined,
           title: 'Nomor Telepon',
           subtitle: widget.user.phonenumber ?? '-',
-          // subtitle: _userData['phone'] ?? '',
           onTap: () {},
         ),
       ],
     );
   }
+
   Widget _buildEditBottom() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -200,6 +189,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
     );
   }
+
   Widget _buildSettingsAccount() {
     return Column(
       children: [
@@ -219,6 +209,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
     );
   }
+
   Widget _buildLogOutButton({
     required String text,
     required VoidCallback onPressed,
@@ -227,18 +218,11 @@ class _ProfilePageState extends State<ProfilePage> {
       height: 56,
       width: double.infinity,
       decoration: BoxDecoration(
-          gradient: const LinearGradient(
-          colors: [Color(0xff2f6b6a), Color(0xff40E0D0)
-          ],),
-           borderRadius: BorderRadius.circular(26),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF2F6B6A).withOpacity(0.4),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-          ),
+        gradient: const LinearGradient(
+          colors: [Color(0xff2f6b6a), Color(0xff40E0D0)],
+        ),
+        borderRadius: BorderRadius.circular(26),
+      ),
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -259,262 +243,246 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+
+  Widget _buildDeleteAccountButton() {
+    return Container(
+      width: double.infinity,
+      height: 56,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: Colors.red.withOpacity(0.2), width: 1.5),
+      ),
+      child: InkWell(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                title: const Text(
+                  "Hapus Akun?",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                content: const Text(
+                  "Apakah kamu yakin ingin menghapus akun ini? Semua data akan hilang permanen.",
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Tutup dialog
+                    },
+                    child: const Text("Batal"),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                    ),
+                    onPressed: () async {
+                      final db = DBHelper();
+                      await DBHelper.deleteUser(widget.user.id!);
+
+                      Navigator.pop(context); // Tutup dialog
+
+                      Fluttertoast.showToast(
+                        msg: "Akun berhasil dihapus",
+                        gravity: ToastGravity.BOTTOM,
+                      );
+
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => SplashPage()),
+                        (route) => false,
+                      );
+                    },
+                    child: const Text(
+                      "Hapus",
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 255, 255, 255),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.delete, color: Colors.red),
+            width(10),
+            Text(
+              "Hapus Akun",
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.red.shade700,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildAppVersion() {
     return Center(
       child: Column(
         children: [
           Text(
             'Versi 1.0.0',
-            style: TextStyle(
-              color: const Color.fromARGB(255, 104, 103, 103),
-              fontSize: 12,
-            ),
+            style: TextStyle(color: Colors.grey[600], fontSize: 12),
           ),
           height(5),
           Text(
             'Copyright 2025 stuntinQ.',
-            style: TextStyle(
-              color: const Color.fromARGB(255, 139, 139, 139),
-              fontSize: 11,
-            ),
+            style: TextStyle(color: Colors.grey[600], fontSize: 11),
           ),
           Text(
             'All right reserved.',
-            style: TextStyle(
-              color: const Color.fromARGB(255, 139, 139, 139),
-              fontSize: 11,
-            ),
+            style: TextStyle(color: Colors.grey[600], fontSize: 11),
           ),
         ],
       ),
     );
   }
-  Widget _buildInfoItem({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFF40E0D0).withOpacity(0.2),
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                // Icon Container
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        const Color(0xFF40E0D0).withOpacity(0.2),
-                        const Color(0xFF2F6B6A).withOpacity(0.2),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(icon, size: 20, color: const Color(0xFF2F6B6A)),
-                ),
-                const SizedBox(width: 12),
 
-                // Text Content
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          color: Color(0xFF2F6B6A),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        subtitle,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Arrow Icon
-                Icon(Icons.chevron_right, size: 20, color: Colors.grey[400]),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  //Edit User
   Future<void> _onEdit(UserModel user) async {
-    final editFullnameC = TextEditingController(text: user.fullname);
-    final editEmailC = TextEditingController(text: user.email);
-    final editPhonenumberC = TextEditingController(text: user.phonenumber);
+    final nameC = TextEditingController(text: user.fullname);
+    final emailC = TextEditingController(text: user.email);
+    final phoneC = TextEditingController(text: user.phonenumber);
+
     final res = await showDialog(
       context: context,
       builder: (context) {
-        return 
-        AlertDialog(
+        return AlertDialog(
           shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color(0xFF40E0D0).withOpacity(0.2),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(
-                Icons.edit,
-                color: Color(0xFF2F6B6A),
-              ),
-            ),
-            width(12),
-            const Text(
-              'Edit Profil',
-              style: TextStyle(fontSize: 18),
-            ),
-          ],
-        ),
-         content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: editFullnameC,
-              decoration: InputDecoration(
-                labelText: 'Nama Lengkap',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(
-                    color: Color(0xFF2F6B6A),
-                    width: 2,
-                  ),
-                ),
-              ),
-            ),
-            height(16),
-            TextField(              
-              controller: editEmailC,
-              decoration: InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(
-                    color: Color(0xFF2F6B6A),
-                    width: 2,
-                  ),
-                ),
-              ),
-            ),
-            height(16),
-            TextField(              
-              controller: editPhonenumberC,
-              decoration: InputDecoration(
-                labelText: 'Nomor Telepon',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(
-                    color: Color(0xFF2F6B6A),
-                    width: 2,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-            actions: [
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Text("Edit Profil"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _editField(nameC, "Nama Lengkap"),
+              height(16),
+              _editField(emailC, "Email"),
+              height(16),
+              _editField(phoneC, "Nomor Telepon"),
+            ],
+          ),
+          actions: [
             TextButton(
-              onPressed: () {
-                Navigator.pop(context, false);
-              },
+              onPressed: () => Navigator.pop(context, false),
               child: Text("Cancel"),
             ),
             TextButton(
-              onPressed: () {
-                Navigator.pop(context, true);
-              },
+              onPressed: () => Navigator.pop(context, true),
               child: Text("Save"),
-        ),
-            ]
-          );
-      }
-            );
-          
-      
+            ),
+          ],
+        );
+      },
+    );
 
     if (res == true) {
       final updated = UserModel(
         id: user.id,
-        fullname: editFullnameC.text,
-        email: editEmailC.text,
-        phonenumber: editPhonenumberC.text,
-
-        //Contoh jika data integer
-        //   age: int.parse(editAgeC.text),
+        fullname: nameC.text,
+        email: emailC.text,
+        phonenumber: phoneC.text,
       );
-      DBHelper.updateUser(updated);
+
+      await DBHelper.updateUser(updated);
 
       setState(() {
         widget.user.fullname = updated.fullname;
         widget.user.email = updated.email;
         widget.user.phonenumber = updated.phonenumber;
       });
-       ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle, color: Colors.white),
-            const SizedBox(width: 12),
-            Text('Data Berhasil Diedit'),
-          ],
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.white),
+              SizedBox(width: 12),
+              Text('Data Berhasil Diedit'),
+            ],
+          ),
+          backgroundColor: Color(0xFF2F6B6A),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          margin: EdgeInsets.all(16),
         ),
-        backgroundColor: const Color(0xFF2F6B6A),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
+      );
+    }
+  }
+
+  Widget _editField(TextEditingController c, String label) {
+    return TextField(
+      controller: c,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
-    }
   }
 }
 
-//Sized Box
+// reusable helper
+Widget _buildInfoItem({
+  required IconData icon,
+  required String title,
+  required String subtitle,
+  required VoidCallback onTap,
+}) {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(
+        color: const Color(0xFF40E0D0).withOpacity(0.2),
+        width: 1.5,
+      ),
+    ),
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Icon(icon, color: Color(0xFF2F6B6A)),
+            SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right, color: Colors.grey),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+// SizedBox helpers
 SizedBox height(double h) => SizedBox(height: h);
 SizedBox width(double w) => SizedBox(width: w);

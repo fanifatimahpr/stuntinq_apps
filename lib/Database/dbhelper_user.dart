@@ -102,5 +102,6 @@ class DBHelper {
     final dbs = await db();
     //Insert adalah fungsi untuk menambahkan data (CREATE)
     await dbs.delete(tableUser, where: "id = ?", whereArgs: [id]);
+    print("User Deleted ID: $id");
   }
 }

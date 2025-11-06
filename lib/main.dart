@@ -6,7 +6,6 @@ import 'package:stuntinq_apps/Splashing/signin_page.dart';
 import 'package:stuntinq_apps/Splashing/splashscreen_page.dart';
 import 'package:stuntinq_apps/bottomnavigation/bottomnavigation.dart';
 import 'package:stuntinq_apps/bottomnavigation/imunisasi.dart';
-import 'package:stuntinq_apps/test_data.dart';
 
 void main() {
   runApp(const MyApp());

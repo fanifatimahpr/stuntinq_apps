@@ -13,6 +13,24 @@ class NutritionSource {
     required this.portion,
     required this.dateAdded,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'portion': portion,
+      'dateAdded': dateAdded.toIso8601String(),
+    };
+  }
+
+  factory NutritionSource.fromMap(Map<String, dynamic> map) {
+    return NutritionSource(
+      id: map['id'],
+      name: map['name'],
+      portion: map['portion'],
+      dateAdded: DateTime.parse(map['dateAdded']),
+    );
+  }
 }
 
 // // Class Model untuk Keluhan

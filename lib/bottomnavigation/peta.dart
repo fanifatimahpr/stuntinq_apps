@@ -117,7 +117,7 @@ class _PetaPageState extends State<PetaPage> {
   //         children: [
   //           const Icon(Icons.navigation, color: Colors.white, size: 20),
   //           const SizedBox(width: 12),
-  //           Expanded(child: 
+  //           Expanded(child:
   //           // Text('Memanggil ${facility.phone}'
   //           Text('Masih Gatau Arah'
   //         )),
@@ -231,6 +231,7 @@ class _PetaPageState extends State<PetaPage> {
       ],
     );
   }
+
   Widget _buildSearchBar() {
     return Container(
       decoration: BoxDecoration(
@@ -277,6 +278,7 @@ class _PetaPageState extends State<PetaPage> {
       ),
     );
   }
+
   Widget _buildMapLocation() {
     return Container(
       height: 200,
@@ -373,6 +375,7 @@ class _PetaPageState extends State<PetaPage> {
       ),
     );
   }
+
   Widget _buildFilterFaskes() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -414,6 +417,7 @@ class _PetaPageState extends State<PetaPage> {
       ],
     );
   }
+
   Widget _buildListFaskes() {
     if (_filteredFacilities.isEmpty) {
       return Container(
@@ -439,6 +443,7 @@ class _PetaPageState extends State<PetaPage> {
       }).toList(),
     );
   }
+
   Widget _buildInfoFaskes(PetaModel facility) {
     return Container(
       decoration: BoxDecoration(
@@ -606,17 +611,19 @@ class _PetaPageState extends State<PetaPage> {
                         icon: Icons.navigation,
                         label: 'Arah',
                         //SnackBar sementara
-                        onTap: () { 
+                        onTap: () {
                           ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Masih Gatau Arah🙂'),
-        backgroundColor: const Color(0xFF2F6B6A),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
-      ),
-    );}
-      
+                            SnackBar(
+                              content: Text('Masih Gatau Arah🙂'),
+                              backgroundColor: const Color(0xFF2F6B6A),
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              margin: const EdgeInsets.all(16),
+                            ),
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -642,8 +649,7 @@ class _PetaPageState extends State<PetaPage> {
     required String label,
     required VoidCallback onTap,
   }) {
-    return
-    Container(
+    return Container(
       height: 40,
       decoration: BoxDecoration(
         border: Border.all(color: const Color(0xFF2F6B6A), width: 1.5),
@@ -728,7 +734,6 @@ class _PetaPageState extends State<PetaPage> {
       ),
     );
   }
-
 }
 
 //Sized Box

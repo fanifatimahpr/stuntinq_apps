@@ -12,7 +12,7 @@ class DataPage extends StatefulWidget {
 
 class _DataPageState extends State<DataPage>
     with SingleTickerProviderStateMixin {
-      List<NutritionSource> _nutritionSources = [
+  List<NutritionSource> _nutritionSources = [
     NutritionSource(
       id: '1',
       name: 'Nasi Putih',
@@ -30,9 +30,10 @@ class _DataPageState extends State<DataPage>
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _weightController = TextEditingController(  );
-  final TextEditingController _heightController = TextEditingController(  );
-  final TextEditingController _headCircumferenceController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
+  final TextEditingController _heightController = TextEditingController();
+  final TextEditingController _headCircumferenceController =
+      TextEditingController();
 
   String _selectedGender = 'female';
   bool _showSuccess = false;
@@ -57,6 +58,7 @@ class _DataPageState extends State<DataPage>
     _successAnimationController.dispose();
     super.dispose();
   }
+
   void _handleSubmit() {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -76,6 +78,7 @@ class _DataPageState extends State<DataPage>
       // print('Data saved: ${_nameController.text}');
     }
   }
+
   //Show Dialog Add Nutrition
   void _showAddNutritionDialog() {
     final TextEditingController nameController = TextEditingController();
@@ -83,9 +86,7 @@ class _DataPageState extends State<DataPage>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           children: [
             Container(
@@ -100,10 +101,7 @@ class _DataPageState extends State<DataPage>
               ),
             ),
             const SizedBox(width: 12),
-            const Text(
-              'Tambah Sumber Gizi',
-              style: TextStyle(fontSize: 18),
-            ),
+            const Text('Tambah Sumber Gizi', style: TextStyle(fontSize: 18)),
           ],
         ),
         content: Column(
@@ -156,9 +154,106 @@ class _DataPageState extends State<DataPage>
           ),
           ElevatedButton(
             onPressed: () {
-              if (nameController.text.isNotEmpty && 
+              if (nameController.text.isNotEmpty &&
                   portionController.text.isNotEmpty) {
-                _addNutrition(
+                _addNutrition(nameController.text, portionController.text);
+                Navigator.pop(context);
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF2F6B6A),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text(
+              'Tambah',
+              style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  //Show Dialog Edit Nutrition
+  void _showEditNutritionDialog(NutritionSource nutrition) {
+    final TextEditingController nameController = TextEditingController(
+      text: nutrition.name,
+    );
+    final TextEditingController portionController = TextEditingController(
+      text: nutrition.portion,
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF40E0D0).withOpacity(0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.edit_outlined, color: Color(0xFF2F6B6A)),
+            ),
+            const SizedBox(width: 12),
+            const Text('Edit Sumber Gizi', style: TextStyle(fontSize: 18)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: InputDecoration(
+                labelText: 'Nama Makanan',
+                hintText: 'Contoh: Nasi Putih',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: Color(0xFF2F6B6A),
+                    width: 2,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: portionController,
+              decoration: InputDecoration(
+                labelText: 'Porsi',
+                hintText: 'Contoh: 1 mangkok',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: Color(0xFF2F6B6A),
+                    width: 2,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal', style: TextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (nameController.text.isNotEmpty &&
+                  portionController.text.isNotEmpty) {
+                _editNutrition(
+                  nutrition.id,
                   nameController.text,
                   portionController.text,
                 );
@@ -171,13 +266,16 @@ class _DataPageState extends State<DataPage>
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const Text('Tambah',
-            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
+            child: const Text(
+              'Simpan',
+              style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+            ),
           ),
         ],
       ),
     );
   }
+
   //Create Nutrition
   void _addNutrition(String name, String portion) {
     setState(() {
@@ -190,7 +288,7 @@ class _DataPageState extends State<DataPage>
         ),
       );
     });
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -207,13 +305,49 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
-  //Delete Nutrition
-  void _deleteNutrition(String id) {final nutrition = _nutritionSources.firstWhere((n) => n.id == id);
-  showDialog(      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+
+  //Update(Edit) Nutrition
+  void _editNutrition(String id, String name, String portion) {
+    final index = _nutritionSources.indexWhere((n) => n.id == id);
+
+    if (index != -1) {
+      setState(() {
+        _nutritionSources[index] = NutritionSource(
+          id: id,
+          name: name,
+          portion: portion,
+          dateAdded: _nutritionSources[index].dateAdded, // Keep original date
+        );
+      });
+
+      HapticFeedback.mediumImpact();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle, color: Colors.white),
+              const SizedBox(width: 12),
+              Text('$name berhasil diperbarui'),
+            ],
+          ),
+          backgroundColor: const Color(0xFF2F6B6A),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          margin: const EdgeInsets.all(16),
         ),
+      );
+    }
+  }
+
+  //Delete Nutrition
+  void _deleteNutrition(String id) {
+    final nutrition = _nutritionSources.firstWhere((n) => n.id == id);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text('Hapus Sumber Gizi?'),
         content: Text('Apakah Anda yakin ingin menghapus "${nutrition.name}"?'),
         actions: [
@@ -227,7 +361,7 @@ class _DataPageState extends State<DataPage>
                 _nutritionSources.removeWhere((n) => n.id == id);
               });
               Navigator.pop(context);
-              
+
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Row(
@@ -252,12 +386,17 @@ class _DataPageState extends State<DataPage>
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const Text('Hapus',style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
+            child: const Text(
+              'Hapus',
+              style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+            ),
           ),
         ],
       ),
     );
   }
+
+  //Calculate IMT
   double _calculateIMT() {
     if (_weightController.text.isEmpty || _heightController.text.isEmpty) {
       return 0;
@@ -270,31 +409,39 @@ class _DataPageState extends State<DataPage>
     double heightMeter = heightCm / 100;
     return weight / (heightMeter * heightMeter);
   }
+
   String _getStatus() {
     double imt = _calculateIMT();
     if (imt == 0) return 'Data belum lengkap';
     if (imt < 18.5) return 'Berat Badan Kurang (Underweight)';
     if (imt >= 18.5 && imt <= 22.9) return 'Berat Badan Normal (Ideal)';
     if (imt >= 23 && imt <= 24.9) return 'Kelebihan Berat Badan (Overweight)';
-    if (imt >= 25 && imt <=29.9) return 'Obesitas Tingkat I (Risk of Obesity)';
+    if (imt >= 25 && imt <= 29.9) return 'Obesitas Tingkat I (Risk of Obesity)';
     if (imt >= 30) return 'Obesitas Tingkat II';
     return 'Normal';
   }
+
   String _getGrowthStatus() {
     double imt = _calculateIMT();
     if (imt == 0) return 'Data belum lengkap';
-    if (imt < 18.5) return 'Berat badan anak di bawah normal. '
+    if (imt < 18.5)
+      return 'Berat badan anak di bawah normal. '
           'Konsultasikan dengan tenaga kesehatan dan pastikan asupan gizi cukup.';
-    if (imt >= 18.5 && imt <= 22.9) return 'Pertumbuhan anak Anda sesuai dengan standar WHO. '
+    if (imt >= 18.5 && imt <= 22.9)
+      return 'Pertumbuhan anak Anda sesuai dengan standar WHO. '
           'Lanjutkan pola asuh dan nutrisi yang baik.';
-    if (imt >= 23 && imt <= 24.9) return 'Berat badan anak sedikit melebihi standar. '
+    if (imt >= 23 && imt <= 24.9)
+      return 'Berat badan anak sedikit melebihi standar. '
           'Perhatikan pola makan, kurangi makanan tinggi gula dan lemak, serta dorong aktivitas fisik rutin.';
-    if (imt >= 25 && imt <=29.9) return 'Berat badan anak jauh di atas standar WHO. '
+    if (imt >= 25 && imt <= 29.9)
+      return 'Berat badan anak jauh di atas standar WHO. '
           'Segera konsultasikan dengan dokter anak untuk penanganan lebih lanjut dan evaluasi pola hidup sehat.';
-    if (imt >= 30) return 'Berat badan anak jauh di atas standar WHO. '
+    if (imt >= 30)
+      return 'Berat badan anak jauh di atas standar WHO. '
           'Segera konsultasikan dengan dokter anak untuk penanganan lebih lanjut dan evaluasi pola hidup sehat.';
     return 'Normal';
   }
+
   String _getInitials(String name) {
     if (name.isEmpty) return 'NA';
 
@@ -304,10 +451,11 @@ class _DataPageState extends State<DataPage>
     }
     return name.substring(0, name.length >= 2 ? 2 : 1).toUpperCase();
   }
+
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Hari ini';
     } else if (difference.inDays == 1) {
@@ -327,6 +475,7 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
+
   Widget _buildBackground() {
     return Container(
       width: double.infinity,
@@ -353,7 +502,7 @@ class _DataPageState extends State<DataPage>
             //IMT
             _buildIMTResult(),
             height(16),
-            
+
             //Form Input Data Anak
             _buildSectionTitle('Input Data Antropometri Anak'),
             height(8),
@@ -363,9 +512,9 @@ class _DataPageState extends State<DataPage>
             //Save Button
             _buildSaveButton(),
             height(40),
-            
+
             //Form Sumber Nutrisi
-             _buildSectionTitle('Input Sumber Gizi Harian Anak'),
+            _buildSectionTitle('Input Sumber Gizi Harian Anak'),
             height(8),
             _buildNutritionSection(),
             height(16),
@@ -428,6 +577,7 @@ class _DataPageState extends State<DataPage>
       ],
     );
   }
+
   Widget _buildChildProfile() {
     return Container(
       decoration: BoxDecoration(
@@ -554,7 +704,6 @@ class _DataPageState extends State<DataPage>
                 // Divider
                 height(16),
                 Divider(color: Colors.white.withOpacity(0.2)),
-                
 
                 // Status
                 Column(
@@ -563,9 +712,11 @@ class _DataPageState extends State<DataPage>
                   children: [
                     const Text(
                       'Status: ',
-                      style: TextStyle(                    
-                      color: Colors.white, 
-                      fontSize: 13, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     height(4),
                     Text(
@@ -586,8 +737,9 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
+
   Widget _buildIMTResult() {
-   double imt = _calculateIMT();
+    double imt = _calculateIMT();
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -614,8 +766,8 @@ class _DataPageState extends State<DataPage>
               //     color: Color.fromARGB(255, 219, 163, 89).withOpacity(0.3),
               //     borderRadius: BorderRadius.circular(12),
               //   ),
-              //   child: 
-                Text('📈', style: TextStyle(fontSize: 18)),
+              //   child:
+              Text('📈', style: TextStyle(fontSize: 18)),
               // ),
               width(12),
               const Text(
@@ -628,7 +780,7 @@ class _DataPageState extends State<DataPage>
               ),
             ],
           ),
-         height(12),
+          height(12),
           Text(
             imt == 0
                 ? 'Masukkan berat dan tinggi badan untuk menghitung IMT dan mengetahui status IMT anak Anda.'
@@ -643,6 +795,7 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
+
   Widget _buildStatChip(IconData icon, String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -667,6 +820,7 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
+
   Widget _buildSectionTitle(String title) {
     return Align(
       alignment: Alignment.centerLeft,
@@ -680,6 +834,7 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
+
   Widget _buildInputForm() {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -799,6 +954,7 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
+
   Widget _buildInputField({
     required TextEditingController controller,
     required String label,
@@ -870,6 +1026,7 @@ class _DataPageState extends State<DataPage>
       ],
     );
   }
+
   Widget _buildGenderSelector() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -928,6 +1085,7 @@ class _DataPageState extends State<DataPage>
       ],
     );
   }
+
   Widget _buildSaveButton() {
     return Container(
       width: double.infinity,
@@ -964,6 +1122,7 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
+
   Widget _buildNutritionSection() {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -1023,33 +1182,23 @@ class _DataPageState extends State<DataPage>
             ],
           ),
           height(16),
-          
+
           if (_nutritionSources.isEmpty)
             Container(
               padding: const EdgeInsets.all(24),
               child: Center(
                 child: Column(
                   children: [
-                    Icon(
-                      Icons.restaurant,
-                      size: 48,
-                      color: Colors.grey[400],
-                    ),
+                    Icon(Icons.restaurant, size: 48, color: Colors.grey[400]),
                     height(12),
                     Text(
                       'Belum ada sumber gizi tercatat',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
                     ),
                     height(8),
                     Text(
                       'Tap ikon + untuk menambah',
-                      style: TextStyle(
-                        color: Colors.grey[500],
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: Colors.grey[500], fontSize: 12),
                     ),
                   ],
                 ),
@@ -1070,6 +1219,7 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
+
   Widget _buildNutritionItem(NutritionSource nutrition) {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -1089,11 +1239,7 @@ class _DataPageState extends State<DataPage>
               color: const Color(0xFF40E0D0).withOpacity(0.2),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Icon(
-              Icons.dining,
-              size: 20,
-              color: Color(0xFF2F6B6A),
-            ),
+            child: const Icon(Icons.dining, size: 20, color: Color(0xFF2F6B6A)),
           ),
           width(12),
           Expanded(
@@ -1113,24 +1259,24 @@ class _DataPageState extends State<DataPage>
                   children: [
                     Text(
                       nutrition.portion,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       // '',
                       '• ${_formatDate(nutrition.dateAdded)}',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey[500],
-                      ),
+                      style: TextStyle(fontSize: 11, color: Colors.grey[500]),
                     ),
                   ],
                 ),
               ],
             ),
+          ),
+          IconButton(
+            onPressed: () => _showEditNutritionDialog(nutrition),
+            icon: const Icon(Icons.edit_outlined),
+            color: const Color(0xFF40E0D0),
+            iconSize: 20,
           ),
           IconButton(
             // onPressed: (){},
@@ -1143,6 +1289,7 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
+
   Widget _buildTips() {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -1193,6 +1340,7 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
+
   Widget _buildTipItem(String text) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1221,7 +1369,6 @@ class _DataPageState extends State<DataPage>
       ],
     );
   }
-  
 }
 
 //Sized Box

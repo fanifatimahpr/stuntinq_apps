@@ -7,7 +7,6 @@ import 'package:stuntinq_apps/bottomnavigation/imunisasi.dart';
 import 'package:stuntinq_apps/bottomnavigation/peta.dart';
 import 'package:stuntinq_apps/bottomnavigation/profile.dart';
 import 'package:stuntinq_apps/preference_handler.dart';
-import 'package:stuntinq_apps/test_listuser_editdelete.dart';
 
 class BottomNavigationApp extends StatefulWidget {
   final UserModel currentUser;
