@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stuntinq_apps/Model/imunisasi_model.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class ImunisasiPage extends StatefulWidget {
   const ImunisasiPage({Key? key}) : super(key: key);
@@ -33,67 +34,78 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       id: 1,
       name: 'Hepatitis B',
       ageMonth: 0,
-      date: DateTime(2025, 9, 15),
+      date: DateTime.now(),
       reminder: false,
       completed: false,
+      status: ImunisasiStatus.upcoming
     ),
     Imunisasi(
       id: 2,
       name: 'BCG',
       ageMonth: 1,
-      date: DateTime(2025, 10, 15),
+      date: DateTime.now(),
       reminder: false,
       completed: false,
+      status: ImunisasiStatus.upcoming
     ),
     Imunisasi(
       id: 3,
       name: 'DPT-HB-Hib 1',
       ageMonth: 2,
-      date: DateTime(2025, 11, 15),
+      date: DateTime.now(),
       reminder: true,
       completed: false,
+      status: ImunisasiStatus.upcoming
     ),
     Imunisasi(
       id: 4,
       name: 'Polio 1',
       ageMonth: 2,
-      date: DateTime(2025, 11, 15),
+      date: DateTime.now(),
       reminder: true,
       completed: false,
+      status: ImunisasiStatus.upcoming
     ),
     Imunisasi(
       id: 5,
       name: 'DPT-HB-Hib 2',
       ageMonth: 3,
-      date: DateTime(2025, 12, 15),
+      date: DateTime.now(),
       reminder: false,
       completed: false,
+      status: ImunisasiStatus.upcoming
     ),
     Imunisasi(
       id: 6,
       name: 'Polio 2',
       ageMonth: 3,
-      date: DateTime(2025, 12, 15),
+      date: DateTime.now(),
       reminder: false,
       completed: false,
+      status: ImunisasiStatus.upcoming
     ),
     Imunisasi(
       id: 7,
       name: 'DPT-HB-Hib 3',
       ageMonth: 4,
-      date: DateTime(2026, 1, 15),
+      date: DateTime.now(),
       reminder: false,
       completed: false,
+      status: ImunisasiStatus.upcoming
     ),
     Imunisasi(
       id: 8,
       name: 'Polio 3',
       ageMonth: 4,
-      date: DateTime(2026, 1, 15),
+      date: DateTime.now(),
       reminder: false,
       completed: false,
+      status: ImunisasiStatus.upcoming
     ),
   ];
+DateTime? tanggalLahirAnak;
+DateTime _focusedDay = DateTime.now();
+DateTime? _selectedDay;
 
   // int get upcomingCount =>
   //     Imunisasi.where((i) => i.status == ImunisasiStatus.upcoming).length;
@@ -105,6 +117,38 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
     imunisasi = ImunisasiList;
     imunisasi.sort((a, b) => a.date.compareTo(b.date));
   }
+  void _updateImunisasiDates() {
+  if (tanggalLahirAnak == null) return;
+
+  final now = DateTime.now();
+
+  setState(() {
+    for (var imun in imunisasi) {
+      // Hitung tanggal imunisasi = tanggal lahir + ageMonth bulan
+      final newDate = DateTime(
+        tanggalLahirAnak!.year,
+        tanggalLahirAnak!.month + imun.ageMonth,
+        tanggalLahirAnak!.day,
+      );
+
+      imun.date = newDate;
+
+      // Tentukan status
+      if (newDate.isBefore(DateTime(now.year, now.month, now.day))) {
+        imun.status = ImunisasiStatus.overdue; // sudah lewat
+      } else if (newDate.year == now.year &&
+          newDate.month == now.month &&
+          newDate.day == now.day) {
+        imun.status = ImunisasiStatus.upcoming; // hari ini
+      } else {
+        imun.status = ImunisasiStatus.upcoming; // akan datang
+      }
+    }
+
+    imunisasi.sort((a, b) => a.date.compareTo(b.date));
+  });
+}
+
 
   // Imunisasi? get nextImunisasi {
   //   final now = DateTime.now();
@@ -162,6 +206,10 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
 
             //Imunisasi Berikutnya
             _buildNextImunisasi(),
+            height(20),
+
+            //Calendar
+            _buildBirthCalendar(),
             height(20),
 
             //Daftar Jadwal Imunisasi
@@ -230,6 +278,76 @@ class _ImunisasiPageState extends State<ImunisasiPage> {
       ],
     );
   }
+
+Widget _buildBirthCalendar() {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(22),
+      border: Border.all(color: const Color(0xFF40E0D0).withOpacity(0.3)),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05),
+          blurRadius: 10,
+          offset: const Offset(0, 5),
+        ),
+      ],
+    ),
+    padding: const EdgeInsets.all(14),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Pilih Tanggal Lahir Anak",
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF2F6B6A),
+          ),
+        ),
+        const SizedBox(height: 10),
+        TableCalendar(
+          firstDay: DateTime.utc(2010, 1, 1),
+          lastDay: DateTime.now(),
+          focusedDay: _focusedDay,
+          selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+          onDaySelected: (selectedDay, focusedDay) {
+            setState(() {
+              _selectedDay = selectedDay;
+              _focusedDay = focusedDay;
+              tanggalLahirAnak = selectedDay;
+              _updateImunisasiDates(); // 🔹 langsung update jadwal imunisasi
+            });
+          },
+          calendarStyle: CalendarStyle(
+            todayDecoration: BoxDecoration(
+              color: const Color(0xFF40E0D0),
+              shape: BoxShape.circle,
+            ),
+            selectedDecoration: BoxDecoration(
+              color: const Color(0xFF2F6B6A),
+              shape: BoxShape.circle,
+            ),
+            weekendTextStyle: const TextStyle(color: Colors.redAccent),
+          ),
+          headerStyle: const HeaderStyle(
+            formatButtonVisible: false,
+            titleCentered: true,
+          ),
+        ),
+        const SizedBox(height: 10),
+        if (tanggalLahirAnak != null)
+          Text(
+            "Tanggal lahir dipilih: ${tanggalLahirAnak!.day} ${_monthName(tanggalLahirAnak!.month)} ${tanggalLahirAnak!.year}",
+            style: TextStyle(
+              color: const Color(0xFF2F6B6A),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+      ],
+    ),
+  );
+}
 
   Widget _buildNextImunisasi() {
     final next = nextImunisasi;

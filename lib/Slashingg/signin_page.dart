@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stuntinq_apps/Database/dbhelper_user.dart';
+import 'package:stuntinq_apps/Slashingg/forgotpassword_page.dart';
 import 'package:stuntinq_apps/Slashingg/signup_page.dart';
-import 'package:stuntinq_apps/Splashing/forgotpassword_page.dart';
 import 'package:stuntinq_apps/bottomnavigation/bottomnavigation.dart';
 import 'package:stuntinq_apps/preference_handler.dart';
 

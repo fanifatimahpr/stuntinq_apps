@@ -1,41 +1,62 @@
+// class Imunisasi {
+//   final int id;
+//   final String name;
+//   final int ageMonth;
+//   final DateTime date;
+//   // final ImunisasiStatus status;
+//   bool reminder;
+//   bool completed;
+//   // final completedList = Imunisasi.where((i) => i.completed).toList();
+
+
+//   Imunisasi({
+//     required this.id,
+//     required this.name,
+//     required this.ageMonth,
+//     required this.date,
+//     // required this.status,
+//     required this.reminder,
+//     required this.completed
+//   });
+// enum ImunisasiStatus { upcoming, overdue, completed }
+
 class Imunisasi {
-  final int id;
-  final String name;
-  final int ageMonth;
-  final DateTime date;
-  // final ImunisasiStatus status;
+  int id;
+  String name;
+  int ageMonth;
+  DateTime date; 
   bool reminder;
   bool completed;
-  // final completedList = Imunisasi.where((i) => i.completed).toList();
-
+  ImunisasiStatus status; 
 
   Imunisasi({
     required this.id,
     required this.name,
     required this.ageMonth,
     required this.date,
-    // required this.status,
-    required this.reminder,
-    required this.completed
+    this.reminder = false,
+    this.completed = false,
+    this.status = ImunisasiStatus.upcoming, 
   });
-
-  ImunisasiStatus get status {
-    final today = DateTime.now();
-    final cleanToday = DateTime(
-      today.year,
-      today.month,
-      today.day,
-    ); // normalize
-
-    if (date.isBefore(today)) {
-      return ImunisasiStatus.overdue;
-    } else if (date.isAfter(today)) {
-      return ImunisasiStatus.upcoming;
-    } else {
-      return ImunisasiStatus.completed;
-    }
-  }
 }
+
+  // ImunisasiStatus get status {
+  //   final today = DateTime.now();
+  //   final cleanToday = DateTime(
+  //     today.year,
+  //     today.month,
+  //     today.day,
+  //   ); // normalize
+
+  //   if (date.isBefore(today)) {
+  //     return ImunisasiStatus.overdue;
+  //   } else if (date.isAfter(today)) {
+  //     return ImunisasiStatus.upcoming;
+  //   } else {
+  //     return ImunisasiStatus.completed;
+  //   }
+  // }
+
 // ImunisasiStatus get status {
 //   final today = DateTime.now();
 //   if (DateTime.isBefore(DateTime(today.day, today.month, today.year))) {
