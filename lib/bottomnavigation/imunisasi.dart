@@ -206,7 +206,11 @@ DateTime? _selectedDay;
 
             //Imunisasi Berikutnya
             _buildNextImunisasi(),
-            height(20),
+            height(25),
+
+            //Pilih Tanggal Lahir
+            _buildSectionTitle("Pilih Tanggal Lahir Anak"),
+            height(8),
 
             //Calendar
             _buildBirthCalendar(),
@@ -279,75 +283,6 @@ DateTime? _selectedDay;
     );
   }
 
-Widget _buildBirthCalendar() {
-  return Container(
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(22),
-      border: Border.all(color: const Color(0xFF40E0D0).withOpacity(0.3)),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.05),
-          blurRadius: 10,
-          offset: const Offset(0, 5),
-        ),
-      ],
-    ),
-    padding: const EdgeInsets.all(14),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          "Pilih Tanggal Lahir Anak",
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF2F6B6A),
-          ),
-        ),
-        const SizedBox(height: 10),
-        TableCalendar(
-          firstDay: DateTime.utc(2010, 1, 1),
-          lastDay: DateTime.now(),
-          focusedDay: _focusedDay,
-          selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-          onDaySelected: (selectedDay, focusedDay) {
-            setState(() {
-              _selectedDay = selectedDay;
-              _focusedDay = focusedDay;
-              tanggalLahirAnak = selectedDay;
-              _updateImunisasiDates(); 
-            });
-          },
-          calendarStyle: CalendarStyle(
-            todayDecoration: BoxDecoration(
-              color: const Color(0xFF40E0D0),
-              shape: BoxShape.circle,
-            ),
-            selectedDecoration: BoxDecoration(
-              color: const Color(0xFF2F6B6A),
-              shape: BoxShape.circle,
-            ),
-            weekendTextStyle: const TextStyle(color: Colors.redAccent),
-          ),
-          headerStyle: const HeaderStyle(
-            formatButtonVisible: false,
-            titleCentered: true,
-          ),
-        ),
-        const SizedBox(height: 10),
-        if (tanggalLahirAnak != null)
-          Text(
-            "Tanggal lahir dipilih: ${tanggalLahirAnak!.day} ${_monthName(tanggalLahirAnak!.month)} ${tanggalLahirAnak!.year}",
-            style: TextStyle(
-              color: const Color(0xFF2F6B6A),
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-      ],
-    ),
-  );
-}
 
   Widget _buildNextImunisasi() {
     final next = nextImunisasi;
@@ -431,7 +366,7 @@ Widget _buildBirthCalendar() {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    height(6),
+                    height(20),
                     if (completedList.isNotEmpty) ...[
                       // Text(
                       //   "✅ Sudah dilakukan:",
@@ -441,16 +376,17 @@ Widget _buildBirthCalendar() {
                       //     fontWeight: FontWeight.w600,
                       //   ),
                       // ),
-                      height(10),
                       for (var done in completedList)
+                      
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            
                             Text(
-                              "- ${done.name}",
+                              "✓ ${done.name}",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 12,
+                                fontSize: 13,
                               ),
                             ),
 
@@ -459,7 +395,7 @@ Widget _buildBirthCalendar() {
                               'Selesai',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 12,
+                                fontSize: 13,
                               ),
                             ),
                           ],
@@ -474,6 +410,77 @@ Widget _buildBirthCalendar() {
       ),
     );
   }
+
+Widget _buildBirthCalendar() {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(22),
+      border: Border.all(color: const Color(0xFF40E0D0).withOpacity(0.3)),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05),
+          blurRadius: 10,
+          offset: const Offset(0, 5),
+        ),
+      ],
+    ),
+    padding: const EdgeInsets.all(14),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        // const Text(
+        //   "Pilih Tanggal Lahir Anak",
+        //   style: TextStyle(
+        //     fontSize: 15,
+        //     fontWeight: FontWeight.w700,
+        //     color: Color(0xFF2F6B6A),
+        //   ),
+        // ),
+        // const SizedBox(height: 10),
+        TableCalendar(
+          firstDay: DateTime.utc(2010, 1, 1),
+          lastDay: DateTime.now(),
+          focusedDay: _focusedDay,
+          selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+          onDaySelected: (selectedDay, focusedDay) {
+            setState(() {
+              _selectedDay = selectedDay;
+              _focusedDay = focusedDay;
+              tanggalLahirAnak = selectedDay;
+              _updateImunisasiDates(); 
+            });
+          },
+          calendarStyle: CalendarStyle(
+            todayDecoration: BoxDecoration(
+              color: const Color.fromARGB(255, 48, 184, 170),
+              shape: BoxShape.circle,
+            ),
+            selectedDecoration: BoxDecoration(
+              color: const Color(0xFF2F6B6A),
+              shape: BoxShape.circle,
+            ),
+            weekendTextStyle: const TextStyle(color: Colors.redAccent),
+          ),
+          headerStyle: const HeaderStyle(
+            formatButtonVisible: false,
+            titleCentered: true,
+          ),
+        ),
+        const SizedBox(height: 10),
+        if (tanggalLahirAnak != null)
+          Text(
+            "Tanggal lahir anak Anda: ${tanggalLahirAnak!.day} ${_monthName(tanggalLahirAnak!.month)} ${tanggalLahirAnak!.year}",
+            style: TextStyle(
+              fontSize: 13,
+              color: const Color(0xFF2F6B6A),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+      ],
+    ),
+  );
+}
 
   Widget _buildSectionTitle(String title) {
     return Align(
@@ -492,7 +499,7 @@ Widget _buildBirthCalendar() {
   Widget _buildListImunisasi() {
     return Column(
       children: imunisasi.map((item) {
-        return Padding(
+        return Padding(          
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Container(
             decoration: BoxDecoration(
@@ -510,7 +517,7 @@ Widget _buildBirthCalendar() {
                 ),
               ],
             ),
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(16),
             child: Row(
               children: [
                 _getStatusIcon(item.status),
@@ -522,7 +529,7 @@ Widget _buildBirthCalendar() {
                       Text(
                         item.name,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 15,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF2F6B6A),
                         ),
@@ -530,29 +537,16 @@ Widget _buildBirthCalendar() {
                       const SizedBox(height: 4),
                       Text(
                         'Usia ${item.ageMonth} bulan',
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                        style: TextStyle(fontSize: 12, color: const Color.fromARGB(255, 85, 85, 85)),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "${item.date.day} ${_monthName(item.date.month)} ${item.date.year}",
-                        style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                      ),
-
+                      
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            item.status == ImunisasiStatus.upcoming
-                                ? 'Akan Datang'
-                                : item.status == ImunisasiStatus.completed
-                                ? 'Selesai'
-                                : 'Terlambat',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            "Jadwal Imunisasi: ${item.date.day} ${_monthName(item.date.month)} ${item.date.year}",
+                            style: TextStyle(fontSize: 13, color: const Color.fromARGB(255, 0, 0, 0)),
                           ),
-
                           //Menambahkan fitur checklist
                           Checkbox(
                             value: item.completed,
@@ -563,17 +557,22 @@ Widget _buildBirthCalendar() {
                               });
                             },
                           ),
-
-                          // Transform.scale(
-                          //   scale: 0.85,
-                          //   child: Switch(
-                          //     value: item.reminder,
-                          //     // onChanged: () {},
-                          //     onChanged: (_) => toggleReminder(item.id),
-                          //   ),
-                          // ),
                         ],
                       ),
+
+                      Text(
+                        item.status == ImunisasiStatus.upcoming
+                            ? 'Akan Datang'
+                            : item.status == ImunisasiStatus.completed
+                            ? 'Selesai'
+                            : 'Sudah Lewat',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      
+                      
                     ],
                   ),
                 ),
