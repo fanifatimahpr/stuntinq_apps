@@ -67,6 +67,7 @@ class _DataPageState extends State<DataPage>
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: _nutritionNameController.text,
       portion: _nutritionPortionController.text,
+
       dateAdded: DateTime.now(),
     );
 
@@ -162,6 +163,36 @@ Future<void> _deleteNutrition(String id) async {
       // print('Data saved: ${_nameController.text}');
     }
   }
+void _showDuplicateDialog() {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        title: const Text(
+          'Sumber Gizi Sudah Ada',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF2F6B6A),
+          ),
+        ),
+        content: const Text(
+          'Nama sumber gizi ini sudah ditambahkan sebelumnya.',
+          style: TextStyle(color: Colors.black87),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'OK',
+              style: TextStyle(color: Color(0xFF2F6B6A)),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
 
 
   
@@ -899,102 +930,102 @@ Future<void> _deleteNutrition(String id) async {
       ),
     );
   }
-Widget _buildNutritionSection() {
-  return Container(
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      color: Colors.white.withOpacity(0.8),
-      borderRadius: BorderRadius.circular(24),
-      border: Border.all(
-        color: const Color(0xFF40E0D0).withOpacity(0.2),
-        width: 1.5,
+  Widget _buildNutritionSection() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.8),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: const Color(0xFF40E0D0).withOpacity(0.2),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.05),
-          blurRadius: 20,
-          offset: const Offset(0, 10),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF40E0D0).withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(
-                    Icons.restaurant_menu,
-                    size: 20,
-                    color: Color(0xFF2F6B6A),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                const Text(
-                  'Sumber Gizi Anak',
-                  style: TextStyle(
-                    color: Color(0xFF2F6B6A),
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            IconButton(
-              onPressed: _showAddNutritionDialog,
-              icon: const Icon(Icons.add_circle),
-              color: const Color(0xFF2F6B6A),
-              iconSize: 28,
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-
-        if (_nutritionSources.isEmpty)
-          Container(
-            padding: const EdgeInsets.all(24),
-            child: Center(
-              child: Column(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
                 children: [
-                  Icon(Icons.restaurant, size: 48, color: Colors.grey[400]),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Belum ada sumber gizi tercatat',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF40E0D0).withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.restaurant_menu,
+                      size: 20,
+                      color: Color(0xFF2F6B6A),
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Tap ikon + untuk menambah',
-                    style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                  const SizedBox(width: 12),
+                  const Text(
+                    'Sumber Gizi Anak',
+                    style: TextStyle(
+                      color: Color(0xFF2F6B6A),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
-            ),
-          )
-        else
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _nutritionSources.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 8),
-            itemBuilder: (context, index) {
-              final item = _nutritionSources[index];
-              return _buildNutritionItem(item);
-            },
+              IconButton(
+                onPressed: _showAddNutritionDialog,
+                icon: const Icon(Icons.add_circle),
+                color: const Color(0xFF2F6B6A),
+                iconSize: 28,
+              ),
+            ],
           ),
-      ],
-    ),
-  );
-}
-Widget _buildNutritionItem(NutritionSource item) {
+          const SizedBox(height: 16),
+
+          if (_nutritionSources.isEmpty)
+            Container(
+              padding: const EdgeInsets.all(24),
+              child: Center(
+                child: Column(
+                  children: [
+                    Icon(Icons.restaurant, size: 48, color: Colors.grey[400]),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Belum ada sumber gizi tercatat',
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Tap ikon + untuk menambah',
+                      style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          else
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _nutritionSources.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              itemBuilder: (context, index) {
+                final item = _nutritionSources[index];
+                return _buildNutritionItem(item);
+              },
+            ),
+        ],
+      ),
+    );
+  }
+  Widget _buildNutritionItem(NutritionSource item) {
   return Container(
     padding: const EdgeInsets.all(12),
     decoration: BoxDecoration(
@@ -1309,6 +1340,8 @@ Widget _buildNutritionItem(NutritionSource item) {
   }
 
 Future<void> _showAddNutritionDialog() async {
+   String name = '';
+  String portion = '';
   await showDialog(
     context: context,
     builder: (context) {
@@ -1319,13 +1352,15 @@ Future<void> _showAddNutritionDialog() async {
           children: [
             TextField(
               controller: _nutritionNameController,
+              onChanged: (value) => name = value,
               decoration: const InputDecoration(
-                labelText: 'Nama Makanan',
+                labelText: 'Nama Makanan',                
               ),
             ),
             const SizedBox(height: 10),
             TextField(
               controller: _nutritionPortionController,
+               onChanged: (value) => portion = value,
               decoration: const InputDecoration(
                 labelText: 'Porsi',
               ),
@@ -1343,10 +1378,32 @@ Future<void> _showAddNutritionDialog() async {
           ),
           ElevatedButton(
             onPressed: () async {
-              await _addNutritionSource();
+              final isDuplicate = _nutritionSources.any(
+                (item) => item.name.toLowerCase().trim() == name.toLowerCase().trim(),
+              );
+
+              if (isDuplicate) {
+                Navigator.pop(context);
+                _showDuplicateDialog();
+                return;
+              }
+
+              setState(() {
+                _nutritionSources.add(
+                  NutritionSource(
+                    id: DateTime.now()
+                        .millisecondsSinceEpoch
+                        .toString(), 
+                    name: name,
+                    portion: portion,
+                    dateAdded: DateTime.now(),
+                  ),
+                );
+              });
+
               Navigator.pop(context);
             },
-            child: const Text("Tambah"),
+            child: const Text('Tambah'),
           ),
         ],
       );
