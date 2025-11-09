@@ -219,7 +219,7 @@ class _PetaPageState extends State<PetaPage> {
               ),
             ),
             Text(
-              'Informasi fasilitas kesehatan terdekat',
+              'Informasi Fasilitas Kesehatan Terdekat',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,

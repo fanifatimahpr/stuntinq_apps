@@ -11,25 +11,13 @@ class DataPage extends StatefulWidget {
   State<DataPage> createState() => _DataPageState();
 }
 
-
 class _DataPageState extends State<DataPage>
     with SingleTickerProviderStateMixin {
-  final TextEditingController _nutritionNameController = TextEditingController();
-  final TextEditingController _nutritionPortionController = TextEditingController();
-  List<NutritionSource> _nutritionSources = [
-    // NutritionSource(
-    //   id: '1',
-    //   name: 'Nasi Putih',
-    //   portion: '1 mangkok',
-    //   dateAdded: DateTime.now().subtract(const Duration(days: 1)),
-    // ),
-    // NutritionSource(
-    //   id: '2',
-    //   name: 'Telur Rebus',
-    //   portion: '1 butir',
-    //   dateAdded: DateTime.now(),
-    // ),
-  ];
+  final TextEditingController _nutritionNameController =
+      TextEditingController();
+  final TextEditingController _nutritionPortionController =
+      TextEditingController();
+  List<NutritionSource> _nutritionSources = [];
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
@@ -39,98 +27,218 @@ class _DataPageState extends State<DataPage>
   final TextEditingController _headCircumferenceController =
       TextEditingController();
 
-  String _selectedGender = 'female';
+  String _selectedGender = 'Perempuan';
   bool _showSuccess = false;
   late AnimationController _successAnimationController;
 
   @override
   void initState() {
     super.initState();
-  _loadNutritionData();
-    // _successAnimationController = AnimationController(
-    //   vsync: this,
-    //   duration: const Duration(milliseconds: 300),
-    // );
-  }
-  Future<void> _loadNutritionData() async {
-  final data = await NutritionDB.instance.getAll();
-  setState(() {
-    _nutritionSources = data;
-  });
-}
-  //CREATE (ADD) NUTRITION
-  Future<void> _addNutritionSource() async {
-    if (_nutritionNameController.text.isEmpty ||
-        _nutritionPortionController.text.isEmpty) return;
-
-    final newItem = NutritionSource(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: _nutritionNameController.text,
-      portion: _nutritionPortionController.text,
-
-      dateAdded: DateTime.now(),
-    );
-
-    await NutritionDB.instance.insert(newItem);
-    _nutritionNameController.clear();
-    _nutritionPortionController.clear();
     _loadNutritionData();
+    headCircumferenceBoys;
+    headCircumferenceGirls;
+    _successAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
   }
 
-  //UPDATE (EDIT) NUTRITION DATA  
-Future<void> _showEditNutritionDialog(NutritionSource item) async {
-  _nutritionNameController.text = item.name;
-  _nutritionPortionController.text = item.portion;
+  Future<void> _loadNutritionData() async {
+    final data = await NutritionDB.instance.getAll();
+    print("total: ${data.length}");
+    setState(() {
+      _nutritionSources = data;
+    });
+  }
 
-  await showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text("Edit Sumber Gizi"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: _nutritionNameController,
-              decoration: const InputDecoration(labelText: 'Nama makanan'),
+  //CREATE (ADD) NUTRITION
+  Future<void> _showAddNutritionDialog() async {
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController portionController = TextEditingController();
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Text(
+            "Tambah Sumber Gizi",
+            style: TextStyle(
+              color: Color(0xFF2F6B6A),
+              fontWeight: FontWeight.bold,
             ),
-            TextField(
-              controller: _nutritionPortionController,
-              decoration: const InputDecoration(labelText: 'Porsi'),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                  labelText: "Nama Makanan",
+                  prefixIcon: Icon(Icons.fastfood),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: portionController,
+                decoration: const InputDecoration(
+                  labelText: "Porsi",
+                  prefixIcon: Icon(Icons.scale),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Batal"),
+            ),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.save_outlined, size: 18),
+              label: const Text("Simpan"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF2F6B6A),
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () async {
+                final name = nameController.text.trim();
+                final portion = portionController.text.trim();
+
+                if (name.isEmpty || portion.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Nama dan porsi tidak boleh kosong"),
+                      backgroundColor: Colors.redAccent,
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                  return;
+                }
+
+                // ✅ Buat data baru
+                final newData = NutritionSource(
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                  name: name,
+                  portion: portion,
+                  dateAdded: DateTime.now(),
+                );
+
+                // ✅ Simpan ke database
+                await NutritionDB.instance.insert(newData);
+
+                // ✅ Refresh UI dari DB agar langsung tampil
+                await _loadNutritionData();
+
+                // ✅ Tutup dialog setelah selesai
+                if (context.mounted) Navigator.pop(context);
+
+                // ✅ Snackbar konfirmasi
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Sumber gizi berhasil ditambahkan"),
+                    backgroundColor: Colors.teal,
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              },
             ),
           ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Batal"),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              final updated = NutritionSource(
-                id: item.id,
-                name: _nutritionNameController.text.trim(),
-                portion: _nutritionPortionController.text.trim(),
-                dateAdded: item.dateAdded,
-              );
+        );
+      },
+    );
+  }
 
-              await NutritionDB.instance.update(updated);
-              Navigator.pop(context);
-              _loadNutritionData();
-            },
-            child: const Text("Simpan"),
-          ),
-        ],
-      );
-    },
-  );
-}
+  //UPDATE (EDIT) NUTRITION DATA
+  Future<void> _showEditNutritionDialog(NutritionSource nutrition) async {
+    final nameController = TextEditingController(text: nutrition.name);
+    final portionController = TextEditingController(text: nutrition.portion);
 
-//DELETE NUTRITION DATA 
-Future<void> _deleteNutrition(String id) async {
-  await NutritionDB.instance.delete(id);
-  _loadNutritionData();
-}
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Text(
+            "Edit Sumber Gizi",
+            style: TextStyle(
+              color: Color(0xFF2F6B6A),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Nama Makanan',
+                  prefixIcon: Icon(Icons.fastfood),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: portionController,
+                decoration: const InputDecoration(
+                  labelText: 'Porsi',
+                  prefixIcon: Icon(Icons.scale),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Batal"),
+            ),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.save_outlined, size: 18),
+              label: const Text("Simpan"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF2F6B6A),
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () async {
+                final updated = NutritionSource(
+                  id: nutrition.id,
+                  name: nameController.text.trim(),
+                  portion: portionController.text.trim(),
+                  dateAdded: nutrition.dateAdded,
+                );
+
+                await NutritionDB.instance.update(updated);
+                await _loadNutritionData();
+                if (context.mounted) Navigator.pop(context);
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Data berhasil diperbarui"),
+                    backgroundColor: Colors.teal,
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _updateNutrition(NutritionSource updatedItem) async {
+    await NutritionDB.instance.update(updatedItem);
+    print("${updatedItem.name} berhasil diupdate");
+    await _loadNutritionData(); // ✅ Refresh data setelah update
+  }
+
+  //DELETE NUTRITION DATA
+  Future<void> _deleteNutrition(String id) async {
+    await NutritionDB.instance.delete(id);
+    _loadNutritionData();
+  }
 
   @override
   void dispose() {
@@ -140,7 +248,7 @@ Future<void> _deleteNutrition(String id) async {
     _heightController.dispose();
     _headCircumferenceController.dispose();
     _successAnimationController.dispose();
-    
+
     super.dispose();
   }
 
@@ -150,52 +258,42 @@ Future<void> _deleteNutrition(String id) async {
         _showSuccess = true;
       });
       _successAnimationController.forward();
-      // // Hide success message after 3 seconds
-      // Future.delayed(const Duration(seconds: 3), () {
-      //   if (mounted) {
-      //     setState(() {
-      //       _showSuccess = false;
-      //     });
-      //     _successAnimationController.reverse();
-      //   }
-      // });
-
-      // print('Data saved: ${_nameController.text}');
     }
   }
-void _showDuplicateDialog() {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        title: const Text(
-          'Sumber Gizi Sudah Ada',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF2F6B6A),
+
+  void _showDuplicateDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
           ),
-        ),
-        content: const Text(
-          'Nama sumber gizi ini sudah ditambahkan sebelumnya.',
-          style: TextStyle(color: Colors.black87),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'OK',
-              style: TextStyle(color: Color(0xFF2F6B6A)),
+          title: const Text(
+            'Sumber Gizi Sudah Ada',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF2F6B6A),
             ),
           ),
-        ],
-      );
-    },
-  );
-}
+          content: const Text(
+            'Nama sumber gizi ini sudah ditambahkan sebelumnya.',
+            style: TextStyle(color: Colors.black87),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text(
+                'OK',
+                style: TextStyle(color: Color(0xFF2F6B6A)),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-
-  
   //Calculate IMT
   double _calculateIMT() {
     if (_weightController.text.isEmpty || _heightController.text.isEmpty) {
@@ -242,6 +340,41 @@ void _showDuplicateDialog() {
     return 'Normal';
   }
 
+  //Calculate Lingkar Kepala
+  String _getHeadCircumferenceStatus() {
+    final String gender = _selectedGender;
+    final int age = int.tryParse(_ageController.text) ?? 0;
+    final double inputHead =
+        double.tryParse(_headCircumferenceController.text) ?? 0.0;
+
+    // Ambil referensi sesuai jenis kelamin
+    final reference = headCircumference[gender];
+
+    if (reference == null)
+      return 'Data referensi jenis kelamin tidak ditemukan';
+    if (reference.isEmpty) return 'Data referensi kosong';
+
+    // Cari usia terdekat di tabel
+    int closestAge = reference.keys.reduce(
+      (a, b) => (age - a).abs() < (age - b).abs() ? a : b,
+    );
+
+    double median = reference[closestAge]!;
+
+    // Toleransi WHO normal ±2 cm
+    double lowerLimit = median - 2.0;
+    double upperLimit = median + 2.0;
+
+    // Tentukan status
+    if (inputHead < lowerLimit) {
+      return 'Lingkar kepala kecil (di bawah normal)';
+    } else if (inputHead > upperLimit) {
+      return 'Lingkar kepala besar (di atas normal)';
+    } else {
+      return 'Lingkar kepala normal';
+    }
+  }
+
   String _getInitials(String name) {
     if (name.isEmpty) return 'NA';
 
@@ -266,7 +399,6 @@ void _showDuplicateDialog() {
       return '${date.day}/${date.month}/${date.year}';
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -304,6 +436,10 @@ void _showDuplicateDialog() {
             _buildIMTResult(),
             height(16),
 
+            //Lingkar Kepala
+            _buildHeadCircumfenceResult(),
+            height(16),
+
             //Form Input Data Anak
             _buildSectionTitle('Input Data Antropometri Anak'),
             height(8),
@@ -317,13 +453,7 @@ void _showDuplicateDialog() {
             //Form Sumber Nutrisi
             _buildSectionTitle('Input Sumber Gizi Harian Anak'),
             height(8),
-            
-// NutritionCRUDWidget(
-//   nutritionSources: _nutritionSources,
-//   onAdd: _addNutrition,
-//   onEdit: _editNutrition,
-//   onDelete: _deleteNutrition,
-// ),
+
             _buildNutritionSection(),
             height(16),
 
@@ -483,7 +613,7 @@ void _showDuplicateDialog() {
                           ),
                           height(4),
                           Text(
-                            '${_ageController.text.isEmpty ? '0' : _ageController.text} bulan • ${_selectedGender == 'male' ? '👦 Laki-laki' : '👧 Perempuan'}',
+                            '${_ageController.text.isEmpty ? '0' : _ageController.text} bulan • ${_selectedGender == 'Laki-Laki' ? '👦 Laki-laki' : '👧 Perempuan'}',
                             style: TextStyle(
                               color: Colors.white.withOpacity(0.9),
                               fontSize: 14,
@@ -548,6 +678,7 @@ void _showDuplicateDialog() {
 
   Widget _buildIMTResult() {
     double imt = _calculateIMT();
+    String headStatus = _getHeadCircumferenceStatus();
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -568,13 +699,6 @@ void _showDuplicateDialog() {
         children: [
           Row(
             children: [
-              // Container(
-              //   padding: const EdgeInsets.all(8),
-              //   decoration: BoxDecoration(
-              //     color: Color.fromARGB(255, 219, 163, 89).withOpacity(0.3),
-              //     borderRadius: BorderRadius.circular(12),
-              //   ),
-              //   child:
               Text('📈', style: TextStyle(fontSize: 18)),
               // ),
               width(12),
@@ -589,15 +713,84 @@ void _showDuplicateDialog() {
             ],
           ),
           height(12),
-          Text(
-            imt == 0
-                ? 'Masukkan berat dan tinggi badan untuk menghitung IMT dan mengetahui status IMT anak Anda.'
-                : 'Hasil IMT: ${imt.toStringAsFixed(2)} (${_getStatus()})',
-            style: TextStyle(
-              color: Color(0xFF92400E),
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
+          Row(
+            children: [
+              Icon(Icons.circle, size: 6, color: Color(0xFF92400E)),
+              width(8),
+              Expanded(
+                child: Text(
+                  imt == 0
+                      ? 'Masukkan berat dan tinggi badan untuk menghitung IMT dan mengetahui status IMT anak Anda.'
+                      : 'Hasil IMT: ${imt.toStringAsFixed(2)} (${_getStatus()})',
+                  style: TextStyle(
+                    color: Color(0xFF92400E),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          height(6),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeadCircumfenceResult() {
+    double imt = _calculateIMT();
+    String headStatus = _getHeadCircumferenceStatus();
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFFFFEDD5).withOpacity(0.6),
+            Color(0xFFFFF9F0).withOpacity(0.6),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(
+          color: Color.fromARGB(255, 219, 163, 89).withOpacity(0.3),
+          width: 1.5,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text('👶🏻', style: TextStyle(fontSize: 18)),
+              // ),
+              width(12),
+              const Text(
+                'Status Lingkar Kepala',
+                style: TextStyle(
+                  color: Color(0xFF92400E),
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          height(12),
+          Row(
+            children: [
+              Icon(Icons.circle, size: 6, color: Color(0xFF92400E)),
+              width(8),
+              Expanded(
+                child: Text(
+                  headStatus == 0
+                      ? 'Masukkan ukuran lingkar kepala untuk mengetahui status lingkar kepala anak Anda.'
+                      : 'Hasil: ${_getHeadCircumferenceStatus()}',
+                  style: TextStyle(
+                    color: Color(0xFF92400E),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -877,8 +1070,14 @@ void _showDuplicateDialog() {
                 color: Colors.black87,
               ),
               items: const [
-                DropdownMenuItem(value: 'male', child: Text('👦 Laki-laki')),
-                DropdownMenuItem(value: 'female', child: Text('👧 Perempuan')),
+                DropdownMenuItem(
+                  value: 'Laki-Laki',
+                  child: Text('👦 Laki-Laki'),
+                ),
+                DropdownMenuItem(
+                  value: 'Perempuan',
+                  child: Text('👧 Perempuan'),
+                ),
               ],
               onChanged: (value) {
                 if (value != null) {
@@ -930,6 +1129,7 @@ void _showDuplicateDialog() {
       ),
     );
   }
+
   Widget _buildNutritionSection() {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -1025,239 +1225,74 @@ void _showDuplicateDialog() {
       ),
     );
   }
+
   Widget _buildNutritionItem(NutritionSource item) {
-  return Container(
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: const Color(0xFF40E0D0).withOpacity(0.05),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(
-        color: const Color(0xFF40E0D0).withOpacity(0.2),
-        width: 1,
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF40E0D0).withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: const Color(0xFF40E0D0).withOpacity(0.2),
+          width: 1,
+        ),
       ),
-    ),
-    child: Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: const Color(0xFF40E0D0).withOpacity(0.2),
-            borderRadius: BorderRadius.circular(8),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF40E0D0).withOpacity(0.2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Icon(Icons.dining, size: 20, color: Color(0xFF2F6B6A)),
           ),
-          child: const Icon(Icons.dining, size: 20, color: Color(0xFF2F6B6A)),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                item.name,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF2F6B6A),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.name,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF2F6B6A),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  Text(
-                    item.portion,
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '• ${_formatDate(item.dateAdded)}',
-                    style: TextStyle(fontSize: 11, color: Colors.grey[500]),
-                  ),
-                ],
-              ),
-            ],
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Text(
+                      item.portion,
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '• ${_formatDate(item.dateAdded)}',
+                      style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-        IconButton(
-          onPressed: () => _showEditNutritionDialog(item),
-          icon: const Icon(Icons.edit_outlined),
-          color: const Color(0xFF40E0D0),
-          iconSize: 20,
-        ),
-        IconButton(
-          onPressed: () => _showDeleteNutritionDialog(item),
-          icon: const Icon(Icons.delete_outline),
-          color: Colors.red,
-          iconSize: 20,
-        ),
-      ],
-    ),
-  );
-}
-  // Widget _buildNutritionSection() {
-  //   return Container(
-  //     padding: const EdgeInsets.all(20),
-  //     decoration: BoxDecoration(
-  //       color: Colors.white.withOpacity(0.8),
-  //       borderRadius: BorderRadius.circular(24),
-  //       border: Border.all(
-  //         color: const Color(0xFF40E0D0).withOpacity(0.2),
-  //         width: 1.5,
-  //       ),
-  //       boxShadow: [
-  //         BoxShadow(
-  //           color: Colors.black.withOpacity(0.05),
-  //           blurRadius: 20,
-  //           offset: const Offset(0, 10),
-  //         ),
-  //       ],
-  //     ),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Row(
-  //               children: [
-  //                 Container(
-  //                   padding: const EdgeInsets.all(8),
-  //                   decoration: BoxDecoration(
-  //                     color: const Color(0xFF40E0D0).withOpacity(0.2),
-  //                     borderRadius: BorderRadius.circular(10),
-  //                   ),
-  //                   child: const Icon(
-  //                     Icons.restaurant_menu,
-  //                     size: 20,
-  //                     color: Color(0xFF2F6B6A),
-  //                   ),
-  //                 ),
-  //                 width(12),
-  //                 const Text(
-  //                   'Sumber Gizi Anak',
-  //                   style: TextStyle(
-  //                     color: Color(0xFF2F6B6A),
-  //                     fontSize: 16,
-  //                     fontWeight: FontWeight.bold,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //             IconButton(
-  //               onPressed: _showAddNutritionDialog,
-  //               // onPressed: (){},
-  //               icon: const Icon(Icons.add_circle),
-  //               color: Color(0xFF2F6B6A),
-  //               iconSize: 28,
-  //             ),
-  //           ],
-  //         ),
-  //         height(16),
-
-  //         if (_nutritionSources.isEmpty)
-  //           Container(
-  //             padding: const EdgeInsets.all(24),
-  //             child: Center(
-  //               child: Column(
-  //                 children: [
-  //                   Icon(Icons.restaurant, size: 48, color: Colors.grey[400]),
-  //                   height(12),
-  //                   Text(
-  //                     'Belum ada sumber gizi tercatat',
-  //                     style: TextStyle(color: Colors.grey[600], fontSize: 14),
-  //                   ),
-  //                   height(8),
-  //                   Text(
-  //                     'Tap ikon + untuk menambah',
-  //                     style: TextStyle(color: Colors.grey[500], fontSize: 12),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           )
-  //         else
-  //           ListView.separated(
-  //             shrinkWrap: true,
-  //             physics: const NeverScrollableScrollPhysics(),
-  //             itemCount: _nutritionSources.length,
-  //             separatorBuilder: (context, index) => const SizedBox(height: 8),
-  //             itemBuilder: (context, index) {
-  //               final nutrition = _nutritionSources[index];
-  //               return _buildNutritionItem(nutrition);
-  //             },
-  //           ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildNutritionItem(NutritionSource nutrition) {
-  //   return Container(
-  //     padding: const EdgeInsets.all(12),
-  //     decoration: BoxDecoration(
-  //       color: const Color(0xFF40E0D0).withOpacity(0.05),
-  //       borderRadius: BorderRadius.circular(12),
-  //       border: Border.all(
-  //         color: const Color(0xFF40E0D0).withOpacity(0.2),
-  //         width: 1,
-  //       ),
-  //     ),
-  //     child: Row(
-  //       children: [
-  //         Container(
-  //           padding: const EdgeInsets.all(8),
-  //           decoration: BoxDecoration(
-  //             color: const Color(0xFF40E0D0).withOpacity(0.2),
-  //             borderRadius: BorderRadius.circular(8),
-  //           ),
-  //           child: const Icon(Icons.dining, size: 20, color: Color(0xFF2F6B6A)),
-  //         ),
-  //         width(12),
-  //         Expanded(
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               Text(
-  //                 nutrition.name,
-  //                 style: const TextStyle(
-  //                   fontSize: 14,
-  //                   fontWeight: FontWeight.w600,
-  //                   color: Color(0xFF2F6B6A),
-  //                 ),
-  //               ),
-  //               const SizedBox(height: 4),
-  //               Row(
-  //                 children: [
-  //                   Text(
-  //                     nutrition.portion,
-  //                     style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-  //                   ),
-  //                   const SizedBox(width: 8),
-  //                   Text(
-  //                     // '',
-  //                     '• ${_formatDate(nutrition.dateAdded)}',
-  //                     style: TextStyle(fontSize: 11, color: Colors.grey[500]),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //         IconButton(
-  //           onPressed: () => _showEditNutritionDialog(nutrition),
-  //           icon: const Icon(Icons.edit_outlined),
-  //           color: const Color(0xFF40E0D0),
-  //           iconSize: 20,
-  //         ),
-  //         IconButton(
-  //           // onPressed: (){},
-  //           onPressed: () => _deleteNutrition(nutrition.id),
-  //           icon: const Icon(Icons.delete_outline),
-  //           color: Colors.red,
-  //           iconSize: 20,
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+          IconButton(
+            onPressed: () => _showEditNutritionDialog(item),
+            icon: const Icon(Icons.edit_outlined),
+            color: const Color(0xFF40E0D0),
+            iconSize: 20,
+          ),
+          IconButton(
+            onPressed: () => _showDeleteNutritionDialog(item),
+            icon: const Icon(Icons.delete_outline),
+            color: Colors.red,
+            iconSize: 20,
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildTips() {
     return Container(
@@ -1339,128 +1374,56 @@ void _showDuplicateDialog() {
     );
   }
 
-Future<void> _showAddNutritionDialog() async {
-   String name = '';
-  String portion = '';
-  await showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text("Tambah Sumber Gizi"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: _nutritionNameController,
-              onChanged: (value) => name = value,
-              decoration: const InputDecoration(
-                labelText: 'Nama Makanan',                
-              ),
+  Future<void> _showDeleteNutritionDialog(NutritionSource nutrition) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            children: const [
+              Icon(Icons.warning_amber_rounded, color: Colors.redAccent),
+              SizedBox(width: 8),
+              Text("Hapus Sumber Gizi"),
+            ],
+          ),
+          content: Text(
+            "Apakah kamu yakin ingin menghapus '${nutrition.name}' dari daftar sumber gizi?",
+            style: const TextStyle(fontSize: 14, color: Colors.black87),
+          ),
+          actionsAlignment: MainAxisAlignment.spaceBetween,
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(foregroundColor: Colors.grey[700]),
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Batal"),
             ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _nutritionPortionController,
-               onChanged: (value) => portion = value,
-              decoration: const InputDecoration(
-                labelText: 'Porsi',
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
+              icon: const Icon(Icons.delete_outline, size: 18),
+              label: const Text("Hapus"),
+              onPressed: () async {
+                await _deleteNutrition(nutrition.id);
+                if (context.mounted) Navigator.pop(context);
+              },
             ),
           ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _nutritionNameController.clear();
-              _nutritionPortionController.clear();
-            },
-            child: const Text("Batal"),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              final isDuplicate = _nutritionSources.any(
-                (item) => item.name.toLowerCase().trim() == name.toLowerCase().trim(),
-              );
-
-              if (isDuplicate) {
-                Navigator.pop(context);
-                _showDuplicateDialog();
-                return;
-              }
-
-              setState(() {
-                _nutritionSources.add(
-                  NutritionSource(
-                    id: DateTime.now()
-                        .millisecondsSinceEpoch
-                        .toString(), 
-                    name: name,
-                    portion: portion,
-                    dateAdded: DateTime.now(),
-                  ),
-                );
-              });
-
-              Navigator.pop(context);
-            },
-            child: const Text('Tambah'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-Future<void> _showDeleteNutritionDialog(NutritionSource nutrition) async {
-  await showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        title: Row(
-          children: const [
-            Icon(Icons.warning_amber_rounded, color: Colors.redAccent),
-            SizedBox(width: 8),
-            Text("Hapus Sumber Gizi"),
-          ],
-        ),
-        content: Text(
-          "Apakah kamu yakin ingin menghapus '${nutrition.name}' dari daftar sumber gizi?",
-          style: const TextStyle(fontSize: 14, color: Colors.black87),
-        ),
-        actionsAlignment: MainAxisAlignment.spaceBetween,
-        actions: [
-          TextButton(
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.grey[700],
-            ),
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Batal"),
-          ),
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.redAccent,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            icon: const Icon(Icons.delete_outline, size: 18),
-            label: const Text("Hapus"),
-            onPressed: () async {
-              await _deleteNutrition(nutrition.id);
-              if (context.mounted) Navigator.pop(context);
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
-
+        );
+      },
+    );
+  }
 }
 
 //Sized Box

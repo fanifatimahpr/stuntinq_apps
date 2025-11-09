@@ -1,5 +1,27 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stuntinq_apps/Model/edukasi_model.dart';
+import 'package:stuntinq_apps/bottomnavigation/edukasi_modul1.dart';
+import 'package:stuntinq_apps/bottomnavigation/edukasi_modul2.dart';
+import 'package:stuntinq_apps/bottomnavigation/edukasi_modul3.dart';
+import 'package:stuntinq_apps/bottomnavigation/edukasi_modul4.dart';
+
+// MODEL ARTIKEL
+class Article {
+  final String title;
+  final String? content;
+  final IconData icon;
+  final String uiType;
+  final bool completed;
+
+  Article({
+    required this.title,
+    this.content,
+    required this.icon,
+    required this.uiType,
+    this.completed = false,
+  });
+}
 
 class EdukasiPage extends StatefulWidget {
   const EdukasiPage({super.key});
@@ -9,6 +31,34 @@ class EdukasiPage extends StatefulWidget {
 }
 
 class _EdukasiPageState extends State<EdukasiPage> {
+  // DAFTAR ARTIKEL
+  final List<Article> articles = [
+    Article(
+      title: '1000 Hari Pertama Kehidupan',
+      // content: '',
+      icon: Icons.child_care, // ikon khusus
+      uiType: 'type1', // nanti di next page pakai layout type1
+    ),
+    Article(
+      title: 'Nutrisi Ibu Hamil',
+      // content: 'Isi artikel 2...',
+      icon: Icons.local_hospital,
+      uiType: 'type2', // layout berbeda
+    ),
+    Article(
+      title: 'MPASI Bergizi',
+      // content: 'Isi artikel 3...',
+      icon: Icons.restaurant_menu,
+      uiType: 'type3',
+    ),
+    Article(
+      title: 'Peran Imunisasi',
+      // content: 'Isi artikel 4...',
+      icon: Icons.vaccines,
+      uiType: 'type4',
+    ),
+  ];
+
   List<FAQ> faqs = [
     FAQ(
       question: 'Apa perbedaan stunting dan gizi buruk?',
@@ -65,18 +115,17 @@ class _EdukasiPageState extends State<EdukasiPage> {
 
             //Progress Edukasi
             _buildProgressEducation(),
-            height(15),
+            height(25),
 
             //List Modul Edukasi
-            ...modul.map(
-              (modul) => Padding(
+            ...articles.map(
+              (article) => Padding(
                 padding: const EdgeInsets.only(bottom: 12.0),
-                child: _buildListModul(modul),
+                child: _buildListModul(article),
               ),
             ),
 
-            // _buildListModul(modul),
-            height(20),
+            height(15),
 
             //Frequently Ask Questions
             _buildFAQ(),
@@ -124,7 +173,7 @@ class _EdukasiPageState extends State<EdukasiPage> {
               ),
             ),
             Text(
-              'Pelajari tentang stunting',
+              'Pelajari Tentang Stunting',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
@@ -142,88 +191,74 @@ class _EdukasiPageState extends State<EdukasiPage> {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+        gradient: const LinearGradient(
           colors: [Color(0xFF2F6B6A), Color(0xFF359a99), Color(0xFF40E0D0)],
         ),
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF2F6B6A).withOpacity(0.3),
+            color: const Color(0xFF2F6B6A).withOpacity(0.3),
             blurRadius: 8,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Stack(
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Progres Pembelajaran',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.white.withOpacity(0.9),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              height(12),
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: ClipRRect(
-              //         borderRadius: BorderRadius.circular(10),
-              //         child: LinearProgressIndicator(
-              //           // value: progress,
-              //           backgroundColor: Colors.white.withOpacity(0.3),
-              //           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              //           minHeight: 8,
-              //         ),
-              //       ),
-              //     ),
-              //     const SizedBox(width: 12),
-              //     Text(
-              //       '',
-              //       // '$completedEducation/${modul.length}',
-              //       style: TextStyle(
-              //         fontSize: 13,
-              //         color: Colors.white,
-              //         fontWeight: FontWeight.w600,
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              const SizedBox(height: 8),
-              Text(
-                'Terus belajar untuk lindungi anak dari stunting!',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.white.withOpacity(0.95),
-                ),
-              ),
-            ],
+          Text(
+            '📝  Edukasi Pencegahan Stunting',
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            'Baca artikel untuk meningkatkan pemahaman dan melindungi anak dari stunting.',
+            style: TextStyle(fontSize: 13, color: Colors.white70),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildListModul(Education modul) {
+  Widget _buildListModul(Article article) {
     return InkWell(
       onTap: () {
-        print('Tapped on module: ${modul.title}');
+        switch (article.uiType) {
+          case 'type1':
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ArticleType1()),
+            );
+            break;
+          case 'type2':
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ArticleType2()),
+            );
+            break;
+          case 'type3':
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ArticleType3()),
+            );
+            break;
+          case 'type4':
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ArticleType4()),
+            );
+            break;
+          default:
+            // Optional: jika ada uiType tak dikenal
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Halaman belum tersedia')),
+            );
+        }
       },
-      //Jika mau ontap ke next page
-      //       onTap: () {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) => ModulDetailPage(modul: modul),
-      //     ),
-      //   );
-      // },
       borderRadius: BorderRadius.circular(22),
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -231,116 +266,42 @@ class _EdukasiPageState extends State<EdukasiPage> {
           color: Colors.white.withOpacity(0.8),
           borderRadius: BorderRadius.circular(22),
           border: Border.all(
-            color: Color(0xFF40E0D0).withOpacity(0.2),
+            color: const Color(0xFF40E0D0).withOpacity(0.2),
             width: 1,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: Offset(0, 2),
-            ),
-          ],
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Type Icon
             Container(
-              margin: const EdgeInsets.only(top: 2),
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: modul.type == EducationType.video
-                      ? [Color(0xFFFEE2E2), Color(0xFFFCE7F3)]
-                      : [
-                          Color(0xFF40E0D0).withOpacity(0.2),
-                          Color(0xFF2F6B6A).withOpacity(0.2),
-                        ],
+                  colors: [
+                    const Color(0xFF40E0D0).withOpacity(0.2),
+                    const Color(0xFF2F6B6A).withOpacity(0.2),
+                  ],
                 ),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
-                modul.type == EducationType.video
-                    ? Icons.play_arrow
-                    : Icons.menu_book,
-                color: modul.type == EducationType.video
-                    ? Color(0xFFDC2626)
-                    : Color(0xFF2F6B6A),
-                size: 16,
+                article.icon,
+                color: const Color(0xFF2F6B6A),
+                size: 18,
               ),
             ),
             width(12),
-
-            // Content
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              modul.title,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF2F6B6A),
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              modul.duration,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Icon(
-                        modul.completed
-                            ? Icons.check_circle
-                            : Icons.chevron_right,
-                        color: modul.completed
-                            ? Colors.green[600]
-                            : Colors.grey[400],
-                        size: 20,
-                      ),
-                    ],
-                  ),
-                  if (modul.completed) ...[
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFDCFCE7),
-                        borderRadius: BorderRadius.circular(22),
-                      ),
-                      child: Text(
-                        'Selesai',
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF166534),
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
+              child: Text(
+                article.title,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF2F6B6A),
+                ),
               ),
             ),
+            const Icon(Icons.chevron_right, color: Colors.grey, size: 22),
           ],
         ),
       ),

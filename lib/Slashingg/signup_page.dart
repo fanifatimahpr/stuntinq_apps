@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stuntinq_apps/Database/dbhelper_user.dart';
 import 'package:stuntinq_apps/Model/user_model.dart';
+import 'package:stuntinq_apps/Slashingg/signin_page.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -185,7 +186,7 @@ class _SignupPageState extends State<SignupPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const SignupPage()),
+                    MaterialPageRoute(builder: (_) => const SigninPage()),
                   );
                 },
               ),
@@ -221,10 +222,10 @@ class _SignupPageState extends State<SignupPage> {
       height: 56,
       width: double.infinity,
       decoration: BoxDecoration(
-          gradient: const LinearGradient(
-          colors: [Color(0xff2f6b6a), Color(0xff40E0D0)
-          ],),
-           borderRadius: BorderRadius.circular(26),
+        gradient: const LinearGradient(
+          colors: [Color(0xff2f6b6a), Color(0xff40E0D0)],
+        ),
+        borderRadius: BorderRadius.circular(26),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF2F6B6A).withOpacity(0.4),
@@ -232,7 +233,7 @@ class _SignupPageState extends State<SignupPage> {
             offset: const Offset(0, 8),
           ),
         ],
-          ),
+      ),
       child: ElevatedButton(
         onPressed: () {
           if (_formKey.currentState!.validate()) {
