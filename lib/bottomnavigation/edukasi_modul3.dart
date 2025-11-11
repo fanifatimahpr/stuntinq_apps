@@ -11,7 +11,7 @@ class ArticleType3 extends StatefulWidget {
 class _ArticleType3PageState extends State<ArticleType3> {
   bool isLiked = false;
   bool isBookmarked = false;
-  int likeCount = 300;
+  int likeCount = 287;
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +116,7 @@ class _ArticleType3PageState extends State<ArticleType3> {
             borderRadius: BorderRadius.circular(30),
           ),
           child: Text(
-            "Tumbuh Optimal",
+            "Menu MPASI",
             style: TextStyle(
               color: Color.fromARGB(255, 255, 255, 255),
               fontWeight: FontWeight.w600,
@@ -239,16 +239,117 @@ class _ArticleType3PageState extends State<ArticleType3> {
           style: TextStyle(height: 1.6),
         ),
         SizedBox(height: 10),
-        Text("5. Vitamin", style: TextStyle(fontWeight: FontWeight.bold)),
+        Text("🍚  Karbohidrat, terdiri dari makanan pokok seperti nasi, kentang, gandum, jagung atau ubi.", style: TextStyle(height: 1.6)),
         Text(
-          'Selama kehamilan, asupan vitamin menjadi krusial, khususnya vitamin B dan D. Vitamin B kompleks (B1, B2, B6, B9, dan B12) berperan dalam produksi energi dan menjaga fungsi optimal plasenta, sementara vitamin D, terutama D3, mendukung pembentukan serta kekuatan tulang janin. Sumber vitamin B dapat ditemukan pada daging ayam, pisang, kacang-kacangan, gandum utuh, dan roti, sedangkan vitamin D diperoleh melalui konsumsi susu, ikan, jeruk, serta paparan sinar matahari pagi.',
+          '🐔  Protein hewani, terdiri dari daging sapi, daging ayam/unggas, ikan, dan telur.',
           style: TextStyle(height: 1.6),
         ),
-        SizedBox(height: 15),
         Text(
-          "💡  Selain memenuhi kebutuhan nutrisi, ibu hamil harus tetap menerapkan pola hidup sehat dan segera berkonsultasi ke dokter atau bidan.",
-          style: TextStyle(fontWeight: FontWeight.w500),
+          "🥜  Protein nabati, terdiri dari kacang-kacangan dan olahannya, seperti tahu dan tempe.",
+          style: TextStyle(height: 1.6),
         ),
+        Text(
+          "🥑  Lemak sehat, seperti alpukat dan minyak zaitun.",
+          style: TextStyle(height: 1.6),
+        ),
+         Text(
+          "🥕  Vitamin A, bisa diperoleh dari wortel, apel dan pisang atau ubi jalar.",
+          style: TextStyle(height: 1.6),
+        ),
+        Text(
+          "🍊  Vitamin C, bisa diperoleh dari buah dan sayuran, seperti jeruk, papaya dan brokoli.",
+          style: TextStyle(height: 1.6),
+        ),
+        Text(
+          "🐮  Zat besi, diperoleh dari hati (ayam dan sapi) dan sayur bayam.",
+          style: TextStyle(height: 1.6),
+        ),
+        Text(
+          "🍌  Asam folat, bisa diperoleh dari buah pisang dan sayuran berdaun hijau gelap.",
+          style: TextStyle(height: 1.6),
+        ),
+
+        SizedBox(height: 20),
+
+        Text(
+          "Menu MPASI Bayi Usia 6-8 Bulan",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            color: Color(0xff2f6b6a),
+          ),
+        ),
+        SizedBox(height: 3),
+         Text(
+          "Usia 6 bulan merupakan masa peralihan dari ASI eksklusif ke MPASI dimana bayi sudah mulai bisa mencerna makanan yang lebih padat. Inilah saat yang tepat memberi si kecil makanan bertekstur lunak, seperti bubur, kentang tumbuk, pisang atau alpukat.",
+          style: TextStyle(height: 1.6),
+        ),
+        SizedBox(height: 10),
+       
+        Text(
+          "Usia 6 bulan merupakan masa peralihan dari ASI eksklusif ke MPASI dimana bayi sudah mulai bisa mencerna makanan yang lebih padat. Inilah saat yang tepat memberi si kecil makanan bertekstur lunak, seperti bubur, kentang tumbuk, pisang atau alpukat.",
+          style: TextStyle(height: 1.6),
+        ),
+        SizedBox(height: 10),
+        Text(
+          'Makanan yang bisa disiapkan Ibu antara lain bubur pisang campur apel dan pir, bubur sup daging kacang merah, atau puding kentang ayam dan telur. Unduh resep mpasi lokal untuk bayi usia 6-8 bukan di sini.', style: TextStyle(height: 1.6),
+          ),
+          SizedBox(height: 20),
+
+        Text(
+          "Menu MPASI Bayi Usia 9-11 Bulan",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            color: Color(0xff2f6b6a),
+          ),
+        ),
+        SizedBox(height: 3),
+         Text(
+          'Di usia 9 bulan bayi mulai beralih ke menu makanan yang bervariasi dan bertekstur kasar. Walaupun ASI tetap merupakan sumber gizi utama, MPASI mulai berkontribusi terhadap pemenuhan kebutuhan nutrisi si kecil.', style: TextStyle(height: 1.6),
+        ),
+        SizedBox(height: 10),
+        Text(
+          'Berikan makanan yang lembut seperti nasi tim atau yang dicincang halus, dicacah, dan diiris-iris. Beberapa resep MPASI yang bisa ibu siapkan antara lain sop daging cincang, nasi tim ikan tuna telur puyuh atau tim bubur manado daging dan udang.', style: TextStyle(height: 1.6),
+        ),
+        SizedBox(height: 20),
+        Text(
+          "Menu MPASI Bayi Usia 12-23 Bulan",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            color: Color(0xff2f6b6a),
+          ),
+        ),
+        SizedBox(height: 3),
+         Text(
+          'Saat mencapai usia 12 bulan atau 1 tahun, kebutuhan energi dan protein si kecil meningkat. Pastikan Ibu memberi si kecil protein hewani yang mengandung asam amino esensial untuk mendukung pertumbuhan otak dan sel-sel tubuh lainnya. ', style: TextStyle(height: 1.6),
+        ),
+        SizedBox(height: 10),
+        Text(
+          'Menu makanan yang diberikan, selain ASI, harus tetap lengkap, bervariasi dan bergizi seimbang. Pada rentang usia ini si kecil sudah mulai bisa makan nasi dan daging yang diiris-iris. Beberapa resep MPASI yang bisa ibu siapkan antara lain nasi sup telur puyuh bola ayam, nasi soto ayam kuah kuning, nasi ikan kuah kuning, dan nugget tempe ayam sayuran.', style: TextStyle(height: 1.6),
+        ),
+         SizedBox(height: 20),
+        Text(
+          "Menu MPASI Bayi Usia 2-5 Tahun",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            color: Color(0xff2f6b6a),
+          ),
+        ),
+        SizedBox(height: 3),
+         Text(
+          'Memasuki usia 2 tahun ke atas, kemampuan fisik, intelektual dan sosial anak berkembang pesat. Anak juga sudah mulai memilih-milih makanan dan bisa makan makanan orang dewasa.', style: TextStyle(height: 1.6),
+        ),
+        SizedBox(height: 10),
+        Text(
+          'Berikan menu makanan yang lebih bervariasi agar anak tidak bosan. Namun tetap perhatikan kadar garam dan gula, serta hindari makanan olahan yang mengandung zat adiktif dan bahan pengawet.', style: TextStyle(height: 1.6),
+        ),
+        Text(
+          'Beberapa resep MPASI untuk anak usia 2 tahun ke atas, antara lain nasi masak ayam kecap sayur, nasi ikan lele katsu ceria, nasi sup tabas udang sayur dan bola-bola nasi isi rabuk ikan.', style: TextStyle(height: 1.6),
+        ),
+         SizedBox(height: 20),
       ],
     );
   }

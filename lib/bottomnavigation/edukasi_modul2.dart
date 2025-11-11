@@ -11,7 +11,7 @@ class ArticleType2 extends StatefulWidget {
 class _ArticleType2PageState extends State<ArticleType2> {
   bool isLiked = false;
   bool isBookmarked = false;
-  int likeCount = 300;
+  int likeCount = 343;
 
   @override
   Widget build(BuildContext context) {
