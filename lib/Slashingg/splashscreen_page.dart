@@ -20,25 +20,6 @@ class _SplashPageState extends State<SplashPage> {
     isLoginFunction();
   }
 
-  // isLoginFunction() async {
-  //   await Future.delayed(const Duration(seconds: 3)).then((value) async {
-  //     bool? isLogin = await PreferenceHandler.getLogin();
-  //     int? userId = await PreferenceHandler.getUserId(); //get user ID (login)
-
-  //     //Jika sudah ada user id langsung ke bottom navigation
-  //     //  if (isLogin == true && userId != null) {
-  //     //   UserModel? user = await DBHelper.getUserById(userId);
-
-  //     //   if (user != null) {
-  //     //     Navigator.pushAndRemoveUntil(
-  //     //       context,
-  //     //       MaterialPageRoute(
-  //     //         builder: (context) => BottomNavigationApp(currentUser: user),
-  //     //       ),
-  //     //       (route) => false,
-  //     //     );
-  //     //     return;
-  //     //
 
       //Jika sudah ada user id namun harus ke sign in lagi
       isLoginFunction() async {
@@ -46,18 +27,27 @@ class _SplashPageState extends State<SplashPage> {
     bool? isLogin = await PreferenceHandler.getLogin();
     int? userId = await PreferenceHandler.getUserId();
 
-    if (isLogin == true && userId != null) {
-      // TODO: arahkan ke homepage / dashboard
-      // contoh:
-      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => BottomNavigationApp(currentUser: user)));
-    } else {
-      // Jika belum login, arahkan ke halaman sign in
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const SigninPage()),
-      );
-    }
-  });
+    
+  if (!mounted) return;
+
+  print("DEBUG: isLogin=$isLogin, userId=$userId"); // untuk cek nilai
+
+  if (isLogin == true && userId != null) {
+    // Sudah login, arahkan ke home (nanti ganti sesuai app kamu)
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const SigninPage()),
+      // ganti SigninPage() jadi BottomNavigationApp(currentUser: user)
+    );
+  } else {
+    // Belum login → ke SigninPage
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const SigninPage()),
+    );
+  }
+}
+);
 }
 
     

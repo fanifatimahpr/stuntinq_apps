@@ -14,6 +14,7 @@ class PreferenceHandler {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt("userId", id);
   }
+  
 
   //Ambil data user ID saat login
   static Future<int?> getUserId() async {
@@ -28,8 +29,16 @@ class PreferenceHandler {
   }
 
   //Hapus data login pada saat logout
+  // static removeLogin() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   prefs.remove('userId');
+
+  // }
+
   static removeLogin() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.remove(isLogin);
-  }
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.remove(isLogin);
+  await prefs.remove("userId");
+}
+
 }
