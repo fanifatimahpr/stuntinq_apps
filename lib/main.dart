@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:stuntinq_apps/Slashingg/splashscreen_page.dart';
+import 'package:stuntinq_apps/Slicing/splashscreen_page.dart';
 import 'package:stuntinq_apps/bottomnavigation/bottomnavigation.dart';
 import 'package:stuntinq_apps/bottomnavigation/imunisasi.dart';
 

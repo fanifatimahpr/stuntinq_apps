@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stuntinq_apps/Database/dbhelper_user.dart';
 import 'package:stuntinq_apps/Model/user_model.dart';
-import 'package:stuntinq_apps/Slashingg/splashscreen_page.dart';
+import 'package:stuntinq_apps/Slicing/splashscreen_page.dart';
 
 class ProfilePage extends StatefulWidget {
   final UserModel user;
