@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:stuntinq_apps/Database/dbhelper_user.dart';
+import 'package:stuntinq_apps/Database/user_dbhelper.dart';
 import 'package:stuntinq_apps/Model/user_model.dart';
 import 'package:stuntinq_apps/Slicing/signin_page.dart';
 import 'package:stuntinq_apps/preference_handler.dart';

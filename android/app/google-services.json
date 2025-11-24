@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "111380793180",
+    "project_id": "stuntinq-project",
+    "storage_bucket": "stuntinq-project.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:111380793180:android:58bcb634c3df1008f12399",
+        "android_client_info": {
+          "package_name": "com.ppkd.stuntinq_apps"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvh7aGWg2bipVZONS8OlyqiTjcEcxJh4E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

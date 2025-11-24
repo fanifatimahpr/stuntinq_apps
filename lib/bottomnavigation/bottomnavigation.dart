@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:stuntinq_apps/Database/dbhelper_user.dart';
+import 'package:stuntinq_apps/Database/user_dbhelper.dart';
 import 'package:stuntinq_apps/Model/user_model.dart';
-import 'package:stuntinq_apps/bottomnavigation/data.dart';
+import 'package:stuntinq_apps/bottomnavigation/data_page.dart';
 import 'package:stuntinq_apps/bottomnavigation/edukasi.dart';
 import 'package:stuntinq_apps/bottomnavigation/imunisasi.dart';
 import 'package:stuntinq_apps/bottomnavigation/peta.dart';

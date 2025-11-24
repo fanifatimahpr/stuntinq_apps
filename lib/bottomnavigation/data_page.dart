@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:stuntinq_apps/Database/dbhelper_datapage.dart';
-import 'package:stuntinq_apps/Model/data_model.dart';
+import 'package:stuntinq_apps/Database/child_data_dbhelper.dart';
+import 'package:stuntinq_apps/Database/nutrition_data_dbhelper.dart';
+import 'package:stuntinq_apps/Model/child_model.dart';
+import 'package:stuntinq_apps/Model/nutrition_data_model.dart';
 import 'package:stuntinq_apps/Model/edukasi_model.dart';
 
 class DataPage extends StatefulWidget {
@@ -12,12 +14,12 @@ class DataPage extends StatefulWidget {
 }
 
 class _DataPageState extends State<DataPage>
-    with SingleTickerProviderStateMixin {
-  final TextEditingController _nutritionNameController =
-      TextEditingController();
-  final TextEditingController _nutritionPortionController =
-      TextEditingController();
+  with SingleTickerProviderStateMixin {
+  final TextEditingController _nutritionNameController = TextEditingController();
+  final TextEditingController _nutritionPortionController = TextEditingController();
+
   List<NutritionSource> _nutritionSources = [];
+  List<ChildHistoryModel> _history = [];
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
@@ -35,6 +37,7 @@ class _DataPageState extends State<DataPage>
   void initState() {
     super.initState();
     _loadNutritionData();
+    _loadHistory();
     headCircumferenceBoys;
     headCircumferenceGirls;
     _successAnimationController = AnimationController(
@@ -50,6 +53,14 @@ class _DataPageState extends State<DataPage>
       _nutritionSources = data;
     });
   }
+  
+  Future<void> _loadHistory() async {
+  final data = await ChildHistoryDB.instance.getAllHistory();
+  setState(() {
+    _history = data;
+  });
+}
+
 
   //CREATE (ADD) NUTRITION
   Future<void> _showAddNutritionDialog() async {
@@ -252,14 +263,28 @@ class _DataPageState extends State<DataPage>
     super.dispose();
   }
 
-  void _handleSubmit() {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _showSuccess = true;
-      });
-      _successAnimationController.forward();
-    }
+  void _handleSubmit() async {
+  if (_formKey.currentState!.validate()) {
+
+    final imt = _calculateIMT();
+
+    final history = ChildHistoryModel(
+      name: _nameController.text,
+      age: int.parse(_ageController.text),
+      weight: double.parse(_weightController.text),
+      height: double.parse(_heightController.text),
+      imt: imt,
+      head: double.parse(_headCircumferenceController.text),
+      createdAt: DateTime.now(),
+    );
+
+    await ChildHistoryDB.instance.insertHistory(history);
+    await _loadHistory();
+
+    Navigator.pop(context);
   }
+}
+
 
   void _showDuplicateDialog() {
     showDialog(
@@ -430,6 +455,10 @@ class _DataPageState extends State<DataPage>
 
             //Profil Anak
             _buildChildProfile(),
+            height(16),
+
+            //History Anak
+            _buildHistorySection(),
             height(16),
 
             //IMT
@@ -675,6 +704,97 @@ class _DataPageState extends State<DataPage>
       ),
     );
   }
+
+Widget _buildHistorySection() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        "Riwayat Pemeriksaan",
+        style: TextStyle(
+          color: Color(0xFF2F6B6A),
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      height(12),
+
+      SizedBox(
+        height: 150,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: _history.length,
+          itemBuilder: (context, index) {
+            final item = _history[index];
+
+            return Container(
+              margin: EdgeInsets.only(right: 12),
+              padding: EdgeInsets.all(16),
+              width: 220,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF2F6B6A), Color(0xFF40E0D0)],
+                ),
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.name,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  height(4),
+                  Text(
+                    "${item.age} bulan",
+                    style: TextStyle(color: Colors.white70),
+                  ),
+                  height(8),
+
+                  Text(
+                    "IMT: ${item.imt.toStringAsFixed(2)}",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Text(
+                    "Tinggi: ${item.height} cm",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Text(
+                    "Berat: ${item.weight} kg",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Text(
+                    "Lingkar Kepala: ${item.head} cm",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  height(6),
+                  Text(
+                    "Waktu: ${item.createdAt.day}/${item.createdAt.month}/${item.createdAt.year}",
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    ],
+  );
+}
 
   Widget _buildIMTResult() {
     double imt = _calculateIMT();
@@ -1113,22 +1233,45 @@ class _DataPageState extends State<DataPage>
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: _handleSubmit,
+          onTap: 
+          _handleSubmit,
           borderRadius: BorderRadius.circular(26),
           child: const Center(
             child: Text(
               'Simpan Data',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+  //     ElevatedButton(
+  // onPressed: () async {
+  //   if (_formKey.currentState!.validate()) {
+
+  //     final imt = _calculateIMT();
+
+  //     final history = ChildHistoryModel(
+  //       name: _nameController.text,
+  //       age: int.parse(_ageController.text),
+  //       weight: double.parse(_weightController.text),
+  //       height: double.parse(_heightController.text),
+  //       imt: imt,
+  //       head: double.parse(_headCircumferenceController.text),
+  //       createdAt: DateTime.now(),
+  //     );
+
+  //     await ChildHistoryDB.instance.insertHistory(history);
+  //     await _loadHistory();
+
+  //     Navigator.pop(context);
+  //   }
+  // },
+  // child: Text('Simpan',
+  //             style: TextStyle(
+  //               color: Colors.white,
+  //               fontSize: 16,
+  //               fontWeight: FontWeight.bold,
               ),
+          )
             ),
           ),
-        ),
-      ),
-    );
-  }
+        );
+      }
 
   Widget _buildNutritionSection() {
     return Container(
