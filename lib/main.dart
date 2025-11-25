@@ -1,13 +1,22 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:stuntinq_apps/Firebase/views/auth/signup_firebase.dart';
+import 'package:stuntinq_apps/Firebase/views/auth/splash_firebase.dart';
 import 'package:stuntinq_apps/Slicing/splashscreen_page.dart';
 import 'package:stuntinq_apps/bottomnavigation/bottomnavigation.dart';
-import 'package:stuntinq_apps/bottomnavigation/imunisasi.dart';
+import 'package:stuntinq_apps/bottomnavigation/imunisasi_page.dart';
+import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -20,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
       ),
-      home: SplashPage(),
+      home: SplashFirebase(),
     );
   }
 }

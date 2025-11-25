@@ -1,6 +1,6 @@
 // Class baru untuk next page article
 import 'package:flutter/material.dart';
-import 'package:stuntinq_apps/bottomnavigation/edukasi.dart';
+import 'package:stuntinq_apps/bottomnavigation/edukasi_page.dart';
 
 class ArticleType4 extends StatefulWidget {
   const ArticleType4({super.key});

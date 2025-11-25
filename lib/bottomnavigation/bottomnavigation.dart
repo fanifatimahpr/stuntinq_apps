@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:stuntinq_apps/Database/user_dbhelper.dart';
 import 'package:stuntinq_apps/Model/user_model.dart';
 import 'package:stuntinq_apps/bottomnavigation/data_page.dart';
-import 'package:stuntinq_apps/bottomnavigation/edukasi.dart';
-import 'package:stuntinq_apps/bottomnavigation/imunisasi.dart';
-import 'package:stuntinq_apps/bottomnavigation/peta.dart';
-import 'package:stuntinq_apps/bottomnavigation/profile.dart';
+import 'package:stuntinq_apps/bottomnavigation/edukasi_page.dart';
+import 'package:stuntinq_apps/bottomnavigation/imunisasi_page.dart';
+import 'package:stuntinq_apps/bottomnavigation/peta_page.dart';
+import 'package:stuntinq_apps/bottomnavigation/profile_page.dart';
 import 'package:stuntinq_apps/preference_handler.dart';
 
 class BottomNavigationApp extends StatefulWidget {
-  final UserModel currentUser;
+  final UserModel? currentUser;
   const BottomNavigationApp({required this.currentUser, Key? key})
     : super(key: key);
   @override
@@ -54,8 +54,17 @@ class _BottomNavigatorAppState extends State<BottomNavigationApp> {
 
   @override
   Widget build(BuildContext context) {
+    if (currentUser == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
-      body: _widgetOptions(widget.currentUser)[_selectedIndex],
+      // body: _widgetOptions(widget.currentUser)[_selectedIndex],
+      body: currentUser == null
+    ? const Center(child: CircularProgressIndicator())
+    : _widgetOptions(currentUser!)[_selectedIndex],
+
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       //Bottom Navigator
       bottomNavigationBar: BottomNavigationBar(

@@ -7,14 +7,14 @@ import 'package:stuntinq_apps/Model/nutrition_data_model.dart';
 import 'package:stuntinq_apps/Model/edukasi_model.dart';
 import 'package:stuntinq_apps/bottomnavigation/history_page.dart';
 
-class DataPage extends StatefulWidget {
-  const DataPage({Key? key}) : super(key: key);
+class DataFirebase extends StatefulWidget {
+  const DataFirebase({Key? key}) : super(key: key);
 
   @override
-  State<DataPage> createState() => _DataPageState();
+  State<DataFirebase> createState() => _DataFirebaseState();
 }
 
-class _DataPageState extends State<DataPage>
+class _DataFirebaseState extends State<DataFirebase>
   with SingleTickerProviderStateMixin {
   final TextEditingController _nutritionNameController = TextEditingController();
   final TextEditingController _nutritionPortionController = TextEditingController();
@@ -29,6 +29,7 @@ class _DataPageState extends State<DataPage>
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _headCircumferenceController =
       TextEditingController();
+      
 
   String _selectedGender = 'Perempuan';
   bool _showSuccess = false;

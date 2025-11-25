@@ -48,18 +48,6 @@ class DBHelper {
     return null;
   }
 
-  // //Create User
-  // static Future<void> createUser(UserModel user) async {
-  //   final dbs = await db();
-  //   //Insert adalah fungsi untuk menambahkan data (CREATE)
-  //   await dbs.insert(
-  //     tableUser,
-  //     user.toMap(),
-  //     conflictAlgorithm: ConflictAlgorithm.replace,
-  //   );
-  //   print(user.toMap());
-  // }
-
   //GET USER
   static Future<List<UserModel>> getAllUser() async {
     final dbs = await db();
