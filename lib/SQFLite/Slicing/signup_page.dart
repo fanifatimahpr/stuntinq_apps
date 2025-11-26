@@ -1,26 +1,24 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stuntinq_apps/SQFLite/Database/user_dbhelper.dart';
-import 'package:stuntinq_apps/Firebase/models/user_firebase_model.dart';
-import 'package:stuntinq_apps/Firebase/service/firebase_service.dart';
-import 'package:stuntinq_apps/Firebase/views/auth/signin_firebase.dart';
 import 'package:stuntinq_apps/SQFLite/Model/user_model.dart';
+import 'package:stuntinq_apps/SQFLite/Slicing/signin_page.dart';
 
-class SignupFirebase extends StatefulWidget {
-  const SignupFirebase({super.key});
+class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
 
   @override
-  State<SignupFirebase> createState() => _SignupFirebaseState();
+  State<SignupPage> createState() => _SignupPageState();
 }
 
-class _SignupFirebaseState extends State<SignupFirebase> {
+class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _fullnameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  UserFirebaseModel user = UserFirebaseModel();
+
   bool _showPassword = false;
 
   Widget _buildTextField({
@@ -188,7 +186,7 @@ class _SignupFirebaseState extends State<SignupFirebase> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const SigninFirebase()),
+                    MaterialPageRoute(builder: (_) => const SigninPage()),
                   );
                 },
               ),
@@ -237,57 +235,19 @@ class _SignupFirebaseState extends State<SignupFirebase> {
         ],
       ),
       child: ElevatedButton(
-        onPressed: () async {
-  if (_formKey.currentState!.validate()) {
-    try {
-      // REGISTER KE FIREBASE
-      final result = await FirebaseService.registerUser(
-        email: _emailController.text.trim(),
-        fullname: _fullnameController.text.trim(),
-        phonenumber: _phoneController.text.trim(),
-        password: _passwordController.text,
-      );
-
-      setState(() {
-        user = result; // simpan user Firebase
-      });
-
-      // SIMPAN KE DATABASE LOKAL (SQLite)
-      final UserModel data = UserModel(
-        fullname: _fullnameController.text,
-        phonenumber: _phoneController.text,
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-
-      await DBHelper.registerUser(data);
-
-      Fluttertoast.showToast(msg: "Sign Up Successful");
-
-      // KEMBALI KE LOGIN PAGE
-      Navigator.pop(context);
-    } catch (e) {
-      Fluttertoast.showToast(
-        msg: "Registration failed: $e",
-        backgroundColor: Colors.red,
-      );
-    }
-  }
-},
-
-        // onPressed: () {
-        //   if (_formKey.currentState!.validate()) {
-        //     final UserModel data = UserModel(
-        //       fullname: _fullnameController.text,
-        //       phonenumber: _phoneController.text,
-        //       email: _emailController.text,
-        //       password: _passwordController.text,
-        //     );
-        //     DBHelper.registerUser(data);
-        //     Fluttertoast.showToast(msg: "Sign Up Successful");
-        //     Navigator.pop(context);
-        //   } else {}
-        // },
+        onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            final UserModel data = UserModel(
+              fullname: _fullnameController.text,
+              phonenumber: _phoneController.text,
+              email: _emailController.text,
+              password: _passwordController.text,
+            );
+            DBHelper.registerUser(data);
+            Fluttertoast.showToast(msg: "Sign Up Successful");
+            Navigator.pop(context);
+          } else {}
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,

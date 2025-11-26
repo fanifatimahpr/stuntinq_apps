@@ -2,19 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:stuntinq_apps/SQFLite/Database/user_dbhelper.dart';
-import 'package:stuntinq_apps/Firebase/views/auth/signin_firebase.dart';
 import 'package:stuntinq_apps/SQFLite/Model/user_model.dart';
 import 'package:stuntinq_apps/SQFLite/Slicing/signin_page.dart';
 import 'package:stuntinq_apps/preference_handler.dart';
 
-class SplashFirebase extends StatefulWidget {
-  const SplashFirebase({super.key});
+class SplashPage extends StatefulWidget {
+  const SplashPage({super.key});
 
   @override
-  State<SplashFirebase> createState() => _SplashFirebaseState();
+  State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashFirebaseState extends State<SplashFirebase> {
+class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
@@ -37,14 +36,14 @@ class _SplashFirebaseState extends State<SplashFirebase> {
     // Sudah login, arahkan ke home (nanti ganti sesuai app kamu)
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const SigninFirebase()),
+      MaterialPageRoute(builder: (context) => const SigninPage()),
       // ganti SigninPage() jadi BottomNavigationApp(currentUser: user)
     );
   } else {
     // Belum login → ke SigninPage
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const SigninFirebase()),
+      MaterialPageRoute(builder: (context) => const SigninPage()),
     );
   }
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:stuntinq_apps/Firebase/edukasi/edukasi_page_firebase.dart';
-import 'package:stuntinq_apps/Firebase/imunasi/imunisasi_page_firebase.dart';
-import 'package:stuntinq_apps/Firebase/peta/peta_page_firebase.dart';
-import 'package:stuntinq_apps/Firebase/profil/profil_page_firebase.dart';
-import 'package:stuntinq_apps/Firebase/service/user_firebase_service.dart';
-import 'package:stuntinq_apps/Firebase/views/data/data_page_firebase.dart';
+import 'package:stuntinq_apps/Firebase/Main%20Page/data_page_firebase.dart';
+import 'package:stuntinq_apps/Firebase/Main%20Page/edukasi_page_firebase.dart';
+import 'package:stuntinq_apps/Firebase/Main%20Page/imunisasi_page_firebase.dart';
+import 'package:stuntinq_apps/Firebase/Main%20Page/peta_page_firebase.dart';
+import 'package:stuntinq_apps/Firebase/Main%20Page/profil_page_firebase.dart';
+import 'package:stuntinq_apps/Firebase/service/firebase_service.dart';
 
 class BottomNavFirebase extends StatefulWidget {
   final String currentUserUid;

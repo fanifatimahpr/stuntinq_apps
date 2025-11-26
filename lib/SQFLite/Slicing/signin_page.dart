@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stuntinq_apps/SQFLite/Database/user_dbhelper.dart';
-import 'package:stuntinq_apps/Firebase/Main%20Page/profil_page_firebase.dart';
-import 'package:stuntinq_apps/Firebase/service/firebase_service.dart';
-import 'package:stuntinq_apps/Firebase/views/auth/bottomnav_firebase.dart';
-import 'package:stuntinq_apps/Firebase/views/auth/signup_firebase.dart';
 import 'package:stuntinq_apps/SQFLite/Slicing/forgotpassword_page.dart';
+import 'package:stuntinq_apps/SQFLite/Slicing/signup_page.dart';
+import 'package:stuntinq_apps/SQFLite/Slicing/bottomnavigation.dart';
 import 'package:stuntinq_apps/preference_handler.dart';
 
-class SigninFirebase extends StatefulWidget {
-  const SigninFirebase({super.key});
+class SigninPage extends StatefulWidget {
+  const SigninPage({super.key});
 
   @override
-  State<SigninFirebase> createState() => _SigninFirebaseState();
+  State<SigninPage> createState() => _SigninPageState();
 }
 
-class _SigninFirebaseState extends State<SigninFirebase> {
+class _SigninPageState extends State<SigninPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -146,49 +144,48 @@ class _SigninFirebaseState extends State<SigninFirebase> {
                 text: "Sign In",
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    try {
-                      /// LOGIN KE FIREBASE
-                      final result = await FirebaseService.loginUser(
-                        email: _emailController.text.trim(),
-                        password: _passwordController.text,
-                      );
+                    final data = await DBHelper.loginUser(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                    );
 
-                      if (result == null) {
-                        Fluttertoast.showToast(
-                          msg: "Email atau password salah",
-                          backgroundColor: Colors.red,
-                        );
-                        return;
-                      }
-
-                      /// LOGIN LOCAL DATABASE (opsional)
-                      final data = await DBHelper.loginUser(
-                        email: _emailController.text.trim(),
-                        password: _passwordController.text.trim(),
-                      );
-
-                      /// SIMPAN STATUS LOGIN
-                      await PreferenceHandler.saveLogin(true);
-
-                      if (data != null) {
-                        await PreferenceHandler.saveUserId(data.id!);
-                      }
-
-                      Fluttertoast.showToast(msg: "Login Successful");
-
-                      /// Panggil ProfileFirebase dengan UID user yang baru login
+                    //Jika Berhasil Sign in
+                    if (data != null) {
+                      PreferenceHandler.saveLogin(true);
+                      PreferenceHandler.saveUserId(
+                        data.id!,
+                      ); //Menyimpan user ID yang login
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => BottomNavFirebase(currentUserUid: result.uid!,), 
+                          builder: (_) =>
+                              BottomNavigationApp(currentUser: data),
                         ),
                       );
-                    } catch (e) {
-                      Fluttertoast.showToast(
-                        msg: "Login Failed: $e",
-                        backgroundColor: Colors.red,
-                      );
+                      //Jika Gagal Sign in
+                    } else {
+                      Fluttertoast.showToast(msg: "Email or password invalid");
                     }
+                    //Jika Pengisian Data Form Kurang
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          title: const Text("Validation Error"),
+                          content: const Text("Please fill all fields"),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text("OK"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   }
                 },
               ),
@@ -233,7 +230,7 @@ class _SigninFirebaseState extends State<SigninFirebase> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const SignupFirebase()),
+                    MaterialPageRoute(builder: (_) => const SignupPage()),
                   );
                 },
               ),
