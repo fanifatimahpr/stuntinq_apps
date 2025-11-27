@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stuntinq_apps/Firebase/Main%20Page/Edukasi%20Page/artikel_1_firebase.dart';
+import 'package:stuntinq_apps/Firebase/Main%20Page/Edukasi%20Page/artikel_2_firebase.dart';
+import 'package:stuntinq_apps/Firebase/Main%20Page/Edukasi%20Page/artikel_3_firebase.dart';
+import 'package:stuntinq_apps/Firebase/Main%20Page/Edukasi%20Page/artikel_4_firebase.dart';
 import 'package:stuntinq_apps/SQFLite/Model/edukasi_model.dart';
 import 'package:stuntinq_apps/SQFLite/main%20page/edukasi_modul1.dart';
 import 'package:stuntinq_apps/SQFLite/main%20page/edukasi_modul2.dart';
@@ -37,13 +41,13 @@ class _EdukasiFirebaseState extends State<EdukasiFirebase> {
       title: '1000 Hari Pertama Kehidupan',
       // content: '',
       icon: Icons.child_care, // ikon khusus
-      uiType: 'type1', // nanti di next page pakai layout type1
+      uiType: 'type1', 
     ),
     Article(
       title: 'Nutrisi Ibu Hamil',
       // content: 'Isi artikel 2...',
       icon: Icons.local_hospital,
-      uiType: 'type2', // layout berbeda
+      uiType: 'type2', 
     ),
     Article(
       title: 'MPASI Bergizi',
@@ -81,9 +85,6 @@ class _EdukasiFirebaseState extends State<EdukasiFirebase> {
           'Cara mencegah: nutrisi seimbang saat hamil, ASI eksklusif 6 bulan, MPASI bergizi, imunisasi lengkap, sanitasi baik, dan pemantauan pertumbuhan rutin di posyandu.',
     ),
   ];
-
-  // int get completedEducation => modul.where((m) => m.completed).length;
-  // double get progress => (completedEducation / modul.length);
 
   @override
   Widget build(BuildContext context) {
@@ -231,25 +232,25 @@ class _EdukasiFirebaseState extends State<EdukasiFirebase> {
           case 'type1':
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ArticleType1()),
+              MaterialPageRoute(builder: (context) => ArticleType1Firebase(articleId: 'hpk_001')),
             );
             break;
           case 'type2':
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ArticleType2()),
+              MaterialPageRoute(builder: (context) => ArticleType2Firebase(articleId: 'nutrisi_hamil')),
             );
             break;
           case 'type3':
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ArticleType3()),
+              MaterialPageRoute(builder: (context) => ArticleType3Firebase(articleId: 'mpasi')),
             );
             break;
           case 'type4':
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ArticleType4()),
+              MaterialPageRoute(builder: (context) => ArticleType4Firebase(articleId: 'mpasi')),
             );
             break;
           default:

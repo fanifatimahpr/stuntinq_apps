@@ -1,16 +1,39 @@
-// Class baru untuk next page article
 import 'package:flutter/material.dart';
+import 'package:stuntinq_apps/Firebase/service/firebase_service.dart';
 
-class ArticleType1 extends StatefulWidget {
-  const ArticleType1({super.key});
+class ArticleType2Firebase extends StatefulWidget {
+  final String articleId;
+  const ArticleType2Firebase({super.key, required this.articleId});
+
   @override
-  State<ArticleType1> createState() => _ArticleType1PageState();
+  State<ArticleType2Firebase> createState() => _ArticleType2FirebasePageState();
 }
 
-class _ArticleType1PageState extends State<ArticleType1> {
+class _ArticleType2FirebasePageState extends State<ArticleType2Firebase> {
   bool isLiked = false;
   bool isBookmarked = false;
-  int likeCount = 300;
+  int likeCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInitialStatus();
+  }
+
+  void _loadInitialStatus() async {
+    final like = await FirebaseService.isLiked(widget.articleId);
+    final bookmark = await FirebaseService.isBookmarked(widget.articleId);
+
+    // Mendapatkan jumlah like real-time
+    FirebaseService.likeCount(widget.articleId).listen((count) {
+      setState(() => likeCount = count);
+    });
+
+    setState(() {
+      isLiked = like;
+      isBookmarked = bookmark;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,23 +59,14 @@ class _ArticleType1PageState extends State<ArticleType1> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //Header (Back + Save Icon)
             _buildHeader(),
             SizedBox(height: 10),
-
-            //Category
             _buildCategory(),
-
-            //Judul
             _buildTitle(),
             _buildMetaInfo(),
             SizedBox(height: 12),
-
-            //Isi Artikel
             _buildArticleContent(),
             SizedBox(height: 24),
-
-            //Like Share
             _buildEngagement(),
             SizedBox(height: 24),
           ],
@@ -76,8 +90,10 @@ class _ArticleType1PageState extends State<ArticleType1> {
             _circleIconButton(
               isBookmarked ? Icons.bookmark : Icons.bookmark_border,
               color: isBookmarked ? Colors.teal : Colors.black,
-              onTap: () {
-                setState(() => isBookmarked = !isBookmarked);
+              onTap: () async {
+                final newState = !isBookmarked;
+                setState(() => isBookmarked = newState);
+                await FirebaseService.toggleBookmark(widget.articleId);
               },
             ),
             const SizedBox(width: 8),
@@ -99,9 +115,9 @@ class _ArticleType1PageState extends State<ArticleType1> {
             borderRadius: BorderRadius.circular(30),
           ),
           child: Text(
-            "1000 HPK",
+            "Kehamilan",
             style: TextStyle(
-              color: Color.fromARGB(255, 255, 255, 255),
+              color: Colors.white,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -115,9 +131,9 @@ class _ArticleType1PageState extends State<ArticleType1> {
             borderRadius: BorderRadius.circular(30),
           ),
           child: Text(
-            "ASI",
+            "Nutrisi",
             style: TextStyle(
-              color: Color.fromARGB(255, 255, 255, 255),
+              color: Colors.white,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -128,7 +144,7 @@ class _ArticleType1PageState extends State<ArticleType1> {
 
   Widget _buildTitle() {
     return Text(
-      "1000 Hari Pertama Kehidupan (HPK): Kunci Cegah Stunting",
+      "Nutrisi Ibu Hamil Terpenuhi: Kehamilan Lancar",
       style: const TextStyle(
         fontSize: 26,
         fontWeight: FontWeight.bold,
@@ -147,18 +163,17 @@ class _ArticleType1PageState extends State<ArticleType1> {
       child: Row(
         children: [
           const CircleAvatar(radius: 22),
-
           const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
               Text(
-                "Bdn. Yurenda Aurelia S.Tr.Keb.",
+                "Kementerian Kesehatan",
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
               SizedBox(height: 4),
               Text(
-                "22 Februari 2024",
+                "01 April 2024",
                 style: TextStyle(
                   fontSize: 12,
                   color: Color.fromARGB(255, 118, 118, 118),
@@ -176,83 +191,58 @@ class _ArticleType1PageState extends State<ArticleType1> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: const [
         Text(
-          "Masalah stunting masih menjadi episode panjang masalah kesehatan balita di Indonesia. Stunting adalah kondisi gagal tumbuh pada anak balita akibat kekurangan gizi kronis terutama pada 1.000 Hari Pertama Kehidupan (HPK). Anak dengan stunting biasanya ditandai dengan tinggi badan yang sangat pendek hingga melampaui defisit 2 SD (-2SD) di bawah median panjang atau tinggi badan berdasarkan usia.",
+          'Kehamilan merupakan pengalaman yang penuh kebahagiaan sekaligus tantangan, karena ibu perlu menjaga kesehatan dirinya dan janin secara bersamaan. Selama kebutuhan nutrisinya terpenuhi, tidak ada yang perlu dikhawatirkan. Meski nafsu makan meningkat dan muncul keinginan khusus terhadap makanan tertentu, ibu hamil tetap perlu mengatur pola makan dengan bijak agar asupan gizi seimbang dan tidak berlebihan.',
           style: TextStyle(height: 1.6),
         ),
         SizedBox(height: 10),
         Text(
-          "Dampak dari stunting tidak hanya pada tinggi badan yang kurang namun juga perkembangan intelektual, kognitif, motorik yang buruk dan bahkan mengurangi produktivitas sehingga menyebabkan kerugian ekonomi di masa depan. Maka dari itu, pencegahan terutama pada 1000 HPK sangat diperlukan, yakni mulai dari bayi dalam kandungan hingga usia 23 bulan.",
+          'Selain zat gizi makro seperti karbohidrat, protein dan lemak, ibu hamil juga membutuhkan zat gizi mikro, seperti vitamin dan suplemen. Berikut adalah zat gizi penting yang harus ada dalam makanan Ibu hamil untuk memastikan kesehatan ibu dan janin dalam kandungannya.',
           style: TextStyle(height: 1.6),
         ),
         SizedBox(height: 12),
+        Text("1. Asam Folat", style: TextStyle(fontWeight: FontWeight.bold)),
         Text(
-          "1. Periode Kehamilan",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        Text(
-          'Pemeriksaan kehamilan rutin (Antenatal Care/ANC) merupakan langkah penting untuk mencegah stunting sejak masa kehamilan. Ibu hamil disarankan melakukan pemeriksaan minimal 6 kali — 1 kali pada trimester pertama, 2 kali pada trimester kedua, dan 3 kali pada trimester ketiga. Setidaknya dua pemeriksaan dilakukan oleh dokter kandungan menggunakan USG untuk memantau kesehatan ibu dan janin, termasuk berat badan dan lingkar lengan atas (LiLA) guna menilai status gizi. Jika ibu mengalami kekurangan energi kronis (KEK), perlu diberikan PMT (Pemberian Makanan Tambahan) untuk membantu kenaikan berat badan.',
-          style: TextStyle(height: 1.6),
-        ),
-        SizedBox(height: 10),
-        Text(
-          'Selain itu, ibu hamil dianjurkan untuk:',
-          style: TextStyle(height: 1.6),
-        ),
-        Text(
-          '📌  Minum minimal 90 tablet tambah darah (TTD) selama kehamilan.',
-          style: TextStyle(height: 1.6),
-        ),
-        Text(
-          '📌  Mengonsumsi makanan bergizi seimbang, mencakup makanan pokok, protein hewani, kacang-kacangan, buah, dan sayur.',
-          style: TextStyle(height: 1.6),
-        ),
-        Text(
-          '📌  Menambah satu porsi makanan utama atau selingan setiap hari.',
-          style: TextStyle(height: 1.6),
-        ),
-        Text(
-          '📌  Memenuhi kebutuhan cairan 8-12 gelas (2-3 liter) per hari.',
+          'Asam folat berperan penting dalam pembentukan sel dan organ janin serta membantu menjaga tekanan darah ibu hamil. Kekurangannya dapat memicu gangguan pertumbuhan janin dan komplikasi seperti preeklamsia. Ibu hamil disarankan mengonsumsi 600–800 mcg asam folat per hari yang dapat diperoleh dari kacang-kacangan, hati, telur, dan sayuran hijau.',
           style: TextStyle(height: 1.6),
         ),
         SizedBox(height: 10),
 
+        Text("2. Kalsium", style: TextStyle(fontWeight: FontWeight.bold)),
         Text(
-          "2. Periode Menyusui (Bayi 0-6 Bulan)",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        Text(
-          'Pencegahan stunting pasca melahirkan dapat dilakukan dengan:',
-          style: TextStyle(height: 1.6),
-        ),
-        Text(
-          '📌  Melakukan Inisiasi Menyusu Dini (IMD) dan memberikan kolostrum sebagai imun alami pertama bayi.',
+          'Kalsium dibutuhkan dalam pembentukan tulang dan gigi janin, serta menjaga kesehatan tulang ibu hamil. Kalsium juga membantu menurunkan risiko gangguan kehamilan, seperti hipertensi dan kelahiran prematur. Asupan kalsium bisa didapat dari sumber protein hewani seperti susu, produk susu (yoghurt, keju), ikan, tahu dan sayuran berwarna hijau tua. ',
           style: TextStyle(height: 1.6),
         ),
         SizedBox(height: 10),
+        Text('3. Protein', style: TextStyle(fontWeight: FontWeight.bold)),
+        SizedBox(height: 10),
         Text(
-          '📌  Memberikan ASI eksklusif selama 6 bulan pertama tanpa tambahan makanan atau minuman lain.',
+          'Ikan dan ayam, terutama yang tidak berlemak, dan telur merupakan sumber protein hewani yang dibutuhkan sebagai sumber kalori dan pembentukan darah bagi ibu hamil, serta zat pembangun jaringan tubuh pada janin. Pastikan ikan dan telur sampai benar-benar masak, dan tidak dimakan mentah-mentah.',
+          style: TextStyle(height: 1.6),
+        ),
+
+        SizedBox(height: 10),
+        Text("4. Lemak", style: TextStyle(fontWeight: FontWeight.bold)),
+        Text(
+          'Lemak sehat, seperti asam lemak omega 3 dan DHA (asam dokosaheksaenoat), mendukung perkembangan mata dan otak janin yang sehat. Lemak yang sehat bisa didapat dari alpukat, kacang-kacangan, biji-bijian dan ikan kaya lemak, seperti salmon, sarden, dan ikan tuna.',
           style: TextStyle(height: 1.6),
         ),
         SizedBox(height: 10),
+        Text("5. Zat Besi", style: TextStyle(fontWeight: FontWeight.bold)),
         Text(
-          '📌  Melakukan pemantauan tumbuh kembang rutin minimal 1 kali sebulan di posyandu atau puskesmas.',
+          'Zat besi dibutuhkan untuk pembentukan sel darah merah, karena meningkatnya volume darah yang dibutuhkan selama kehamilan. Kekurangan zat besi dapat meningkatkan risiko bayi lahir prematur, berat badan lahir rendah, serta depresi pasca melahirkan. Asupan zat besi bisa didapatkan dari daging merah tanpa lemak, ikan, unggas, sayuran dan kacang-kacangan, serta suplemen tablet tambah darah (TTD).',
           style: TextStyle(height: 1.6),
         ),
         SizedBox(height: 10),
+        Text("5. Vitamin", style: TextStyle(fontWeight: FontWeight.bold)),
         Text(
-          'Adapun untuk pencegahan penyakit, bayi dianjurkan mendapat imunisasi dasar lengkap dan ibu mendapatkan suplementasi kapsul vitamin A dalam 1-2 hari pasca persalinan untuk menjaga kesehatan dan kualitas ASI.',
+          'Selama kehamilan, asupan vitamin menjadi krusial, khususnya vitamin B dan D. Vitamin B kompleks (B1, B2, B6, B9, dan B12) berperan dalam produksi energi dan menjaga fungsi optimal plasenta, sementara vitamin D, terutama D3, mendukung pembentukan serta kekuatan tulang janin. Sumber vitamin B dapat ditemukan pada daging ayam, pisang, kacang-kacangan, gandum utuh, dan roti, sedangkan vitamin D diperoleh melalui konsumsi susu, ikan, jeruk, serta paparan sinar matahari pagi.',
           style: TextStyle(height: 1.6),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 15),
         Text(
-          "3. BADUTA (Bawah Dua Tahun) 6-23 Bulan",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          "💡  Selain memenuhi kebutuhan nutrisi, ibu hamil harus tetap menerapkan pola hidup sehat dan segera berkonsultasi ke dokter atau bidan.",
+          style: TextStyle(fontWeight: FontWeight.w500),
         ),
-        Text(
-          'Intervensi gizi untuk mencegah stunting dilakukan dengan memberikan ASI hingga usia 23 bulan dan memulai MP-ASI setelah 6 bulan. Upaya tambahan meliputi pemberian obat cacing, suplementasi zinc dan vitamin A, fortifikasi zat besi pada makanan, imunisasi dasar dan lanjutan, serta perlindungan dari penyakit seperti malaria dan diare.',
-          style: TextStyle(height: 1.6),
-        ),
-        SizedBox(height: 10),
       ],
     );
   }
@@ -262,11 +252,9 @@ class _ArticleType1PageState extends State<ArticleType1> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
-          onTap: () {
-            setState(() {
-              isLiked = !isLiked;
-              likeCount += isLiked ? 1 : -1;
-            });
+          onTap: () async {
+            setState(() => isLiked = !isLiked);
+            await FirebaseService.toggleLike(widget.articleId);
           },
           child: Row(
             children: [
@@ -315,6 +303,7 @@ class _ArticleType1PageState extends State<ArticleType1> {
     );
   }
 }
-//Sized Box
+
+// Sized Box helpers
 SizedBox height(double h) => SizedBox(height: h);
 SizedBox width(double w) => SizedBox(width: w);

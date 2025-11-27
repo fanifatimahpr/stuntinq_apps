@@ -1,22 +1,48 @@
-// Class baru untuk next page article
 import 'package:flutter/material.dart';
+import 'package:stuntinq_apps/Firebase/service/firebase_service.dart';
 
-class ArticleType1 extends StatefulWidget {
-  const ArticleType1({super.key});
+class ArticleType1Firebase extends StatefulWidget {
+  final String articleId;
+  const ArticleType1Firebase({super.key, required this.articleId});
+
   @override
-  State<ArticleType1> createState() => _ArticleType1PageState();
+  State<ArticleType1Firebase> createState() => _ArticleType1FirebasePageState();
 }
 
-class _ArticleType1PageState extends State<ArticleType1> {
+class _ArticleType1FirebasePageState extends State<ArticleType1Firebase> {
   bool isLiked = false;
   bool isBookmarked = false;
-  int likeCount = 300;
+  int likeCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInitialStatus();
+  }
+
+  void _loadInitialStatus() async {
+    // Ambil status like & bookmark
+    final like = await FirebaseService.isLiked(widget.articleId);
+    final bookmark = await FirebaseService.isBookmarked(widget.articleId);
+
+    // Stream untuk jumlah like real-time
+    FirebaseService.likeCount(widget.articleId).listen((count) {
+      setState(() => likeCount = count);
+    });
+
+    setState(() {
+      isLiked = like;
+      isBookmarked = bookmark;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Stack(children: [_buildBackground(), _buildLayer()]),
+        child: Stack(
+          children: [_buildBackground(), _buildLayer()],
+        ),
       ),
     );
   }
@@ -36,23 +62,14 @@ class _ArticleType1PageState extends State<ArticleType1> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //Header (Back + Save Icon)
             _buildHeader(),
             SizedBox(height: 10),
-
-            //Category
             _buildCategory(),
-
-            //Judul
             _buildTitle(),
             _buildMetaInfo(),
             SizedBox(height: 12),
-
-            //Isi Artikel
             _buildArticleContent(),
             SizedBox(height: 24),
-
-            //Like Share
             _buildEngagement(),
             SizedBox(height: 24),
           ],
@@ -76,8 +93,10 @@ class _ArticleType1PageState extends State<ArticleType1> {
             _circleIconButton(
               isBookmarked ? Icons.bookmark : Icons.bookmark_border,
               color: isBookmarked ? Colors.teal : Colors.black,
-              onTap: () {
-                setState(() => isBookmarked = !isBookmarked);
+              onTap: () async {
+                final newState = !isBookmarked;
+                setState(() => isBookmarked = newState);
+                await FirebaseService.toggleBookmark(widget.articleId);
               },
             ),
             const SizedBox(width: 8),
@@ -101,7 +120,7 @@ class _ArticleType1PageState extends State<ArticleType1> {
           child: Text(
             "1000 HPK",
             style: TextStyle(
-              color: Color.fromARGB(255, 255, 255, 255),
+              color: Colors.white,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -117,7 +136,7 @@ class _ArticleType1PageState extends State<ArticleType1> {
           child: Text(
             "ASI",
             style: TextStyle(
-              color: Color.fromARGB(255, 255, 255, 255),
+              color: Colors.white,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -147,7 +166,6 @@ class _ArticleType1PageState extends State<ArticleType1> {
       child: Row(
         children: [
           const CircleAvatar(radius: 22),
-
           const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,7 +189,7 @@ class _ArticleType1PageState extends State<ArticleType1> {
     );
   }
 
-  Widget _buildArticleContent() {
+ Widget _buildArticleContent() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: const [
@@ -256,17 +274,15 @@ class _ArticleType1PageState extends State<ArticleType1> {
       ],
     );
   }
-
-  Widget _buildEngagement() {
+  
+ Widget _buildEngagement() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
-          onTap: () {
-            setState(() {
-              isLiked = !isLiked;
-              likeCount += isLiked ? 1 : -1;
-            });
+          onTap: () async {
+            setState(() => isLiked = !isLiked);
+            await FirebaseService.toggleLike(widget.articleId);
           },
           child: Row(
             children: [
@@ -315,6 +331,7 @@ class _ArticleType1PageState extends State<ArticleType1> {
     );
   }
 }
-//Sized Box
+
+// Sized Box helpers
 SizedBox height(double h) => SizedBox(height: h);
 SizedBox width(double w) => SizedBox(width: w);

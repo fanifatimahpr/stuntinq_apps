@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NutritionSourceFirebaseModel {
-  final String? id;
+  final String id;          
   final String uid;          
   final String name;
   final String portion;
   final DateTime dateAdded;
 
   NutritionSourceFirebaseModel({
-    this.id,
+    required this.id,
     required this.uid,
     required this.name,
     required this.portion,
@@ -26,15 +26,12 @@ class NutritionSourceFirebaseModel {
   }
 
   factory NutritionSourceFirebaseModel.fromMap(Map<String, dynamic> map) {
-  return NutritionSourceFirebaseModel(
-    id: map['id'] ?? "",                
-    name: map['name'] ?? "",
-    portion: map['portion'] ?? "",
-    uid: map['uid'] ?? "",
-    dateAdded: (map['dateAdded'] as Timestamp).toDate(),
-
-  );
-}
-
-
+    return NutritionSourceFirebaseModel(
+      id: map['id'] ?? "",          
+      uid: map['uid'] ?? "",
+      name: map['name'] ?? "",
+      portion: map['portion'] ?? "",
+      dateAdded: (map['dateAdded'] as Timestamp).toDate(),
+    );
+  }
 }

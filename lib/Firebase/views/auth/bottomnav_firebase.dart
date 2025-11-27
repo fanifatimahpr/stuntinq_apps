@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:stuntinq_apps/Firebase/Main%20Page/data_page_firebase.dart';
-import 'package:stuntinq_apps/Firebase/Main%20Page/edukasi_page_firebase.dart';
+import 'package:stuntinq_apps/Firebase/Main%20Page/Data%20Page/data_page_firebase.dart';
+import 'package:stuntinq_apps/Firebase/Main%20Page/Edukasi%20Page/edukasi_page_firebase.dart';
 import 'package:stuntinq_apps/Firebase/Main%20Page/imunisasi_page_firebase.dart';
 import 'package:stuntinq_apps/Firebase/Main%20Page/peta_page_firebase.dart';
 import 'package:stuntinq_apps/Firebase/Main%20Page/profil_page_firebase.dart';
@@ -46,7 +46,7 @@ class _BottomNavFirebaseState extends State<BottomNavFirebase> {
     }
 
     return [
-      DataFirebase(),
+      DataFirebase(fromLogin: true,),
       ImunisasiFirebase(),
       EdukasiFirebase(),
       PetaFirebase(),
@@ -57,7 +57,11 @@ class _BottomNavFirebaseState extends State<BottomNavFirebase> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _widgetOptions()[_selectedIndex],
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _widgetOptions(),
+      ),
+
       backgroundColor: Colors.white,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,

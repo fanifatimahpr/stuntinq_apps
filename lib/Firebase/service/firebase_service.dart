@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:stuntinq_apps/Firebase/models/child_birth_firebase_model.dart';
 import 'package:stuntinq_apps/Firebase/models/child_firebase_model.dart';
+import 'package:stuntinq_apps/Firebase/models/location_model_firebase.dart';
 import 'package:stuntinq_apps/Firebase/models/nutrition_firebase.dart';
 import 'package:stuntinq_apps/Firebase/models/user_firebase_model.dart';
 
@@ -110,6 +112,8 @@ class FirebaseService {
     }
   }
 
+/// DATA PAGE
+
  static final CollectionReference historyRef =
       FirebaseFirestore.instance.collection('child_history');
 
@@ -184,21 +188,24 @@ static final CollectionReference nutritionRef =
 // INSERT NUTRITION
 static Future<String> insertNutrition(NutritionSourceFirebaseModel model) async {
   try {
-    DocumentReference doc = await nutritionRef.add({
+    // Buat doc kosong untuk dapat ID terlebih dulu
+    DocumentReference doc = nutritionRef.doc();
+
+    // Simpan data sekaligus dengan ID
+    await doc.set({
+      "id": doc.id,
       "uid": auth.currentUser!.uid,
       "name": model.name,
       "portion": model.portion,
       "dateAdded": Timestamp.fromDate(model.dateAdded),
     });
 
-    await doc.update({"id": doc.id});
     return doc.id;
   } catch (e) {
     print("Insert Nutrition Error: $e");
     rethrow;
   }
 }
-
 
 // GET ALL NUTRITION
 static Future<List<NutritionSourceFirebaseModel>> getAllNutrition() async {
@@ -240,5 +247,166 @@ static Future<void> deleteNutrition(String id) async {
     rethrow;
   }
 }
+
+/// IMUNISASI PAGE
+  static CollectionReference get birthRef =>
+      firestore.collection("child_birth");
+
+  // SAVE BIRTHDAY
+  static Future<void> saveBirthDate(DateTime birthDate) async {
+    final uid = auth.currentUser!.uid;
+
+    final model = ChildBirthModel(uid: uid, birthDate: birthDate);
+
+    await birthRef.doc(uid).set(model.toMap());
+  }
+
+  // GET BIRTHDAY
+  static Future<DateTime?> getBirthDate() async {
+    final uid = auth.currentUser!.uid;
+    final doc = await birthRef.doc(uid).get();
+
+    if (!doc.exists) return null;
+
+    final data = doc.data() as Map<String, dynamic>;
+    return (data["birthDate"] as Timestamp).toDate();
+  }
+
+  /// ARTIKEL PAGE 
+  // Toggle Bookmark
+  static Future<void> toggleBookmark(String articleId) async {
+    final uid = auth.currentUser!.uid;
+
+    final ref = firestore
+        .collection("articles")
+        .doc(articleId)
+        .collection("bookmarks")
+        .doc(uid);
+
+    final snap = await ref.get();
+
+    if (snap.exists) {
+      await ref.delete();
+    } else {
+      await ref.set({
+        "userId": uid,
+        "savedAt": Timestamp.now(),
+      });
+    }
+  }
+
+  // Toggle Like
+  static Future<void> toggleLike(String articleId) async {
+    final uid = auth.currentUser!.uid;
+
+    final ref = firestore
+        .collection("articles")
+        .doc(articleId)
+        .collection("likes")
+        .doc(uid);
+
+    final snap = await ref.get();
+
+    if (snap.exists) {
+      await ref.delete();
+    } else {
+      await ref.set({
+        "userId": uid,
+        "likedAt": Timestamp.now(),
+      });
+    }
+  }
+
+  // Check Bookmark
+  static Future<bool> isBookmarked(String articleId) async {
+    final uid = auth.currentUser!.uid;
+
+    final doc = await firestore
+        .collection("articles")
+        .doc(articleId)
+        .collection("bookmarks")
+        .doc(uid)
+        .get();
+
+    return doc.exists;
+  }
+
+  // Check Like
+  static Future<bool> isLiked(String articleId) async {
+    final uid = auth.currentUser!.uid;
+
+    final doc = await firestore
+        .collection("articles")
+        .doc(articleId)
+        .collection("likes")
+        .doc(uid)
+        .get();
+
+    return doc.exists;
+  }
+
+  // Like Count (stream real-time)
+  static Stream<int> likeCount(String articleId) {
+    return firestore
+        .collection("articles")
+        .doc(articleId)
+        .collection("likes")
+        .snapshots()
+        .map((snap) => snap.size);
+  }
+
+/// PETA PAGE
+  // SAVE or UPDATE current user location
+  static Future<void> saveUserLocation({
+    required double latitude,
+    required double longitude,
+    required String address,
+  }) async {
+    final userId = auth.currentUser!.uid;
+    
+    await firestore.collection("locations").doc(userId).set({
+      "latitude": latitude,
+      "longitude": longitude,
+      "address": address,
+      "updatedAt": Timestamp.now(),
+    }, SetOptions(merge: true));
+
+    // Optional: save history
+    await firestore
+        .collection("location_history")
+        .doc(userId)
+        .collection("records")
+        .add({
+      "latitude": latitude,
+      "longitude": longitude,
+      "address": address,
+      "timestamp": Timestamp.now(),
+    });
+  }
+
+  // GET location once
+  static Future<UserLocation?> getUserLocation() async {
+    final userId = auth.currentUser!.uid;
+    final doc = await firestore.collection("locations").doc(userId).get();
+
+    if (!doc.exists) return null;
+    return UserLocation.fromMap(doc.data()!);
+  }
+
+  // STREAM real-time location
+  static Stream<UserLocation?> streamUserLocation() {
+    final userId = auth.currentUser!.uid;
+
+    return firestore.collection("locations").doc(userId).snapshots().map((snap) {
+      if (!snap.exists) return null;
+      return UserLocation.fromMap(snap.data()!);
+    });
+  }
+
+  /// DELETE location
+  static Future<void> deleteLocation() async {
+    final userId = auth.currentUser!.uid;
+    await firestore.collection("locations").doc(userId).delete();
+  }
 
 }

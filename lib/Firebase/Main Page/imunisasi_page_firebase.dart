@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stuntinq_apps/Firebase/service/firebase_service.dart';
 import 'package:stuntinq_apps/SQFLite/Model/imunisasi_model.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -116,7 +117,25 @@ class _ImunisasiFirebaseState extends State<ImunisasiFirebase> {
     super.initState();
     imunisasi = ImunisasiList;
     imunisasi.sort((a, b) => a.date.compareTo(b.date));
+
+     _loadBirthDate();
   }
+
+  // BIRTHDATE
+  void _loadBirthDate() async {
+  final savedDate = await FirebaseService.getBirthDate();
+
+  if (savedDate != null) {
+    setState(() {
+      tanggalLahirAnak = savedDate;
+      _selectedDay = savedDate;
+      _focusedDay = savedDate;
+    });
+
+    _updateImunisasiDates();
+  }
+}
+
 
   void _updateImunisasiDates() {
     if (tanggalLahirAnak == null) return;
@@ -440,13 +459,15 @@ class _ImunisasiFirebaseState extends State<ImunisasiFirebase> {
             lastDay: DateTime.now(),
             focusedDay: _focusedDay,
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            onDaySelected: (selectedDay, focusedDay) {
+            onDaySelected: (selectedDay, focusedDay) async {
               setState(() {
                 _selectedDay = selectedDay;
                 _focusedDay = focusedDay;
-                tanggalLahirAnak = selectedDay;
-                _updateImunisasiDates();
+                tanggalLahirAnak = selectedDay;                
               });
+              _updateImunisasiDates();
+
+              await FirebaseService.saveBirthDate(selectedDay);
             },
             calendarStyle: CalendarStyle(
               todayDecoration: BoxDecoration(

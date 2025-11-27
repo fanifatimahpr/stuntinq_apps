@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:stuntinq_apps/Firebase/Main%20Page/history_page_firebase.dart';
+import 'package:stuntinq_apps/Firebase/Main%20Page/Data%20Page/history_page_firebase.dart';
 import 'package:stuntinq_apps/Firebase/models/child_firebase_model.dart';
 import 'package:stuntinq_apps/Firebase/models/nutrition_firebase.dart';
 import 'package:stuntinq_apps/Firebase/service/firebase_service.dart';
@@ -11,45 +11,68 @@ import 'package:stuntinq_apps/SQFLite/Database/nutrition_data_dbhelper.dart';
 import 'package:stuntinq_apps/SQFLite/Model/nutrition_data_model.dart';
 
 class DataFirebase extends StatefulWidget {
-  const DataFirebase({Key? key}) : super(key: key);
+   final bool fromLogin;   
+  DataFirebase({super.key, this.fromLogin = false});
 
   @override
   State<DataFirebase> createState() => _DataFirebaseState();
 }
 
 class _DataFirebaseState extends State<DataFirebase>
-  with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
+  
+  // Nutrition controllers
   final TextEditingController _nutritionNameController = TextEditingController();
   final TextEditingController _nutritionPortionController = TextEditingController();
 
-  List<NutritionSourceFirebaseModel> _nutritionSources = [];
-  List<ChildHistoryFirebaseModel> _history = [];
-
-  final _formKey = GlobalKey<FormState>();
+  // Child input controllers (IMT)
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _headCircumferenceController = TextEditingController();
-  
 
+  final _formKey = GlobalKey<FormState>();
   String _selectedGender = 'Perempuan';
   bool _showSuccess = false;
+  
+  // Animation
   late AnimationController _successAnimationController;
+
+  // Firebase data
+  List<NutritionSourceFirebaseModel> _nutritionSources = [];
+  List<ChildHistoryFirebaseModel> _history = [];
 
   @override
   void initState() {
     super.initState();
+    if (widget.fromLogin) {
+      _clearForm();
+    }
+  
+    // Listener-> Card Update Real Time
+    _nameController.addListener(_refreshUI);
+    _ageController.addListener(_refreshUI);
+    _weightController.addListener(_refreshUI);
+    _heightController.addListener(_refreshUI);
+    _headCircumferenceController.addListener(_refreshUI);
+
+    // Load Firebase Data
     _nutritionFuture = _loadNutrition();
     _loadHistory();
-    headCircumferenceBoys;
-    headCircumferenceGirls;
+
+    // headCircumferenceBoys;
+    // headCircumferenceGirls;
     _successAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
   }
+  void _refreshUI() {
+  setState(() {});
+}
 
+  // Load Nutrition
   Future<List<NutritionSourceFirebaseModel>> _loadNutrition() async {
   final data = await FirebaseService.getAllNutrition();
   setState(() {
@@ -58,19 +81,26 @@ class _DataFirebaseState extends State<DataFirebase>
   return data;
 }
 
-  
-  Future<void> _loadHistory() async {  
+  // Load History
+  Future<void> _loadHistory() async {      
   final uid = FirebaseAuth.instance.currentUser!.uid;
   final data = await FirebaseService.getAllHistory(uid);
   setState(() {
     _history = data;
+    if (_history.isNotEmpty) {
+      final latest = _history.last;
+      _nameController.text = latest.name;
+      _ageController.text = latest.age.toString();
+      _weightController.text = latest.weight.toString();
+      _heightController.text = latest.height.toString();
+      _headCircumferenceController.text = latest.head.toString();
+    }
   });
 }
   //CREATE (ADD) NUTRITION
   Future<void> _showAddNutritionDialog() async {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController portionController = TextEditingController();
-
   await showDialog(
     context: context,
     builder: (context) {
@@ -131,10 +161,22 @@ class _DataFirebaseState extends State<DataFirebase>
                 return;
               }
 
+              // --- CEK DUPLIKAT ---
+              final isDuplicate = _nutritionSources.any(
+                (item) => item.name.toLowerCase() == name.toLowerCase(),
+              );
+
+              if (isDuplicate) {
+                Navigator.pop(context);
+                _showDuplicateDialog();
+                return;
+              }
+              // ---------------------
+
               final uid = FirebaseService.auth.currentUser!.uid;
 
               final newData = NutritionSourceFirebaseModel(
-                id: null,
+                id: '',
                 uid: uid,
                 name: name,
                 portion: portion,
@@ -159,7 +201,6 @@ class _DataFirebaseState extends State<DataFirebase>
     },
   );
 }
-
   //UPDATE (EDIT) NUTRITION DATA
   Future<void> _showEditNutritionDialog(
     NutritionSourceFirebaseModel nutrition) async {
@@ -214,16 +255,44 @@ class _DataFirebaseState extends State<DataFirebase>
               foregroundColor: Colors.white,
             ),
             onPressed: () async {
+              final newName = nameController.text.trim();
+              final newPortion = portionController.text.trim();
+
+              if (newName.isEmpty || newPortion.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Nama dan porsi tidak boleh kosong"),
+                    backgroundColor: Colors.redAccent,
+                  ),
+                );
+                return;
+              }
+
+              // --- CEK DUPLIKAT (kecuali dirinya sendiri) ---
+              final isDuplicate = _nutritionSources.any(
+                (item) =>
+                    item.id != nutrition.id &&
+                    item.name.toLowerCase() == newName.toLowerCase(),
+              );
+
+              if (isDuplicate) {
+                Navigator.pop(context);
+                _showDuplicateDialog();
+                return;
+              }
+              // -------------------------------------------------
+
               final updated = NutritionSourceFirebaseModel(
                 id: nutrition.id,
                 uid: nutrition.uid,
-                name: nameController.text.trim(),
-                portion: portionController.text.trim(),
+                name: newName,
+                portion: newPortion,
                 dateAdded: nutrition.dateAdded,
               );
 
               await FirebaseService.updateNutrition(updated);
               await _loadNutrition();
+
               if (context.mounted) Navigator.pop(context);
 
               ScaffoldMessenger.of(context).showSnackBar(
@@ -252,44 +321,53 @@ class _DataFirebaseState extends State<DataFirebase>
   await _loadNutrition();
 }
 
-  Future<void> _showDeleteNutritionDialog(
-    NutritionSourceFirebaseModel nutrition) async {
-
-  await showDialog(
+  void _showDeleteNutritionDialog(BuildContext context, NutritionSourceFirebaseModel model) {
+  showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
         ),
-        title: Row(
-          children: const [
-            Icon(Icons.warning_amber_rounded, color: Colors.redAccent),
-            SizedBox(width: 8),
-            Text("Hapus Sumber Gizi"),
-          ],
+        title: const Text(
+          "Hapus Nutrisi",
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         content: Text(
-          "Apakah kamu yakin ingin menghapus '${nutrition.name}'?",
-          style: const TextStyle(fontSize: 14, color: Colors.black87),
+          "Apakah Anda yakin ingin menghapus '${model.name}'?",
         ),
-        actionsAlignment: MainAxisAlignment.spaceBetween,
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text("Batal"),
           ),
-          ElevatedButton.icon(
-            icon: const Icon(Icons.delete_outline, size: 18),
-            label: const Text("Hapus"),
+
+          // DELETE BUTTON
+          ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.redAccent,
+              backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
             onPressed: () async {
-              await _deleteNutrition(nutrition.id!);
-              if (context.mounted) Navigator.pop(context);
+              try {
+                await FirebaseService.deleteNutrition(model.id!);
+                await _loadNutrition();
+
+                if (mounted) {
+                  Navigator.pop(context); // close dialog
+                }
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Berhasil dihapus")),
+                );
+              } catch (e) {
+                print("Delete error: $e");
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Gagal menghapus: $e")),
+                );
+              }
             },
+            child: const Text("Hapus"),
           ),
         ],
       );
@@ -299,45 +377,7 @@ class _DataFirebaseState extends State<DataFirebase>
 
   late Future<void> _nutritionFuture;
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _ageController.dispose();
-    _weightController.dispose();
-    _heightController.dispose();
-    _headCircumferenceController.dispose();
-    _successAnimationController.dispose();
-
-    super.dispose();
-  }
-
-  // HANDLE SUBMIT 
-  Future<void> _handleSubmit() async {
-  if (!_formKey.currentState!.validate()) {
-    return;
-  }
-
-  try {
-    final imt = _calculateIMT();
-
-    await FirebaseService.saveChildHistory(
-      name: _nameController.text.trim(),
-      age: int.parse(_ageController.text),
-      weight: double.parse(_weightController.text),
-      height: double.parse(_heightController.text),
-      head: double.parse(_headCircumferenceController.text),
-      imt: imt,
-    );
-
-    Fluttertoast.showToast(msg: "Riwayat berhasil disimpan");
-
-    _clearForm();
-
-  } catch (e) {
-    Fluttertoast.showToast(msg: "Gagal menyimpan: $e");
-  }
-}
-
+  // Dialog Nutrisi Duplicate (double)
   void _showDuplicateDialog() {
     showDialog(
       context: context,
@@ -371,25 +411,77 @@ class _DataFirebaseState extends State<DataFirebase>
     );
   }
 
-void _goToHistory() async {
-  final uid = FirebaseAuth.instance.currentUser!.uid;
-  final data = await FirebaseService.getAllHistory(uid);
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    
+    // reset form ketika tab ini dipilih kembali
+    final isCurrentPage = ModalRoute.of(context)?.isCurrent ?? false;
 
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => HistoryFirebase(),
-    ),
-  );
+    if (isCurrentPage) {
+      _clearForm();
+    }
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _ageController.dispose();
+    _weightController.dispose();
+    _heightController.dispose();
+    _headCircumferenceController.dispose();
+    _successAnimationController.dispose();
+
+    super.dispose();
+  }
+
+  // HANDLE SUBMIT (Kalkulasi & Simpan)
+  Future<void> _handleSubmit() async {
+  if (!_formKey.currentState!.validate()) {
+    return;
+  }
+
+  try {
+    final imt = _calculateIMT();
+
+    await FirebaseService.saveChildHistory(
+      name: _nameController.text.trim(),
+      age: int.parse(_ageController.text),
+      weight: double.parse(_weightController.text),
+      height: double.parse(_heightController.text),
+      head: double.parse(_headCircumferenceController.text),
+      imt: imt,
+    );
+    await _loadHistory();
+    Fluttertoast.showToast(msg: "Riwayat berhasil disimpan");
+
+    _clearForm();
+
+  } catch (e) {
+    Fluttertoast.showToast(msg: "Gagal menyimpan: $e");
+  }
 }
+
 void _clearForm() {
   _nameController.clear();
   _ageController.clear();
   _weightController.clear();
   _heightController.clear();
   _headCircumferenceController.clear();
-  setState(() {});
 }
+
+  // History Pemeriksaan
+  void _goToHistory() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final data = await FirebaseService.getAllHistory(uid);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => HistoryFirebase(),
+      ),
+    );
+  }
 
   //Calculate IMT
   double _calculateIMT() {
@@ -1467,7 +1559,7 @@ void _clearForm() {
             iconSize: 20,
           ),
           IconButton(
-            onPressed: () => _showDeleteNutritionDialog(item),
+            onPressed: () => _showDeleteNutritionDialog(context, item),
             icon: const Icon(Icons.delete_outline),
             color: Colors.red,
             iconSize: 20,
