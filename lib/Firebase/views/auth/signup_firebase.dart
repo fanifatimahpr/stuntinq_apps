@@ -94,7 +94,7 @@ class _SignupFirebaseState extends State<SignupFirebase> {
               //Logo App
               _buildLogoHeader(title: "Sign Up"),
 
-              height(25),
+              height(45),
 
               //Form
               //Full Name
@@ -147,7 +147,7 @@ class _SignupFirebaseState extends State<SignupFirebase> {
                 },
               ),
 
-              height(35),
+              height(45),
 
               //Sign Up Button
               _buildSignUpButton(
@@ -159,25 +159,25 @@ class _SignupFirebaseState extends State<SignupFirebase> {
 
               height(25),
 
-              //Divider
-              Row(
-                children: [
-                  Expanded(child: Divider(thickness: 1)),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Text(
-                      "Or Sign Up With",
-                      style: TextStyle(color: Colors.grey.shade700),
-                    ),
-                  ),
-                  Expanded(child: Divider(thickness: 1)),
-                ],
-              ),
+              // //Divider
+              // Row(
+              //   children: [
+              //     Expanded(child: Divider(thickness: 1)),
+              //     Padding(
+              //       padding: const EdgeInsets.symmetric(horizontal: 15),
+              //       child: Text(
+              //         "Or Sign Up With",
+              //         style: TextStyle(color: Colors.grey.shade700),
+              //       ),
+              //     ),
+              //     Expanded(child: Divider(thickness: 1)),
+              //   ],
+              // ),
 
-              height(30),
+              // height(30),
 
-              // Google Button (image)
-              Image.asset("assets/images/googlelogo.png", height: 40),
+              // // Google Button (image)
+              // Image.asset("assets/images/googlelogo.png", height: 40),
 
               SizedBox(height: 25),
 

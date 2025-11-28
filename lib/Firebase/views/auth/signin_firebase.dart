@@ -94,7 +94,7 @@ class _SigninFirebaseState extends State<SigninFirebase> {
 
               //Logo App
               _buildLogoHeader(title: "Sign In"),
-              height(35),
+              height(55),
 
               //Form
               //Email
@@ -137,9 +137,9 @@ class _SigninFirebaseState extends State<SigninFirebase> {
               height(10),
 
               //Forgot Password
-              _buildForgotPassword(),
+              // _buildForgotPassword(),
 
-              height(10),
+              height(55),
 
               //Sign In Button
               _buildSigninButton(
@@ -195,34 +195,34 @@ class _SigninFirebaseState extends State<SigninFirebase> {
 
               height(30),
 
-              //Divider
-              Row(
-                children: const [
-                  Expanded(child: Divider(thickness: 1)),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Text(
-                      "Or Sign In With",
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Color.fromARGB(255, 97, 97, 97),
-                      ),
-                    ),
-                  ),
-                  Expanded(child: Divider(thickness: 1)),
-                ],
-              ),
+              // //Divider
+              // Row(
+              //   children: const [
+              //     Expanded(child: Divider(thickness: 1)),
+              //     Padding(
+              //       padding: EdgeInsets.symmetric(horizontal: 15.0),
+              //       child: Text(
+              //         "Or Sign In With",
+              //         style: TextStyle(
+              //           fontSize: 13,
+              //           color: Color.fromARGB(255, 97, 97, 97),
+              //         ),
+              //       ),
+              //     ),
+              //     Expanded(child: Divider(thickness: 1)),
+              //   ],
+              // ),
 
-              height(30),
+              // height(30),
 
-              // Google Icon
-              Center(
-                child: Image.asset(
-                  "assets/images/googlelogo.png",
-                  height: 40,
-                  width: 40,
-                ),
-              ),
+              // // Google Icon
+              // Center(
+              //   child: Image.asset(
+              //     "assets/images/googlelogo.png",
+              //     height: 40,
+              //     width: 40,
+              //   ),
+              // ),
 
               height(25),
 

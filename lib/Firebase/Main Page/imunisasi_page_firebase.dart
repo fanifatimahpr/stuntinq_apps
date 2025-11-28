@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stuntinq_apps/Firebase/models/imunisasi_firebase_model.dart';
 import 'package:stuntinq_apps/Firebase/service/firebase_service.dart';
 import 'package:stuntinq_apps/SQFLite/Model/imunisasi_model.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -119,6 +120,8 @@ class _ImunisasiFirebaseState extends State<ImunisasiFirebase> {
     imunisasi.sort((a, b) => a.date.compareTo(b.date));
 
      _loadBirthDate();
+     _loadCompletedImunisasi();
+
   }
 
   // BIRTHDATE
@@ -136,7 +139,7 @@ class _ImunisasiFirebaseState extends State<ImunisasiFirebase> {
   }
 }
 
-
+  // TANGGAL IMUNISASI
   void _updateImunisasiDates() {
     if (tanggalLahirAnak == null) return;
 
@@ -169,13 +172,17 @@ class _ImunisasiFirebaseState extends State<ImunisasiFirebase> {
     });
   }
 
-  // Imunisasi? get nextImunisasi {
-  //   final now = DateTime.now();
-  //   return imunisasi.firstWhere(
-  //     (i) => i.date.isAfter(now),
-  //     orElse: () => imunisasi.last,
-  //   );
-  // }
+  // COMPLETED IMUNISASI
+  void _loadCompletedImunisasi() async {
+  final completed = await FirebaseService.getCompletedImunisasi();
+  setState(() {
+    for (var i in imunisasi) {
+      if (completed.containsKey(i.id)) {
+        i.completed = completed[i.id]!;
+      }
+    }
+  });
+}
 
   Imunisasi? get nextImunisasi {
     final now = DateTime.now();
@@ -445,15 +452,6 @@ class _ImunisasiFirebaseState extends State<ImunisasiFirebase> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // const Text(
-          //   "Pilih Tanggal Lahir Anak",
-          //   style: TextStyle(
-          //     fontSize: 15,
-          //     fontWeight: FontWeight.w700,
-          //     color: Color(0xFF2F6B6A),
-          //   ),
-          // ),
-          // const SizedBox(height: 10),
           TableCalendar(
             firstDay: DateTime.utc(2010, 1, 1),
             lastDay: DateTime.now(),
@@ -575,10 +573,18 @@ class _ImunisasiFirebaseState extends State<ImunisasiFirebase> {
                           Checkbox(
                             value: item.completed,
                             activeColor: Color(0xFF2F6B6A),
-                            onChanged: (value) {
+                            onChanged: (value) async {
                               setState(() {
                                 item.completed = value ?? false;
                               });
+
+                              await FirebaseService.saveImunisasi(
+                                id: item.id,
+                                name: item.name,
+                                ageMonth: item.ageMonth,
+                                date: item.date,
+                                completed: item.completed,
+                              );
                             },
                           ),
                         ],

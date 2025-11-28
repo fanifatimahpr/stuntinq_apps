@@ -31,6 +31,55 @@ Future<void> fetchUser() async {
   setState(() => isLoading = false);
 }
 
+Future<void> _editSingleField({
+  required String fieldName,
+  required String initialValue,
+  required Future<void> Function(String) onSave,
+}) async {
+  final controller = TextEditingController(text: initialValue);
+
+  final result = await showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text("Edit $fieldName"),
+        content: TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            labelText: fieldName,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text("Batal"),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text("Simpan"),
+          ),
+        ],
+      );
+    },
+  );
+
+  if (result == true) {
+    await onSave(controller.text.trim());
+    await fetchUser();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("$fieldName berhasil diperbarui"),
+        backgroundColor: Color(0xFF2F6B6A),
+      ),
+    );
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,21 +105,26 @@ Future<void> fetchUser() async {
         children: [
           //Header
           _buildHeader(),
-          height(20),
+          height(25),
+
+          if (currentUser != null)
+          _buildUserProfileCard(currentUser!),
+          height(30),
+
 
           //List Info Akun
           _buildSectionTitle("Informasi Akun"),
           height(8),
           _buildInfoUserAccount(),
 
-          //Edit TextButton
-          _buildEditBottom(),
-          height(15),
+          // //Edit TextButton
+          // _buildEditBottom(),
+          // height(15),
 
-          //Pengaturan
-          _buildSectionTitle("Pengaturan Akun"),
-          height(8),
-          _buildSettingsAccount(),
+          // //Pengaturan
+          // _buildSectionTitle("Pengaturan Akun"),
+          // height(8),
+          // _buildSettingsAccount(),
           height(40),
 
           //Log Out
@@ -161,71 +215,229 @@ Future<void> fetchUser() async {
     );
   }
 
-  Widget _buildInfoUserAccount() {
-    return Column(
-      children: [
-        _buildInfoItem(
-          icon: Icons.person_outline,
-          title: 'Nama Lengkap',
-          subtitle: currentUser?.fullname ?? '-',
-          onTap: () {},
-        ),
-        height(12),
-        _buildInfoItem(
-          icon: Icons.email_outlined,
-          title: 'Email',
-          subtitle: currentUser?.email ?? '-',
-          onTap: () {},
-        ),
-        height(12),
-        _buildInfoItem(
-          icon: Icons.phone_outlined,
-          title: 'Nomor Telepon',
-          subtitle: currentUser?.phonenumber ?? '-',
-          onTap: () {},
-        ),
-      ],
-    );
+  Widget _buildUserProfileCard(UserFirebaseModel user) {
+  String _getInitials(String name) {
+    if (name.isEmpty) return "U";
+    final parts = name.trim().split(" ");
+    if (parts.length == 1) return parts[0][0].toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
   }
 
-  Widget _buildEditBottom() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        TextButton(
-          onPressed: () => _onEditFirebase(),
-          child: Text(
-            "Edit Informasi Akun",
-            style: TextStyle(
-              fontSize: 13,
-              color: Color.fromARGB(255, 122, 122, 122),
-              fontWeight: FontWeight.bold,
+  String _formatDate(String? date) {
+    if (date == null || date.isEmpty) return "-";
+    try {
+      final dt = DateTime.parse(date);
+      return "${dt.day}-${dt.month}-${dt.year}";
+    } catch (_) {
+      return date;
+    }
+  }
+
+  return Container(
+    decoration: BoxDecoration(
+      gradient: const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Color(0xFF2F6B6A), Color(0xFF40E0D0)],
+      ),
+      borderRadius: BorderRadius.circular(22),
+      boxShadow: [
+        BoxShadow(
+          color: const Color(0xFF2F6B6A).withOpacity(0.3),
+          blurRadius: 20,
+          offset: const Offset(0, 10),
+        ),
+      ],
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(24),
+      child: Row(
+        children: [
+          // Avatar user
+          Stack(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.3),
+                    width: 4,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 15,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: CircleAvatar(
+                  radius: 38,
+                  backgroundColor: Colors.white.withOpacity(0.2),
+                  child: Text(
+                    _getInitials(user.fullname ?? ""),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFFBBF24), Color(0xFFF59E0B)],
+                    ),
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 2),
+                  ),
+                  child: const Icon(
+                    Icons.verified,
+                    size: 14,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(width: 16),
+
+          // Nama + tanggal bergabung
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  user.fullname ?? "Nama User",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Bergabung sejak: ${_formatDate(user.createdAt)}",
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.9),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      ),
+    ),
+  );
+}
 
-  Widget _buildSettingsAccount() {
-    return Column(
-      children: [
-        _buildInfoItem(
-          icon: Icons.notifications_outlined,
-          title: 'Notifikasi',
-          subtitle: 'Atur pengingat dan pemberitahuan',
-          onTap: () {},
+  Widget _buildInfoUserAccount() {
+  return Column(
+    children: [
+      _buildInfoItem(
+        icon: Icons.person_outline,
+        title: 'Nama Lengkap',
+        subtitle: currentUser?.fullname ?? '-',
+        onEditTap: () => _editSingleField(
+          fieldName: "Nama Lengkap",
+          initialValue: currentUser?.fullname ?? '',
+          onSave: (value) async {
+            await FirebaseService.updateUser(
+              uid: currentUser!.uid!,
+              fullname: value,
+              email: currentUser!.email ?? '',
+              phonenumber: currentUser!.phonenumber ?? '',
+            );
+          },
         ),
-        const SizedBox(height: 12),
-        _buildInfoItem(
-          icon: Icons.lock_outline,
-          title: 'Keamanan',
-          subtitle: 'Ubah kata sandi & keamanan akun',
-          onTap: () {},
+      ),
+      height(12),
+      _buildInfoItem(
+        icon: Icons.email_outlined,
+        title: 'Email',
+        subtitle: currentUser?.email ?? '-',
+        onEditTap: () => _editSingleField(
+          fieldName: "Email",
+          initialValue: currentUser?.email ?? '',
+          onSave: (value) async {
+            await FirebaseService.updateUser(
+              uid: currentUser!.uid!,
+              fullname: currentUser!.fullname ?? '',
+              email: value,
+              phonenumber: currentUser!.phonenumber ?? '',
+            );
+          },
         ),
-      ],
-    );
-  }
+      ),
+      height(12),
+      _buildInfoItem(
+        icon: Icons.phone_outlined,
+        title: 'Nomor Telepon',
+        subtitle: currentUser?.phonenumber ?? '-',
+        onEditTap: () => _editSingleField(
+          fieldName: "Nomor Telepon",
+          initialValue: currentUser?.phonenumber ?? '',
+          onSave: (value) async {
+            await FirebaseService.updateUser(
+              uid: currentUser!.uid!,
+              fullname: currentUser!.fullname ?? '',
+              email: currentUser!.email ?? '',
+              phonenumber: value,
+            );
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+  // Widget _buildEditBottom() {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.end,
+  //     children: [
+  //       TextButton(
+  //         onPressed: () => _onEditFirebase(),
+  //         child: Text(
+  //           "Edit Informasi Akun",
+  //           style: TextStyle(
+  //             fontSize: 13,
+  //             color: Color.fromARGB(255, 122, 122, 122),
+  //             fontWeight: FontWeight.bold,
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  // Widget _buildSettingsAccount() {
+  //   return Column(
+  //     children: [
+  //       _buildInfoItem(
+  //         icon: Icons.notifications_outlined,
+  //         title: 'Notifikasi',
+  //         subtitle: 'Atur pengingat dan pemberitahuan',
+  //         onEditTap: () {},
+  //       ),
+  //       const SizedBox(height: 12),
+  //       _buildInfoItem(
+  //         icon: Icons.lock_outline,
+  //         title: 'Keamanan',
+  //         subtitle: 'Ubah kata sandi & keamanan akun',
+  //         onEditTap: () {},
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _buildLogOutButton({
     required String text,
@@ -379,7 +591,7 @@ Future<void> fetchUser() async {
           ),
           height(5),
           Text(
-            'Copyright 2025 stuntinQ.',
+            'Copyright 2025 StuntinQ.',
             style: TextStyle(color: Colors.grey[600], fontSize: 11),
           ),
           Text(
@@ -466,7 +678,7 @@ Widget _buildInfoItem({
   required IconData icon,
   required String title,
   required String subtitle,
-  required VoidCallback onTap,
+  required VoidCallback onEditTap,
 }) {
   return Container(
     decoration: BoxDecoration(
@@ -477,34 +689,35 @@ Widget _buildInfoItem({
         width: 1.5,
       ),
     ),
-    child: InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Icon(icon, color: Color(0xFF2F6B6A)),
-            SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(height: 2),
-                  Text(
-                    subtitle,
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                  ),
-                ],
-              ),
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          Icon(icon, color: Color(0xFF2F6B6A)),
+          SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                ),
+                SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                ),
+              ],
             ),
-            Icon(Icons.chevron_right, color: Colors.grey),
-          ],
-        ),
+          ),
+
+          // 🔥 DIGANTI: dari chevron → IconButton Edit
+          IconButton(
+            icon: Icon(Icons.edit, color: Color(0xFF2F6B6A)),
+            onPressed: onEditTap,
+          ),
+        ],
       ),
     ),
   );

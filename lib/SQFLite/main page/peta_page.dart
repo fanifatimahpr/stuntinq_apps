@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stuntinq_apps/SQFLite/Model/peta_model.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class PetaPage extends StatefulWidget {
   const PetaPage({Key? key}) : super(key: key);

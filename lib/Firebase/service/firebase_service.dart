@@ -272,6 +272,64 @@ static Future<void> deleteNutrition(String id) async {
     return (data["birthDate"] as Timestamp).toDate();
   }
 
+  /// IMUNISASI CHECKLIST PAGE — FIREBASE
+static CollectionReference get imunisasiRef =>
+    firestore.collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('imunisasi');
+
+// SIMPAN / UPDATE checklist imunisasi
+static Future<void> saveImunisasi({
+  required int id,
+  required String name,
+  required int ageMonth,
+  required DateTime date,
+  required bool completed,
+}) async {
+  try {
+    final uid = auth.currentUser!.uid;
+
+    await firestore
+        .collection('users')
+        .doc(uid)
+        .collection('imunisasi')
+        .doc(id.toString())
+        .set({
+      "id": id,
+      "name": name,
+      "ageMonth": ageMonth,
+      "date": date.toIso8601String(),
+      "completed": completed,
+    }, SetOptions(merge: true));
+  } catch (e) {
+    print("Error saveImunisasi: $e");
+    rethrow;
+  }
+}
+
+// AMBIL STATUS CHECKLIST (untuk initState)
+static Future<Map<int, bool>> getCompletedImunisasi() async {
+  try {
+    final uid = auth.currentUser!.uid;
+
+    final snapshot = await firestore
+        .collection('users')
+        .doc(uid)
+        .collection('imunisasi')
+        .get();
+
+    Map<int, bool> result = {};
+    for (var doc in snapshot.docs) {
+      result[int.parse(doc.id)] = doc['completed'] ?? false;
+    }
+
+    return result;
+  } catch (e) {
+    print("Error getCompletedImunisasi: $e");
+    return {};
+  }
+}
+
   /// ARTIKEL PAGE 
   // Toggle Bookmark
   static Future<void> toggleBookmark(String articleId) async {
